@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- 设计稿 Figma 节点 78:339 "Rename · shared dialog"（335x238）。
+     含遮罩，整块复用：StartPage 的场景改名与 Board 的网关改名共用。
+     纯 UI 交互：Confirmed 回传新名称，保存到哪里由调用方决定。
+     字重按 Figma 实测映射：PJS=400 / PJSM=500 / PJSSB=600 / PJSB=700（字体 Plus Jakarta Sans）。 -->
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BluetoothMauiApp.RenameDialog"
+             IsVisible="False"
+             HorizontalOptions="Fill"
+             VerticalOptions="Fill">
+    <Grid>
+        <!-- Modal backdrop · #0d241b -->
+        <BoxView x:Name="Backdrop"
+                 Color="{StaticResource DgBackdrop}"
+                 Opacity="0.72">
+            <BoxView.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnBackdropTapped" />
+            </BoxView.GestureRecognizers>
+        </BoxView>
+
+        <!-- Rename · shared dialog -->
+        <Border BackgroundColor="{StaticResource DgDialogBg}"
+                Stroke="White"
+                StrokeThickness="1"
+                HorizontalOptions="Fill"
+                VerticalOptions="Center"
+                Margin="20,0"
+                Padding="22,23,22,29">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="18" />
+            </Border.StrokeShape>
+
+            <VerticalStackLayout Spacing="0">
+
+                <Label Text="Rename"
+                       FontSize="21"
+                       FontFamily="PJSSB"
+                       TextColor="{StaticResource DgTitleAlt}" />
+
+                <Label x:Name="SubtitleLabel"
+                       Text="Choose a name for this scene or gateway."
+                       FontSize="11"
+                       FontFamily="PJS"
+                       TextColor="{StaticResource DgLabel}"
+                       Margin="0,9,0,0" />
+
+                <!-- Name input · 291x49 · r18 -->
+                <Border BackgroundColor="White"
+                        Stroke="White"
+                        StrokeThickness="1"
+                        HeightRequest="49"
+                        Margin="0,15,0,0"
+                        Padding="14,0,14,0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="18" />
+                    </Border.StrokeShape>
+                    <Entry x:Name="NameEntry"
+                           BackgroundColor="Transparent"
+                           TextColor="{StaticResource DgTitleAlt}"
+                           FontSize="14"
+                           FontFamily="PJSSB"
+                           PlaceholderColor="{StaticResource DgLabel}"
+                           ReturnType="Done"
+                           Completed="OnEntryCompleted" />
+                </Border>
+
+                <!-- Cancel 139x45 / Save 139x45 -->
+                <Grid ColumnDefinitions="139,13,139" ColumnSpacing="0" Margin="0,28,0,0">
+
+                    <Border Grid.Column="0"
+                            BackgroundColor="White"
+                            Stroke="White"
+                            StrokeThickness="1"
+                            HeightRequest="45">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="18" />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnCancelTapped" />
+                        </Border.GestureRecognizers>
+                        <Label Text="Cancel"
+                               FontSize="13"
+                               FontFamily="PJSM"
+                               TextColor="{StaticResource DgTitleAlt}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+
+                    <Border Grid.Column="2"
+                            BackgroundColor="{StaticResource DgGreenBtn}"
+                            Stroke="White"
+                            StrokeThickness="1"
+                            HeightRequest="45">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="18" />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSaveTapped" />
+                        </Border.GestureRecognizers>
+                        <Label Text="Save"
+                               FontSize="13"
+                               FontFamily="PJSM"
+                               TextColor="White"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+
+                </Grid>
+
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+</ContentView>

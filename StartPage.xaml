@@ -1,0 +1,386 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- 设计稿 Figma 67:1214 "HOME"（375x812）
+     仅亮色。扫描/连接 UI 已按设计稿移到 DataPage（Devices），
+     本页只保留 HOME 的只读状态与场景选择。
+     字重按 Figma 实测映射：PJS=400 / PJSM=500 / PJSSB=600 / PJSB=700（字体 Plus Jakarta Sans）。 -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:BluetoothMauiApp"
+             x:Class="BluetoothMauiApp.StartPage"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
+
+    <Grid>
+        <local:AtmosphereBackground />
+
+        <ScrollView>
+            <VerticalStackLayout Padding="20,16,20,133" Spacing="0">
+
+                <!-- ===== 问候 + View guide ===== -->
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                        <Label Text="Good evening"
+                               FontSize="12"
+                               FontFamily="PJS"
+                               TextColor="{StaticResource DgSub}" />
+                        <Label Text="My Home"
+                               FontSize="28"
+                               FontFamily="PJSB"
+                               TextColor="{StaticResource DgTitle}" />
+                    </VerticalStackLayout>
+
+                    <!-- View guide · 引导入口，本轮只做占位 -->
+                    <Border Grid.Column="1"
+                            x:Name="BtnViewGuide"
+                            BackgroundColor="White"
+                            Stroke="White"
+                            StrokeThickness="1"
+                            WidthRequest="97"
+                            HeightRequest="40"
+                            VerticalOptions="End"
+                            Padding="8,0,8,0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#002E14" Offset="0,5" Radius="16" Opacity="0.12" />
+                        </Border.Shadow>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnViewGuideTapped" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="16,6,Auto" ColumnSpacing="0">
+                            <Image Grid.Column="0" Source="ic_help.png"
+                                   WidthRequest="16" HeightRequest="16"
+                                   VerticalOptions="Center" />
+                            <Label Grid.Column="2" Text="View guide"
+                                   FontSize="11"
+                                   FontFamily="PJSSB"
+                                   TextColor="{StaticResource DgGreenLink}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <!-- ===== All Devices 总开关 ===== -->
+                <Border BackgroundColor="{StaticResource DgGreen}"
+                        StrokeThickness="0"
+                        HeightRequest="130"
+                        Margin="0,20,0,0"
+                        Padding="20,20,20,12">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="28" />
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#1A2B21" Offset="0,10" Radius="24" Opacity="0.12" />
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="0">
+                        <!-- 顶行：电源圆标 + 右侧开关 -->
+                        <Grid ColumnDefinitions="*,53" ColumnSpacing="0" HeightRequest="40">
+                            <!-- 必须 Start：父列是 *，默认 Fill 会把 40dp 的圆拉满整行，
+                                 里面的电源图标跟着被居中到中间，看起来就像"按钮跑到中间了" -->
+                            <Border Grid.Column="0"
+                                    BackgroundColor="White"
+                                    StrokeThickness="0"
+                                    WidthRequest="40"
+                                    HeightRequest="40"
+                                    HorizontalOptions="Start"
+                                    VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="20" />
+                                </Border.StrokeShape>
+                                <Image Source="ic_power.png"
+                                       WidthRequest="22" HeightRequest="22"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+
+                            <!-- 绿卡上的开关：轨道恒白、滑块绿（设计稿 Toggle / Off 样式） -->
+                            <local:ToggleSwitch x:Name="switchAll"
+                                                Grid.Column="1"
+                                                WidthRequest="53"
+                                                HeightRequest="26"
+                                                KnobSize="18"
+                                                IsOn="True"
+                                                OnColor="White"
+                                                OffColor="White"
+                                                KnobColor="{StaticResource DgGreen}"
+                                                VerticalOptions="Center"
+                                                HorizontalOptions="End" />
+                        </Grid>
+
+                        <Label Text="All Devices"
+                               FontSize="20"
+                               FontFamily="PJSSB"
+                               TextColor="White"
+                               LineBreakMode="NoWrap"
+                               Margin="0,14,0,0" />
+                        <Label Text="One switch. Your whole home."
+                               FontSize="11"
+                               FontFamily="PJS"
+                               TextColor="White"
+                               Margin="0,5,0,0" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ===== 网关连接状态（只读） ===== -->
+                <Border BackgroundColor="{StaticResource DgCard}"
+                        Stroke="White"
+                        StrokeThickness="1"
+                        HeightRequest="56"
+                        Margin="0,12,0,0"
+                        Padding="13,8,30,8">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="18" />
+                    </Border.StrokeShape>
+
+                    <Grid ColumnDefinitions="101,*,Auto" ColumnSpacing="0">
+                        <!-- Offline badge -->
+                        <Border Grid.Column="0"
+                                BackgroundColor="{StaticResource DgOfflineBg}"
+                                StrokeThickness="0"
+                                WidthRequest="101"
+                                HeightRequest="40"
+                                Padding="15,0,0,0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="11" />
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="17,10,Auto" ColumnSpacing="0">
+                                <Image Grid.Column="0" Source="ic_link.png"
+                                       WidthRequest="17" HeightRequest="17"
+                                       VerticalOptions="Center" />
+                                <Label x:Name="lblConnState" Grid.Column="2"
+                                       Text="Offline"
+                                       FontSize="12"
+                                       FontFamily="PJSM"
+                                       TextColor="{StaticResource DgOffline}"
+                                       VerticalOptions="Center"
+                                       LineBreakMode="NoWrap" />
+                            </Grid>
+                        </Border>
+
+                        <Label Grid.Column="2" Text="Gateway status"
+                               FontSize="12"
+                               FontFamily="PJS"
+                               TextColor="{StaticResource DgSub4}"
+                               VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+
+                <!-- ===== Quick scenes ===== -->
+                <Label Text="Quick scenes"
+                       FontSize="21"
+                       FontFamily="PJSB"
+                       TextColor="{StaticResource DgTitle}"
+                       Margin="0,20,0,0" />
+                <Label Text="Choose the mood for your space"
+                       FontSize="12"
+                       FontFamily="PJS"
+                       TextColor="{StaticResource DgSub}"
+                       Margin="0,4,0,0" />
+
+                <VerticalStackLayout Spacing="12" Margin="0,15,0,0">
+
+                    <!-- Scene 1 · 选中态 -->
+                    <Border x:Name="frameScene1"
+                            BackgroundColor="{StaticResource DgCardSelected}"
+                            Stroke="{StaticResource DgGreenRing}"
+                            StrokeThickness="1.5"
+                            HeightRequest="82"
+                            Padding="16,15,22,15">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="24" />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="TapScene1" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="52,16,*,22" ColumnSpacing="0">
+                            <Border Grid.Column="0" x:Name="iconBg1"
+                                    BackgroundColor="White"
+                                    StrokeThickness="0"
+                                    WidthRequest="52" HeightRequest="52"
+                                    VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="18" />
+                                </Border.StrokeShape>
+                                <Image Source="ic_scene1.png" WidthRequest="22" HeightRequest="20"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="2" Spacing="0"
+                                                 VerticalOptions="Center">
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label x:Name="sceneTitle1" Text="Scene 1"
+                                           FontSize="17"
+                                           FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgSceneTitle}"
+                                           LineBreakMode="NoWrap" />
+                                    <Image Source="ic_edit_sm.png" WidthRequest="16" HeightRequest="16"
+                                           VerticalOptions="Center">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnScene1Rename" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                </HorizontalStackLayout>
+                                <Label x:Name="sceneSub1" Text="Active scene"
+                                       FontSize="11"
+                                       FontFamily="PJSM"
+                                       TextColor="{StaticResource DgSub3}"
+                                       Margin="0,6,0,0" />
+                            </VerticalStackLayout>
+                            <Grid Grid.Column="3" WidthRequest="22" HeightRequest="22"
+                                  VerticalOptions="Center">
+                                <Ellipse x:Name="ring1"
+                                         Fill="White"
+                                         Stroke="{StaticResource DgGreen}"
+                                         StrokeThickness="2" />
+                                <Ellipse x:Name="ringCore1"
+                                         WidthRequest="12" HeightRequest="12"
+                                         Fill="{StaticResource DgGreen}"
+                                         HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                    <!-- Scene 2 · 未选中 -->
+                    <Border x:Name="frameScene2"
+                            BackgroundColor="{StaticResource DgCard}"
+                            Stroke="White"
+                            StrokeThickness="1"
+                            HeightRequest="82"
+                            Padding="16,15,22,15">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="24" />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="TapScene2" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="52,16,*,22" ColumnSpacing="0">
+                            <Border Grid.Column="0" x:Name="iconBg2"
+                                    BackgroundColor="{StaticResource DgIconBg}"
+                                    StrokeThickness="0"
+                                    WidthRequest="52" HeightRequest="52"
+                                    VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="18" />
+                                </Border.StrokeShape>
+                                <Image Source="ic_scene2.png" WidthRequest="22" HeightRequest="23"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="2" Spacing="0"
+                                                 VerticalOptions="Center">
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label x:Name="sceneTitle2" Text="Scene 2"
+                                           FontSize="17"
+                                           FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgSceneTitle}"
+                                           LineBreakMode="NoWrap" />
+                                    <Image Source="ic_edit_sm.png" WidthRequest="16" HeightRequest="16"
+                                           VerticalOptions="Center">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnScene2Rename" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                </HorizontalStackLayout>
+                                <Label x:Name="sceneSub2" Text="Standby"
+                                       FontSize="11"
+                                       FontFamily="PJSM"
+                                       TextColor="{StaticResource DgSub3}"
+                                       Margin="0,6,0,0" />
+                            </VerticalStackLayout>
+                            <Grid Grid.Column="3" WidthRequest="22" HeightRequest="22"
+                                  VerticalOptions="Center">
+                                <Ellipse x:Name="ring2"
+                                         Fill="Transparent"
+                                         Stroke="{StaticResource DgTrackRing}"
+                                         StrokeThickness="2" />
+                                <Ellipse x:Name="ringCore2"
+                                         WidthRequest="12" HeightRequest="12"
+                                         Fill="{StaticResource DgGreen}"
+                                         HorizontalOptions="Center" VerticalOptions="Center"
+                                         IsVisible="False" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                    <!-- Scene 3 · 未选中 -->
+                    <Border x:Name="frameScene3"
+                            BackgroundColor="{StaticResource DgCard}"
+                            Stroke="White"
+                            StrokeThickness="1"
+                            HeightRequest="82"
+                            Padding="16,15,22,15">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="24" />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="TapScene3" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="52,16,*,22" ColumnSpacing="0">
+                            <Border Grid.Column="0" x:Name="iconBg3"
+                                    BackgroundColor="{StaticResource DgIconBg}"
+                                    StrokeThickness="0"
+                                    WidthRequest="52" HeightRequest="52"
+                                    VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="18" />
+                                </Border.StrokeShape>
+                                <Image Source="ic_scene3.png" WidthRequest="21" HeightRequest="21"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="2" Spacing="0"
+                                                 VerticalOptions="Center">
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label x:Name="sceneTitle3" Text="Scene 3"
+                                           FontSize="17"
+                                           FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgSceneTitle}"
+                                           LineBreakMode="NoWrap" />
+                                    <Image Source="ic_edit_sm.png" WidthRequest="16" HeightRequest="16"
+                                           VerticalOptions="Center">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnScene3Rename" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                </HorizontalStackLayout>
+                                <Label x:Name="sceneSub3" Text="Standby"
+                                       FontSize="11"
+                                       FontFamily="PJSM"
+                                       TextColor="{StaticResource DgSub3}"
+                                       Margin="0,6,0,0" />
+                            </VerticalStackLayout>
+                            <Grid Grid.Column="3" WidthRequest="22" HeightRequest="22"
+                                  VerticalOptions="Center">
+                                <Ellipse x:Name="ring3"
+                                         Fill="Transparent"
+                                         Stroke="{StaticResource DgTrackRing}"
+                                         StrokeThickness="2" />
+                                <Ellipse x:Name="ringCore3"
+                                         WidthRequest="12" HeightRequest="12"
+                                         Fill="{StaticResource DgGreen}"
+                                         HorizontalOptions="Center" VerticalOptions="Center"
+                                         IsVisible="False" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- 自绘底部导航（设计稿 Frame 52） -->
+        <local:AppTabBar x:Name="TabBar" />
+
+        <!-- 新手引导 第1步 · Figma Onboarding 1（View guide 入口） -->
+        <local:CoachMark x:Name="Guide1"
+                         Step="1" CardY="340"
+                         Title="Open Devices"
+                         Description="Tap Devices below to view your gateways and connect a new one."
+                         ActionText="Next"
+                         Illustration="guide1.png"
+                         SpotOffsetX="-25" SpotOffsetY="-26"
+                         SpotWidth="96" SpotHeight="76" />
+
+        <!-- Rename 弹窗（场景改名） -->
+        <local:RenameDialog x:Name="RenameDlg" />
+    </Grid>
+</ContentPage>

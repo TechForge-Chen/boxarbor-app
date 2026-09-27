@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- 设计稿 Figma 67:1404 "Settings"（375x812）
+     仅亮色：设计稿未提供深色画板，此处不使用 AppThemeBinding。
+     字重按 Figma 实测映射：PJS=400 / PJSM=500 / PJSSB=600 / PJSB=700（字体 Plus Jakarta Sans）。
+     纵向间距按设计稿 y 坐标换算（页面顶部 = 设计稿 y44 状态栏之下）。 -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:BluetoothMauiApp"
+             x:Class="BluetoothMauiApp.SetPage"
+             Title="Settings"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
+
+    <Grid>
+        <local:AtmosphereBackground />
+
+        <ScrollView>
+            <VerticalStackLayout Padding="17,28,16,137" Spacing="0">
+
+                <!-- 标题 -->
+                <Label Text="Settings"
+                       FontSize="30"
+                       FontFamily="PJSB"
+                       TextColor="{StaticResource DgTitle}"
+                       Margin="6,0,0,0" />
+                <Label Text="Make the app feel like home"
+                       FontSize="14"
+                       FontFamily="PJS"
+                       TextColor="{StaticResource DgSub2}"
+                       Margin="6,7,0,0" />
+
+                <!-- ===== Notifications ===== -->
+                <Label Text="Notifications"
+                       FontSize="14"
+                       FontFamily="PJSSB"
+                       TextColor="{StaticResource DgTitle}"
+                       Margin="3,39,0,0" />
+
+                <Border BackgroundColor="{StaticResource DgCard}"
+                        Stroke="White"
+                        StrokeThickness="1"
+                        Margin="0,12,0,0"
+                        Padding="14,10,14,11">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="24" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="0">
+
+                        <!-- Offline alerts -->
+                        <Grid ColumnDefinitions="43,13,*,47" ColumnSpacing="0" HeightRequest="43">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="{StaticResource DgIconBgAlt}"
+                                    StrokeThickness="0"
+                                    HeightRequest="43"
+                                    WidthRequest="43"
+                                    VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="21" />
+                                </Border.StrokeShape>
+                                <Image Source="ic_bell.png" WidthRequest="18" HeightRequest="21"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="2" Spacing="3" VerticalOptions="Center">
+                                <Label Text="Offline alerts"
+                                       FontSize="12"
+                                       FontFamily="PJSM"
+                                       TextColor="{StaticResource DgTitle}"
+                                       LineBreakMode="NoWrap" />
+                                <Label Text="Get notified when a device disconnects"
+                                       FontSize="10.5"
+                                       FontFamily="PJS"
+                                       TextColor="{StaticResource DgSub2}" />
+                            </VerticalStackLayout>
+                            <local:ToggleSwitch x:Name="swOfflineAlerts"
+                                                Grid.Column="3"
+                                                WidthRequest="47"
+                                                HeightRequest="26"
+                                                IsOn="True"
+                                                VerticalOptions="Center"
+                                                HorizontalOptions="End" />
+                        </Grid>
+
+                        <BoxView HeightRequest="1"
+                                 BackgroundColor="{StaticResource DgDivider}"
+                                 Margin="0,10,0,0" />
+
+                        <!-- Automation alerts -->
+                        <Grid ColumnDefinitions="43,13,*,47" ColumnSpacing="0" HeightRequest="43" Margin="0,9,0,0">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="{StaticResource DgIconBgAlt}"
+                                    StrokeThickness="0"
+                                    HeightRequest="43"
+                                    WidthRequest="43"
+                                    VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="21" />
+                                </Border.StrokeShape>
+                                <Image Source="ic_clock.png" WidthRequest="20" HeightRequest="20"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="2" Spacing="3" VerticalOptions="Center">
+                                <Label Text="Automation alerts"
+                                       FontSize="12"
+                                       FontFamily="PJSM"
+                                       TextColor="{StaticResource DgTitle}"
+                                       LineBreakMode="NoWrap" />
+                                <Label Text="Know when a scene is triggered"
+                                       FontSize="10.5"
+                                       FontFamily="PJS"
+                                       TextColor="{StaticResource DgSub2}" />
+                            </VerticalStackLayout>
+                            <local:ToggleSwitch x:Name="swAutomationAlerts"
+                                                Grid.Column="3"
+                                                WidthRequest="47"
+                                                HeightRequest="26"
+                                                IsOn="True"
+                                                VerticalOptions="Center"
+                                                HorizontalOptions="End" />
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ===== Experience ===== -->
+                <Label Text="Experience"
+                       FontSize="14"
+                       FontFamily="PJSSB"
+                       TextColor="{StaticResource DgTitle}"
+                       Margin="3,29,0,0" />
+
+                <Border BackgroundColor="{StaticResource DgCard}"
+                        Stroke="White"
+                        StrokeThickness="1"
+                        Margin="0,12,0,0"
+                        Padding="14,10,14,11">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="24" />
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="0">
+
+                        <!-- Haptic feedback -->
+                        <Grid ColumnDefinitions="43,13,*,47" ColumnSpacing="0" HeightRequest="43">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="{StaticResource DgIconBgAlt}"
+                                    StrokeThickness="0"
+                                    HeightRequest="43"
+                                    WidthRequest="43"
+                                    VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="21" />
+                                </Border.StrokeShape>
+                                <Image Source="ic_haptic.png" WidthRequest="22" HeightRequest="20"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="2" Spacing="3" VerticalOptions="Center">
+                                <Label Text="Haptic feedback"
+                                       FontSize="12"
+                                       FontFamily="PJSM"
+                                       TextColor="{StaticResource DgTitle}"
+                                       LineBreakMode="NoWrap" />
+                                <Label Text="A subtle tap response"
+                                       FontSize="10.5"
+                                       FontFamily="PJS"
+                                       TextColor="{StaticResource DgSub2}" />
+                            </VerticalStackLayout>
+                            <local:ToggleSwitch x:Name="swHapticFeedback"
+                                                Grid.Column="3"
+                                                WidthRequest="47"
+                                                HeightRequest="26"
+                                                IsOn="True"
+                                                VerticalOptions="Center"
+                                                HorizontalOptions="End" />
+                        </Grid>
+
+                        <BoxView HeightRequest="1"
+                                 BackgroundColor="{StaticResource DgDivider}"
+                                 Margin="0,10,0,0" />
+
+                        <!-- Dark mode -->
+                        <Grid ColumnDefinitions="43,13,*,47" ColumnSpacing="0" HeightRequest="43" Margin="0,9,0,0">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="{StaticResource DgIconBgAlt}"
+                                    StrokeThickness="0"
+                                    HeightRequest="43"
+                                    WidthRequest="43"
+                                    VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="21" />
+                                </Border.StrokeShape>
+                                <Image Source="ic_moon.png" WidthRequest="21" HeightRequest="21"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+                            <VerticalStackLayout Grid.Column="2" Spacing="3" VerticalOptions="Center">
+                                <Label Text="Dark mode"
+                                       FontSize="12"
+                                       FontFamily="PJSM"
+                                       TextColor="{StaticResource DgTitle}"
+                                       LineBreakMode="NoWrap" />
+                                <Label Text="Reduce glare at night"
+                                       FontSize="10.5"
+                                       FontFamily="PJS"
+                                       TextColor="{StaticResource DgSub2}" />
+                            </VerticalStackLayout>
+                            <!-- 设计稿此开关为关闭态；本轮只做亮色，开关不切主题（深色画板未交付，仅记住偏好） -->
+                            <local:ToggleSwitch x:Name="swDarkMode"
+                                                Grid.Column="3"
+                                                WidthRequest="47"
+                                                HeightRequest="26"
+                                                IsOn="False"
+                                                VerticalOptions="Center"
+                                                HorizontalOptions="End" />
+                        </Grid>
+
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- ===== App version ===== -->
+                <Border BackgroundColor="{StaticResource DgCard}"
+                        Stroke="White"
+                        StrokeThickness="1"
+                        Margin="0,27,0,0"
+                        Padding="18,14,17,14"
+                        HeightRequest="45">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20" />
+                    </Border.StrokeShape>
+                    <Grid ColumnDefinitions="17,16,*,7" ColumnSpacing="0">
+                        <Image Grid.Column="0" Source="ic_info.png"
+                               WidthRequest="17" HeightRequest="17"
+                               VerticalOptions="Center" />
+                        <Label Grid.Column="2"
+                               x:Name="lblVersion"
+                               Text="App version"
+                               FontSize="11"
+                               FontFamily="PJSM"
+                               TextColor="{StaticResource DgTitle}"
+                               VerticalOptions="Center" />
+                        <Image Grid.Column="3" Source="ic_chevron.png"
+                               WidthRequest="7" HeightRequest="11"
+                               VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <local:AppTabBar />
+    </Grid>
+</ContentPage>

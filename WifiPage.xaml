@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BluetoothMauiApp.WifiPage"  HideSoftInputOnTapped="True"
+             Title="WiFi TCP 客户端" >
+
+    <ScrollView>
+        <Grid RowDefinitions="Auto,Auto,*,Auto,Auto" Padding="10" RowSpacing="10">
+
+            <!-- 标题和状态 -->
+            <HorizontalStackLayout Grid.Row="0" Spacing="10">
+                <Label Text="WiFi TCP 客户端"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center"/>
+                <Label x:Name="StatusLabel"
+                       Text="未连接"
+                       TextColor="Red"
+                       FontSize="16"
+                       VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+
+            <!-- 连接配置 -->
+            <Frame Grid.Row="1" Padding="10" BackgroundColor="{AppThemeBinding Light={StaticResource ConfigBgLight}, Dark={StaticResource ConfigBgDark}}">
+                <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="10">
+                    <Label Grid.Row="0" Grid.Column="0" Text="服务器IP:" VerticalOptions="Center"/>
+                    <Entry Grid.Row="0" Grid.Column="1"
+                           x:Name="ServerIpEntry"
+                           Text="192.168.4.1"
+                           Placeholder="输入服务器IP地址"
+                           HorizontalOptions="Fill"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" Text="端口:" VerticalOptions="Center"/>
+                    <Entry Grid.Row="1" Grid.Column="1"
+                           x:Name="ServerPortEntry"
+                           Text="9000"
+                           Placeholder="输入端口号"
+                           Keyboard="Numeric"
+                           HorizontalOptions="Fill"/>
+
+                    <Button Grid.Row="0" Grid.Column="2" Grid.RowSpan="2"
+                            x:Name="ConnectButton"
+                            Text="连接"
+                            Clicked="OnConnectButtonClicked"
+                            WidthRequest="80"
+                            VerticalOptions="Center"/>
+                </Grid>
+            </Frame>
+
+            <!-- 消息显示区域 -->
+            <Frame Grid.Row="2" Padding="10" BackgroundColor="{AppThemeBinding Light={StaticResource CardBgLight}, Dark={StaticResource CardBgDark}}" >
+                <Grid RowDefinitions="Auto,*">
+                    <HorizontalStackLayout Grid.Row="0" Spacing="10">
+                        <Label Text="消息记录"
+                               FontSize="14"
+                               FontAttributes="Bold"/>
+                        <Button Text="清空"
+                                FontSize="12"
+                                Clicked="OnClearMessageClicked"
+                                Padding="5"/>
+                    </HorizontalStackLayout>
+
+                    <ScrollView Grid.Row="1">
+                        <VerticalStackLayout x:Name="MessageStack" Spacing="5">
+                            <!-- 消息会动态添加到这里 -->
+                        </VerticalStackLayout>
+                    </ScrollView>
+                </Grid>
+            </Frame>
+
+            <!-- 发送消息区域 -->
+            <Frame Grid.Row="3" Padding="10" BackgroundColor="{AppThemeBinding Light={StaticResource BlueTintLight}, Dark={StaticResource BlueTintDark}}">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                    <Entry x:Name="SendMessageEntry"
+                           Placeholder="输入要发送的消息..."
+                           HorizontalOptions="Fill"/>
+                    <Button Grid.Column="1"
+                            Text="发送"
+                            Clicked="OnSendMessageClicked"
+                            WidthRequest="80"/>
+                </Grid>
+            </Frame>
+
+            <!-- 操作按钮 -->
+            <HorizontalStackLayout Grid.Row="4" Spacing="10" HorizontalOptions="Center">
+                <Button Text="断开连接"
+                        x:Name="DisconnectButton"
+                        Clicked="OnDisconnectButtonClicked"
+                        WidthRequest="120"
+                        BackgroundColor="LightCoral"
+                        IsEnabled="False"/>
+            </HorizontalStackLayout>
+
+        </Grid>
+    </ScrollView>
+
+</ContentPage>

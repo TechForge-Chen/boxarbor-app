@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="BluetoothMauiApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:BluetoothMauiApp"
+    Shell.TabBarBackgroundColor="White"
+    Shell.TabBarForegroundColor="{StaticResource DgGreen}"
+    Shell.TabBarTitleColor="{StaticResource DgGreen}"
+    Shell.TabBarUnselectedColor="{StaticResource DgMuted}">
+
+    <!-- 底部导航对应设计稿 Frame 52（375x105）：Devices | Home | Settings
+         白底；文字选中 #16c95c、未选中 #8b938e，图标走 tab_*_gray / tab_*_green
+         两套矢量，由 AppShell 在 Navigated 时切换。
+         差异说明：设计稿中间是凸起 58dp 绿色 FAB + 白色挖孔，Shell 内建 TabBar
+         不提供图标尺寸、凸起与挖孔能力，这里用同款矢量图标居中近似。 -->
+    <TabBar>
+
+        <!-- Devices -->
+        <Tab Title="Devices" Route="devtab">
+            <Tab.Icon>
+                <FileImageSource File="tab_devices_gray.png" />
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate local:DataPage}" Route="DataPage" />
+        </Tab>
+
+        <!-- Home -->
+        <Tab Title="Home" Route="hometab">
+            <Tab.Icon>
+                <FileImageSource File="tab_home_fab.png" />
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate local:StartPage}" Route="StartPage" />
+        </Tab>
+
+        <!-- Settings -->
+        <Tab Title="Settings" Route="settab">
+            <Tab.Icon>
+                <FileImageSource File="tab_settings_gray.png" />
+            </Tab.Icon>
+            <ShellContent ContentTemplate="{DataTemplate local:SetPage}" Route="SetPage" />
+        </Tab>
+
+    </TabBar>
+</Shell>

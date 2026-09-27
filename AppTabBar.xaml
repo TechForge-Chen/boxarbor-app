@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- 底部导航 · 设计稿 Frame 52（375x105，位于页面 y707..812）
+     挖孔白条直接用 Figma 导出的 tabbar_bg.png（Union 形状，含凸起），
+     不再用 Shell 内建 TabBar —— 它给不了 79dp 条高、挖孔和凸起的 58dp FAB。
+     需配合各页面的 Shell.TabBarIsVisible="False" 使用。
+     设计稿中间 FAB 没有文字标签，只有图标。 -->
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BluetoothMauiApp.AppTabBar"
+             VerticalOptions="End"
+             HorizontalOptions="Fill"
+             HeightRequest="105">
+
+    <Grid>
+
+        <!-- 挖孔白条（含中央凸起） -->
+        <Image Source="tabbar_bg.png"
+               Aspect="Fill"
+               HorizontalOptions="Fill" VerticalOptions="Fill"
+               InputTransparent="true" />
+
+        <!-- 中央凸起 FAB · 58x58 · 设计稿 (159,15) -->
+        <Image Source="tab_home_fab.png"
+               WidthRequest="58" HeightRequest="58"
+               HorizontalOptions="Center" VerticalOptions="Start"
+               Margin="0,15,0,0"
+               InputTransparent="true" />
+
+        <!-- 三个点击区 -->
+        <Grid ColumnDefinitions="0.363*,0.274*,0.363*" ColumnSpacing="0">
+
+            <!-- Devices · 图标 (49,43) 22x22，标签 y72 -->
+            <Border Grid.Column="0"
+                    x:Name="DevicesBtn"
+                    BackgroundColor="Transparent"
+                    StrokeThickness="0"
+                    Padding="0"
+                    VerticalOptions="End"
+                    HeightRequest="79">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnDevicesTapped" />
+                </Border.GestureRecognizers>
+                <StackLayout x:Name="DevicesStack"
+                             Spacing="7"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Start"
+                             Margin="0,17,0,0">
+                    <Image x:Name="IconDevices"
+                           Source="tab_devices_gray.png"
+                           WidthRequest="22" HeightRequest="22" />
+                    <Label x:Name="LabelDevices"
+                           Text="Devices"
+                           FontSize="12"
+                           FontFamily="PJSM"
+                           TextColor="{StaticResource DgMuted}"
+                           LineBreakMode="NoWrap" />
+                </StackLayout>
+            </Border>
+
+            <!-- Home · FAB 点击区 (136..239, y15..73) -->
+            <!-- Home 点击区覆盖整栏（0..105，含凸起部分），
+                 否则 FAB 下方到栏底这段 30dp 点了没反应 -->
+            <Border Grid.Column="1"
+                    BackgroundColor="Transparent"
+                    StrokeThickness="0"
+                    Padding="0"
+                    VerticalOptions="Fill">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnHomeTapped" />
+                </Border.GestureRecognizers>
+            </Border>
+
+            <!-- Settings · 图标 (280,43) 20x20，标签 y70 -->
+            <Border Grid.Column="2"
+                    BackgroundColor="Transparent"
+                    StrokeThickness="0"
+                    Padding="0"
+                    VerticalOptions="End"
+                    HeightRequest="79">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSettingsTapped" />
+                </Border.GestureRecognizers>
+                <StackLayout Spacing="7"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Start"
+                             Margin="0,17,0,0">
+                    <Image x:Name="IconSettings"
+                           Source="tab_settings_gray.png"
+                           WidthRequest="20" HeightRequest="20" />
+                    <Label x:Name="LabelSettings"
+                           Text="Settings"
+                           FontSize="12"
+                           FontFamily="PJSM"
+                           TextColor="{StaticResource DgMuted}"
+                           LineBreakMode="NoWrap" />
+                </StackLayout>
+            </Border>
+
+        </Grid>
+    </Grid>
+</ContentView>

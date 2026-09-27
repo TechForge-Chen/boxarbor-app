@@ -1,0 +1,427 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- 设计稿 Figma 69:2836 "Devices 空态" + 67:1298 "Devices 网关网格"（375x812）
+     蓝牙扫描入口已按设计稿从 StartPage 移到本页。
+     仅亮色。字重按 Figma 实测映射：PJS=400 / PJSM=500 / PJSSB=600 / PJSB=700（字体 Plus Jakarta Sans）。 -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:BluetoothMauiApp"
+             x:Class="BluetoothMauiApp.DataPage"
+             Title="Devices"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
+
+    <Grid>
+        <local:AtmosphereBackground />
+
+        <!-- ========== 网格态：有在线网关 ========== -->
+        <Grid x:Name="GridView" IsVisible="False" RowDefinitions="Auto,*">
+
+            <VerticalStackLayout Grid.Row="0" Padding="17,27,16,0" Spacing="0">
+                <Label Text="Devices"
+                       FontSize="30"
+                       FontFamily="PJSB"
+                       TextColor="{StaticResource DgTitle}"
+                       Margin="9,0,0,0" />
+                <Label Text="Gateway grid · Up to 100 gateways"
+                       FontSize="14"
+                       FontFamily="PJS"
+                       TextColor="{StaticResource DgSub2}"
+                       Margin="10,5,0,0" />
+
+                <!-- Scan with Bluetooth · 335x40 · r24 -->
+                <Border BackgroundColor="{StaticResource DgGreenScan}"
+                        Stroke="White"
+                        StrokeThickness="1"
+                        HeightRequest="40"
+                        Margin="3,3,4,0"
+                        x:Name="ScanBtnGrid">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="24" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnScanTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="12,11,Auto" ColumnSpacing="0"
+                          HorizontalOptions="Center">
+                        <Image Grid.Column="0" Source="ic_bluetooth.png"
+                               WidthRequest="12" HeightRequest="19"
+                               VerticalOptions="Center" />
+                        <Label Grid.Column="2" Text="Scan with Bluetooth"
+                               FontSize="13"
+                               FontFamily="PJSSB"
+                               TextColor="White"
+                               VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+            </VerticalStackLayout>
+
+            <CollectionView Grid.Row="1"
+                            x:Name="GatewayCV"
+                            Margin="18,13,18,105"
+                            ItemsSource="{Binding GatewayList}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                      Span="3"
+                                      HorizontalItemSpacing="12"
+                                      VerticalItemSpacing="12" />
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <!-- Gateway card · 105x115 · r18 -->
+                        <Border BackgroundColor="{StaticResource DgCard}"
+                                Stroke="White"
+                                StrokeThickness="1"
+                                HeightRequest="115"
+                                Padding="10,10,10,9"
+                                IsVisible="{Binding IsOnline}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="18" />
+                            </Border.StrokeShape>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="CardTapped" CommandParameter="{Binding Id}" />
+                            </Border.GestureRecognizers>
+
+                            <Grid RowDefinitions="18,*,16" RowSpacing="0">
+
+                                <Grid Grid.Row="0" ColumnDefinitions="*,30" ColumnSpacing="0">
+                                    <Label Grid.Column="0" Text="SUB"
+                                           FontSize="9"
+                                           FontFamily="PJSB"
+                                           TextColor="{StaticResource DgGreenText3}"
+                                           VerticalOptions="Center" />
+                                    <!-- SUB 开关：本轮只做视觉，不接协议 -->
+                                    <local:ToggleSwitch Grid.Column="1"
+                                                        WidthRequest="30"
+                                                        HeightRequest="18"
+                                                        IsOn="True"
+                                                        HorizontalOptions="End"
+                                                        VerticalOptions="Center" />
+                                </Grid>
+
+                                <Label Grid.Row="1"
+                                       Text="{Binding Name}"
+                                       FontSize="12"
+                                       FontFamily="PJSSB"
+                                       TextColor="{StaticResource DgTitleAlt}"
+                                       VerticalOptions="Center"
+                                       LineBreakMode="TailTruncation" />
+
+                                <Grid Grid.Row="2" ColumnDefinitions="8,4,Auto" ColumnSpacing="0">
+                                    <Ellipse Grid.Column="0"
+                                             WidthRequest="8" HeightRequest="8"
+                                             Fill="{Binding StatusColor}"
+                                             VerticalOptions="Center" />
+                                    <Label Grid.Column="2"
+                                           Text="{Binding StatusText}"
+                                           FontSize="10"
+                                           FontFamily="PJSSB"
+                                           TextColor="{Binding StatusColor}"
+                                           VerticalOptions="Center" />
+                                </Grid>
+
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+
+        <!-- ========== 空态：没有在线网关 ========== -->
+        <ScrollView x:Name="EmptyView" IsVisible="True">
+            <VerticalStackLayout Padding="17,27,16,137" Spacing="0">
+
+                <Label Text="Devices"
+                       FontSize="30"
+                       FontFamily="PJSB"
+                       TextColor="{StaticResource DgTitle}"
+                       Margin="9,0,0,0" />
+                <Label Text="Manage your connected home"
+                       FontSize="14"
+                       FontFamily="PJS"
+                       TextColor="{StaticResource DgSub2}"
+                       Margin="10,5,0,0" />
+
+                <!-- 插画卡片 · 339x338 · r20（插画为 Figma 导出图；标题/副标题仍用 XAML 渲染） -->
+                <Border BackgroundColor="{StaticResource DgCard}"
+                        Stroke="White"
+                        StrokeThickness="1"
+                        HeightRequest="338"
+                        Margin="1,33,0,0"
+                        Padding="0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="20" />
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#263830" Offset="0,10" Radius="24" Opacity="0.04" />
+                    </Border.Shadow>
+
+                    <VerticalStackLayout Spacing="0">
+                        <Image Source="empty_gateway.png"
+                               HeightRequest="205"
+                               Aspect="AspectFit"
+                               HorizontalOptions="Fill" />
+                        <Label Text="No devices yet"
+                               FontSize="23"
+                               FontFamily="PJSB"
+                               TextColor="{StaticResource DgTitle}"
+                               HorizontalOptions="Center"
+                               Margin="0,8,0,0" />
+                        <Label Text="Connect a gateway and bring your home online."
+                               FontSize="12"
+                               FontFamily="PJS"
+                               TextColor="{StaticResource DgSub2}"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               Margin="0,8,0,0" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Scan with Bluetooth · 285x48 · r24 -->
+                <Border BackgroundColor="{StaticResource DgGreenScan}"
+                        x:Name="ScanBtnEmpty"
+                        Stroke="White"
+                        StrokeThickness="1"
+                        WidthRequest="285"
+                        HeightRequest="48"
+                        HorizontalOptions="Center"
+                        Margin="0,16,0,0">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="24" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnScanTapped" />
+                    </Border.GestureRecognizers>
+                    <Grid ColumnDefinitions="12,11,Auto" ColumnSpacing="0"
+                          HorizontalOptions="Center">
+                        <Image Grid.Column="0" Source="ic_bluetooth.png"
+                               WidthRequest="12" HeightRequest="19"
+                               VerticalOptions="Center" />
+                        <Label Grid.Column="2" Text="Scan with Bluetooth"
+                               FontSize="13"
+                               FontFamily="PJSSB"
+                               TextColor="White"
+                               VerticalOptions="Center" />
+                    </Grid>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- 自绘底部导航（设计稿 Frame 52） -->
+        <local:AppTabBar x:Name="TabBar" />
+
+        <!-- 新手引导 第2步 · Figma Onboarding 2（空态高亮 Scan 按钮） -->
+        <local:CoachMark x:Name="Guide2"
+                         Step="2" CardY="168"
+                         Title="Connect your gateway"
+                         Description="Scan for BoxArborMG devices. Enable Bluetooth and allow required access."
+                         ActionText="Next"
+                         Illustration="guide2.png"
+                         SpotOffsetX="-5" SpotOffsetY="-6"
+                         SpotWidth="295" SpotHeight="60" />
+
+        <!-- 新手引导 第3步 · Figma Onboarding 3（网格高亮第一张网关卡） -->
+        <local:CoachMark x:Name="Guide3"
+                         Step="3" CardY="340"
+                         Title="Open a gateway"
+                         Description="Tap any gateway card to configure the Boxes connected to it."
+                         ActionText="Next"
+                         Illustration="guide3.png"
+                         SpotOffsetX="-8" SpotOffsetY="1"
+                         SpotWidth="121" SpotHeight="133" />
+
+        <!-- ========== 蓝牙设备选择弹窗 · Figma 191:240 ========== -->
+        <Grid x:Name="PickerOverlay" IsVisible="False">
+            <BoxView Color="{StaticResource DgBackdrop}" Opacity="0.72">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnPickerBackdrop" />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Border BackgroundColor="{StaticResource DgPickerBg}"
+                    Stroke="White"
+                    StrokeThickness="1"
+                    HeightRequest="478"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Center"
+                    Margin="20,0"
+                    Padding="21,25,21,21">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="28" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="0">
+                    <Label Text="Bluetooth devices"
+                           FontSize="22"
+                           FontFamily="PJSB"
+                           TextColor="{StaticResource DgPickerTitle}" />
+                    <Label Text="Select a nearby BoxArborMG device."
+                           FontSize="12"
+                           FontFamily="PJSSB"
+                           TextColor="{StaticResource DgPickerSub}"
+                           Margin="0,16,0,0" />
+
+                    <!-- 扫描中 -->
+                    <VerticalStackLayout x:Name="PickerScanning" Spacing="0"
+                                         IsVisible="True" HeightRequest="203" Margin="0,16,0,0">
+                        <Label Text="Searching nearby…"
+                               FontSize="19"
+                               FontFamily="PJSB"
+                               TextColor="{StaticResource DgPickerTitle}"
+                               Margin="0,58,0,0" />
+                        <Label Text="Keep your BoxArborMG device powered on and nearby."
+                               FontSize="13"
+                               FontFamily="PJSSB"
+                               TextColor="{StaticResource DgPickerSub}"
+                               Margin="0,12,0,0" />
+                    </VerticalStackLayout>
+
+                    <!-- 结果列表（ItemsSource 由代码绑定到 StartPage.Devices） -->
+                    <CollectionView x:Name="DeviceList"
+                                    IsVisible="False"
+                                    HeightRequest="203"
+                                    Margin="0,16,0,0">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid RowDefinitions="67,1" RowSpacing="0">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnDeviceRowTapped"
+                                                              CommandParameter="{Binding}" />
+                                    </Grid.GestureRecognizers>
+                                    <Grid Grid.Row="0" ColumnDefinitions="*" ColumnSpacing="0">
+                                        <VerticalStackLayout Grid.Column="0" Spacing="4"
+                                                             VerticalOptions="Center">
+                                            <Label Text="{Binding Name}"
+                                                   FontSize="15"
+                                                   FontFamily="PJSSB"
+                                                   TextColor="{StaticResource DgPickerTitle}"
+                                                   LineBreakMode="TailTruncation" />
+                                            <Label Text="{Binding RowHint}"
+                                                   FontSize="11"
+                                                   FontFamily="PJSSB"
+                                                   TextColor="{StaticResource DgPickerSub}" />
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                    <BoxView Grid.Row="1" HeightRequest="1"
+                                             BackgroundColor="{StaticResource DgDivider2}" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <!-- 扫描无结果 -->
+                    <VerticalStackLayout x:Name="PickerEmpty" Spacing="0"
+                                         IsVisible="False" HeightRequest="203" Margin="0,16,0,0">
+                        <Label Text="No devices found"
+                               FontSize="19"
+                               FontFamily="PJSB"
+                               TextColor="{StaticResource DgPickerTitle}"
+                               Margin="0,58,0,0" />
+                        <Label Text="Make sure your BoxArborMG device is powered on and nearby."
+                               FontSize="13"
+                               FontFamily="PJSSB"
+                               TextColor="{StaticResource DgPickerSub}"
+                               Margin="0,12,0,0" />
+                    </VerticalStackLayout>
+
+                    <!-- 连接中 · Figma 192:259 -->
+                    <VerticalStackLayout x:Name="PickerConnecting" Spacing="0"
+                                         IsVisible="False" HeightRequest="203" Margin="0,16,0,0">
+                        <Label Text="Connecting…"
+                               FontSize="19"
+                               FontFamily="PJSB"
+                               TextColor="{StaticResource DgPickerTitle}"
+                               Margin="0,58,0,0" />
+                        <Label Text="Connecting to the selected device. Keep the device nearby."
+                               FontSize="13"
+                               FontFamily="PJSSB"
+                               TextColor="{StaticResource DgPickerSub}"
+                               Margin="0,12,0,0" />
+                    </VerticalStackLayout>
+
+                    <!-- 连接失败 · Figma 192:385 -->
+                    <VerticalStackLayout x:Name="PickerFailure" Spacing="0"
+                                         IsVisible="False" HeightRequest="203" Margin="0,16,0,0">
+                        <Label Text="Unable to connect"
+                               FontSize="19"
+                               FontFamily="PJSB"
+                               TextColor="{StaticResource DgPickerTitle}"
+                               Margin="0,58,0,0" />
+                        <Label Text="Keep the device nearby and powered on, then try again."
+                               FontSize="13"
+                               FontFamily="PJSSB"
+                               TextColor="{StaticResource DgPickerSub}"
+                               Margin="0,12,0,0" />
+                    </VerticalStackLayout>
+
+                    <!-- 连接成功 · Figma 193:316 -->
+                    <VerticalStackLayout x:Name="PickerConnected" Spacing="0"
+                                         IsVisible="False" HeightRequest="203" Margin="0,16,0,0">
+                        <Label Text="Connected"
+                               FontSize="19"
+                               FontFamily="PJSB"
+                               TextColor="{StaticResource DgPickerTitle}"
+                               Margin="0,58,0,0" />
+                        <Label Text="Gateway connected successfully."
+                               FontSize="13"
+                               FontFamily="PJSSB"
+                               TextColor="{StaticResource DgPickerSub}"
+                               Margin="0,12,0,0" />
+                    </VerticalStackLayout>
+
+                    <Label x:Name="FoundLabel"
+                           Text=""
+                           FontSize="11"
+                           FontFamily="PJSSB"
+                           TextColor="{StaticResource DgPickerSub}"
+                           Margin="0,16,0,0" />
+
+                    <!-- Scan again / Scanning… -->
+                    <Border x:Name="ScanAgainBtn"
+                            BackgroundColor="{StaticResource DgGreenBtn}"
+                            StrokeThickness="0"
+                            HeightRequest="46"
+                            Margin="0,16,0,0"
+                            Opacity="0.45">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="14" />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnScanAgainTapped" />
+                        </Border.GestureRecognizers>
+                        <Label x:Name="ScanAgainLabel"
+                               Text="Scanning…"
+                               FontSize="14"
+                               FontFamily="PJSSB"
+                               TextColor="White"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+
+                    <!-- Cancel / Done（连接成功后变为 Done） -->
+                    <Border x:Name="CancelBtn"
+                            BackgroundColor="{StaticResource DgPickerCancelBg}"
+                            StrokeThickness="0"
+                            HeightRequest="46"
+                            Margin="0,16,0,0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="14" />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnPickerCancel" />
+                        </Border.GestureRecognizers>
+                        <Label x:Name="CancelLabel"
+                               Text="Cancel"
+                               FontSize="14"
+                               FontFamily="PJSSB"
+                               TextColor="{StaticResource DgPickerCancelText}"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+
+    </Grid>
+</ContentPage>

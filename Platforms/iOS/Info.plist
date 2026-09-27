@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>1</integer>
+		<integer>2</integer>
+	</array>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>XSAppIconAssets</key>
+	<string>Assets.xcassets/appicon.appiconset</string>
+	<!-- 蓝牙权限声明 - iOS 13+ 必需 -->
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>此应用需要使用蓝牙连接设备并进行数据通信</string>
+	<!-- 蓝牙外围设备权限 -->
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>此应用需要连接蓝牙设备以传输数据</string>
+	<!-- 后台蓝牙模式 - 如需后台扫描和连接 -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>bluetooth-central</string>
+		<string>fetch</string>
+		<string>processing</string>
+	</array>
+	<!-- WiFi 局域网网络权限 - iOS 14+ 必需 -->
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>此应用需要访问局域网以连接WiFi设备进行TCP通信</string>
+	<!-- Bonjour 服务发现权限 -->
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_tcp._local</string>
+	</array>
+</dict>
+</plist>

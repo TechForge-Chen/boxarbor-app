@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 设计稿 Toggle：圆角胶囊 + 白色滑块。三处尺寸不同（47x26 设置页 / 53x26 总开关 / 30x18 灯卡），
+     由使用处用 WidthRequest/HeightRequest 指定，圆角与滑块内边距按实际高度算。
+     不用 MAUI Switch：平台原生 Switch 尺寸不可控，30x18 这档放不下。 -->
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BluetoothMauiApp.ToggleSwitch"
+             BackgroundColor="Transparent">
+    <Border x:Name="Track"
+            StrokeThickness="0"
+            BackgroundColor="{StaticResource DgSwitchOff}"
+            InputTransparent="False">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="13" />
+        </Border.StrokeShape>
+        <Border.GestureRecognizers>
+            <TapGestureRecognizer Tapped="OnTapped" />
+        </Border.GestureRecognizers>
+
+        <Grid x:Name="KnobHost" Padding="2" HorizontalOptions="Fill" VerticalOptions="Fill">
+            <Ellipse x:Name="Knob"
+                     WidthRequest="22"
+                     HeightRequest="22"
+                     HorizontalOptions="Start"
+                     VerticalOptions="Center"
+                     Fill="White" />
+        </Grid>
+    </Border>
+</ContentView>

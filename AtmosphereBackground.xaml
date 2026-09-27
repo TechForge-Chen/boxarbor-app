@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 页面氛围底：设计稿 0922画板 的三团 LAYER_BLUR 色晕，直接从 Figma 导出 PNG（模糊已烘焙），
+     不再用 RadialGradient 近似。位置/尺寸 = 设计稿坐标（未裁剪的 render bounds）：
+       topleft 67:1217  椭圆(-130,-80) blur85  -> 图 590x570 放在 (-215,-165)
+       right   67:1216  椭圆(150,40)  blur100 -> 图 550x730 放在 (50,-60)
+       bottom  67:1215  椭圆(-70,530) blur100 -> 图 600x530 放在 (-170,430)
+     用 TranslationX/Y 定位，不参与布局，父级不裁剪时由窗口边界裁掉（与设计稿一致）。 -->
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BluetoothMauiApp.AtmosphereBackground"
+             HorizontalOptions="Fill"
+             VerticalOptions="Fill"
+             InputTransparent="true">
+    <Grid BackgroundColor="{StaticResource DgAtmosBase}">
+
+        <!-- Atmosphere / diffuse tint · 左上绿 -->
+        <Image Source="atmos_topleft.png"
+               WidthRequest="590" HeightRequest="570"
+               Aspect="Fill"
+               HorizontalOptions="Start" VerticalOptions="Start"
+               TranslationX="-215" TranslationY="-165"
+               InputTransparent="true" />
+
+        <!-- Atmosphere / diffuse tint · 右侧蓝 -->
+        <Image Source="atmos_right.png"
+               WidthRequest="550" HeightRequest="730"
+               Aspect="Fill"
+               HorizontalOptions="Start" VerticalOptions="Start"
+               TranslationX="50" TranslationY="-60"
+               InputTransparent="true" />
+
+        <!-- Atmosphere / diffuse tint · 下方绿 -->
+        <Image Source="atmos_bottom.png"
+               WidthRequest="600" HeightRequest="530"
+               Aspect="Fill"
+               HorizontalOptions="Start" VerticalOptions="Start"
+               TranslationX="-170" TranslationY="430"
+               InputTransparent="true" />
+
+    </Grid>
+</ContentView>

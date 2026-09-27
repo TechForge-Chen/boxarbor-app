@@ -1,0 +1,24 @@
+{
+  "profiles": {
+    "Windows Machine": {
+      "commandName": "MsixPackage",
+      "nativeDebugging": false
+    },
+    "Android Emulator": {
+      "commandName": "AndroidEmulator",
+      "deviceName": "pixel_5_-_api_34"
+    },
+    "Android Device": {
+      "commandName": "AndroidDevice",
+      "deviceName": ""
+    },
+    "iOS Simulator": {
+      "commandName": "iOSSimulator",
+      "deviceName": "iPhone 16 Pro Max"
+    },
+    "iOS Device": {
+      "commandName": "iOSDevice",
+      "deviceName": ""
+    }
+  }
+}

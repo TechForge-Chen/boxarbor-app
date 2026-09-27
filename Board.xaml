@@ -1,0 +1,667 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- 设计稿 Figma 76:321 "Gateway 1 · Lighting settings"（375x812）
+     左侧 Box 选择轨 45 宽 / 右侧灯卡 283 宽，与设计稿一致。
+     设计稿未画出 Scene、Status、Board Count、Strip 这些协议必需控件，
+     本轮按设计稿的卡片样式补在 Save to scene 下方，功能保持不变。
+     仅亮色。 -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:BluetoothMauiApp"
+             x:Class="BluetoothMauiApp.Board"
+             Title="Gateway"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
+
+    <Grid>
+        <local:AtmosphereBackground />
+
+        <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
+
+            <!-- ===== 页头：返回 / 标题 / 重命名 ===== -->
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Padding="20,26,20,0">
+                <HorizontalStackLayout Grid.Column="0" Spacing="21">
+                    <Label Text="‹"
+                           FontSize="27"
+                           FontFamily="PJSM"
+                           TextColor="{StaticResource DgTitleAlt}"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackTapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label x:Name="LabCurrentNet"
+                           Text="Gateway 1"
+                           FontSize="23"
+                           FontFamily="PJSB"
+                           TextColor="{StaticResource DgTitleAlt}"
+                           LineBreakMode="NoWrap"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+
+                <!-- 重命名当前网关 -->
+                <Image Grid.Column="2"
+                       Source="ic_edit.png"
+                       WidthRequest="24" HeightRequest="24"
+                       VerticalOptions="Center">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnGatewayRename" />
+                    </Image.GestureRecognizers>
+                </Image>
+            </Grid>
+
+            <Label Grid.Row="1"
+                   Text="Lighting settings"
+                   FontSize="12"
+                   FontFamily="PJSM"
+                   TextColor="{StaticResource DgLabel2}"
+                   Margin="20,4,0,0" />
+
+            <!-- ===== Save to scene · 339x45 · r18 ===== -->
+            <Border Grid.Row="2"
+                    BackgroundColor="{StaticResource DgGreenBtn}"
+                    Stroke="White"
+                    StrokeThickness="1"
+                    HeightRequest="45"
+                    Margin="18,24,18,0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="18" />
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSaveToScene" />
+                </Border.GestureRecognizers>
+                <Label Text="Save to scene"
+                       FontSize="14"
+                       FontFamily="PJSSB"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </Border>
+
+            <!-- ===== 协议必需控件（设计稿未画，按同一卡片风格补） ===== -->
+            <Border Grid.Row="3"
+                    BackgroundColor="{StaticResource DgCard}"
+                    Stroke="White"
+                    StrokeThickness="1"
+                    Margin="18,12,18,0"
+                    Padding="14,10,14,10">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="18" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="8">
+                    <Grid ColumnDefinitions="76,*,84" ColumnSpacing="8">
+                        <Label Grid.Column="0" Text="Scene"
+                               FontSize="12"
+                               FontFamily="PJSSB"
+                               TextColor="{StaticResource DgLabel}"
+                               VerticalOptions="Center" />
+                        <Picker Grid.Column="1"
+                                x:Name="ModePicker"
+                                Title="Scene"
+                                FontSize="14"
+                                BackgroundColor="Transparent"
+                                TextColor="{StaticResource DgTitleAlt}"
+                                SelectedIndexChanged="ModePicker_SelectedIndexChanged" />
+                        <!-- Status = 主动回查设备当前参数 -->
+                        <Border Grid.Column="2"
+                                BackgroundColor="{StaticResource DgGreenBtn}"
+                                StrokeThickness="0"
+                                HeightRequest="36">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnButtonSearch_Clicked" />
+                            </Border.GestureRecognizers>
+                            <Label Text="Status"
+                                   FontSize="12"
+                                   FontFamily="PJSSB"
+                                   TextColor="White"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
+                        </Border>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="76,*" ColumnSpacing="8">
+                        <Label Grid.Column="0" Text="Board Count"
+                               FontSize="12"
+                               FontFamily="PJSSB"
+                               TextColor="{StaticResource DgLabel}"
+                               VerticalOptions="Center" />
+                        <Border Grid.Column="1"
+                                BackgroundColor="{StaticResource DgIconBg}"
+                                StrokeThickness="0"
+                                HeightRequest="36">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+                            <Entry x:Name="DBTNum"
+                                   MinimumHeightRequest="0"
+                                   Text="10"
+                                   FontSize="14"
+                                   FontFamily="PJSM"
+                                   BackgroundColor="Transparent"
+                                   TextColor="{StaticResource DgTitleAlt}"
+                                   Placeholder="Enter quantity"
+                                   Keyboard="Numeric"
+                                   Unfocused="DBTNum_Unfocused"
+                                   Completed="DBTNum_Completed" />
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ===== 左：Box 选择轨 · 右：灯控卡 ===== -->
+            <Grid Grid.Row="4" ColumnDefinitions="45,11,*" Margin="18,16,18,16">
+
+                <ScrollView Grid.Column="0" VerticalScrollBarVisibility="Default">
+                    <VerticalStackLayout Spacing="8"
+                                         BackgroundColor="{StaticResource DgCard}"
+                                         x:Name="GateListLayout"
+                                         VerticalOptions="Start" />
+                </ScrollView>
+
+                <ScrollView Grid.Column="2">
+                    <VerticalStackLayout Spacing="12">
+
+                        <!-- Monochrome light 1 -->
+                        <Border BackgroundColor="{StaticResource DgCard}"
+                                Stroke="White"
+                                StrokeThickness="1"
+                                Padding="14,13,14,21">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="18" />
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="0">
+                                <Grid ColumnDefinitions="*,30" ColumnSpacing="0" HeightRequest="18">
+                                    <Label Grid.Column="0" Text="Monochrome light 1"
+                                           FontSize="13"
+                                           FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgTitleAlt}"
+                                           VerticalOptions="Center" />
+                                    <!-- 独立开关：设计稿有，协议无对应字段，仅视觉 -->
+                                    <local:ToggleSwitch Grid.Column="1"
+                                                        WidthRequest="30" HeightRequest="18"
+                                                        IsOn="True"
+                                                        HorizontalOptions="End"
+                                                        VerticalOptions="Center" />
+                                </Grid>
+
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,23,0,0">
+                                    <Label Text="Frequency" FontSize="11" FontFamily="PJSM"
+                                           TextColor="{StaticResource DgLabel}" />
+                                    <Label x:Name="HzVal1" Grid.Column="1" Text="0%"
+                                           FontSize="10" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgGreenText2}" />
+                                </Grid>
+                                <Slider x:Name="DSHzSet1" Minimum="0" Maximum="100"
+                                        MinimumTrackColor="{StaticResource DgGreenBtn}"
+                                        MaximumTrackColor="{StaticResource DgTrack}"
+                                        ThumbColor="{StaticResource DgGreenBtn}"
+                                        HeightRequest="30"
+                                        ValueChanged="OnSliderValueChanged"
+                                        DragCompleted="MySlider_DragCompleted" />
+
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,6,0,0">
+                                    <Label Text="Brightness" FontSize="11" FontFamily="PJSM"
+                                           TextColor="{StaticResource DgLabel}" />
+                                    <Label x:Name="BrVal1" Grid.Column="1" Text="0%"
+                                           FontSize="10" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgGreenText2}" />
+                                </Grid>
+                                <Slider x:Name="DSBrightSet1" Minimum="0" Maximum="100"
+                                        MinimumTrackColor="{StaticResource DgGreenBtn}"
+                                        MaximumTrackColor="{StaticResource DgTrack}"
+                                        ThumbColor="{StaticResource DgGreenBtn}"
+                                        HeightRequest="30"
+                                        ValueChanged="OnSliderValueChanged"
+                                        DragCompleted="MySlider_DragCompleted" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Monochrome light 2 -->
+                        <Border BackgroundColor="{StaticResource DgCard}"
+                                Stroke="White"
+                                StrokeThickness="1"
+                                Padding="14,13,14,21">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="18" />
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="0">
+                                <Grid ColumnDefinitions="*,30" ColumnSpacing="0" HeightRequest="18">
+                                    <Label Grid.Column="0" Text="Monochrome light 2"
+                                           FontSize="13"
+                                           FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgTitleAlt}"
+                                           VerticalOptions="Center" />
+                                    <local:ToggleSwitch Grid.Column="1"
+                                                        WidthRequest="30" HeightRequest="18"
+                                                        IsOn="True"
+                                                        HorizontalOptions="End"
+                                                        VerticalOptions="Center" />
+                                </Grid>
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,23,0,0">
+                                    <Label Text="Frequency" FontSize="11" FontFamily="PJSM"
+                                           TextColor="{StaticResource DgLabel}" />
+                                    <Label x:Name="HzVal2" Grid.Column="1" Text="0%"
+                                           FontSize="10" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgGreenText2}" />
+                                </Grid>
+                                <Slider x:Name="DSHzSet2" Minimum="0" Maximum="100"
+                                        MinimumTrackColor="{StaticResource DgGreenBtn}"
+                                        MaximumTrackColor="{StaticResource DgTrack}"
+                                        ThumbColor="{StaticResource DgGreenBtn}"
+                                        HeightRequest="30"
+                                        ValueChanged="OnSliderValueChanged"
+                                        DragCompleted="MySlider_DragCompleted" />
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,6,0,0">
+                                    <Label Text="Brightness" FontSize="11" FontFamily="PJSM"
+                                           TextColor="{StaticResource DgLabel}" />
+                                    <Label x:Name="BrVal2" Grid.Column="1" Text="0%"
+                                           FontSize="10" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgGreenText2}" />
+                                </Grid>
+                                <Slider x:Name="DSBrightSet2" Minimum="0" Maximum="100"
+                                        MinimumTrackColor="{StaticResource DgGreenBtn}"
+                                        MaximumTrackColor="{StaticResource DgTrack}"
+                                        ThumbColor="{StaticResource DgGreenBtn}"
+                                        HeightRequest="30"
+                                        ValueChanged="OnSliderValueChanged"
+                                        DragCompleted="MySlider_DragCompleted" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Monochrome light 3 -->
+                        <Border BackgroundColor="{StaticResource DgCard}"
+                                Stroke="White"
+                                StrokeThickness="1"
+                                Padding="14,13,14,21">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="18" />
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="0">
+                                <Grid ColumnDefinitions="*,30" ColumnSpacing="0" HeightRequest="18">
+                                    <Label Grid.Column="0" Text="Monochrome light 3"
+                                           FontSize="13"
+                                           FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgTitleAlt}"
+                                           VerticalOptions="Center" />
+                                    <local:ToggleSwitch Grid.Column="1"
+                                                        WidthRequest="30" HeightRequest="18"
+                                                        IsOn="True"
+                                                        HorizontalOptions="End"
+                                                        VerticalOptions="Center" />
+                                </Grid>
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,23,0,0">
+                                    <Label Text="Frequency" FontSize="11" FontFamily="PJSM"
+                                           TextColor="{StaticResource DgLabel}" />
+                                    <Label x:Name="HzVal3" Grid.Column="1" Text="0%"
+                                           FontSize="10" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgGreenText2}" />
+                                </Grid>
+                                <Slider x:Name="DSHzSet3" Minimum="0" Maximum="100"
+                                        MinimumTrackColor="{StaticResource DgGreenBtn}"
+                                        MaximumTrackColor="{StaticResource DgTrack}"
+                                        ThumbColor="{StaticResource DgGreenBtn}"
+                                        HeightRequest="30"
+                                        ValueChanged="OnSliderValueChanged"
+                                        DragCompleted="MySlider_DragCompleted" />
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,6,0,0">
+                                    <Label Text="Brightness" FontSize="11" FontFamily="PJSM"
+                                           TextColor="{StaticResource DgLabel}" />
+                                    <Label x:Name="BrVal3" Grid.Column="1" Text="0%"
+                                           FontSize="10" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgGreenText2}" />
+                                </Grid>
+                                <Slider x:Name="DSBrightSet3" Minimum="0" Maximum="100"
+                                        MinimumTrackColor="{StaticResource DgGreenBtn}"
+                                        MaximumTrackColor="{StaticResource DgTrack}"
+                                        ThumbColor="{StaticResource DgGreenBtn}"
+                                        HeightRequest="30"
+                                        ValueChanged="OnSliderValueChanged"
+                                        DragCompleted="MySlider_DragCompleted" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Strip 1 · 设计稿未画，协议需要 LED 数量/颜色，按同一卡片样式补 -->
+                        <Border BackgroundColor="{StaticResource DgCard}"
+                                Stroke="White"
+                                StrokeThickness="1"
+                                Padding="14,13,14,21">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="18" />
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="0">
+                                <Label Text="Strip 1" FontSize="13" FontFamily="PJSSB"
+                                       TextColor="{StaticResource DgTitleAlt}" HeightRequest="18" />
+
+                                <Grid ColumnDefinitions="*,120" ColumnSpacing="8" Margin="0,14,0,0">
+                                    <Label Text="LED Count" FontSize="11" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgLabel}" VerticalOptions="Center" />
+                                    <Border Grid.Column="1" BackgroundColor="{StaticResource DgIconBg}"
+                                            StrokeThickness="0" HeightRequest="32">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="10" />
+                                        </Border.StrokeShape>
+                                        <Entry x:Name="DDNum1" MinimumHeightRequest="0" Text="10" FontSize="14"
+                                               Keyboard="Numeric"
+                                               BackgroundColor="Transparent"
+                                               TextColor="{StaticResource DgTitleAlt}"
+                                               Placeholder="Enter quantity"
+                                               Unfocused="MyEntry_Unfocused" />
+                                    </Border>
+                                </Grid>
+
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,14,0,0">
+                                    <Label Text="Frequency" FontSize="11" FontFamily="PJSM"
+                                           TextColor="{StaticResource DgLabel}" />
+                                    <Label x:Name="DDHzVal1" Grid.Column="1" Text="0%"
+                                           FontSize="10" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgGreenText2}" />
+                                </Grid>
+                                <Slider x:Name="DDHzSet1" Minimum="0" Maximum="100"
+                                        MinimumTrackColor="{StaticResource DgGreenBtn}"
+                                        MaximumTrackColor="{StaticResource DgTrack}"
+                                        ThumbColor="{StaticResource DgGreenBtn}"
+                                        HeightRequest="30"
+                                        ValueChanged="OnSliderValueChanged"
+                                        DragCompleted="MySlider_DragCompleted" />
+
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,6,0,0">
+                                    <Label Text="Brightness" FontSize="11" FontFamily="PJSM"
+                                           TextColor="{StaticResource DgLabel}" />
+                                    <Label x:Name="DDBrVal1" Grid.Column="1" Text="0%"
+                                           FontSize="10" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgGreenText2}" />
+                                </Grid>
+                                <Slider x:Name="DDBrightSet1" Minimum="0" Maximum="100"
+                                        MinimumTrackColor="{StaticResource DgGreenBtn}"
+                                        MaximumTrackColor="{StaticResource DgTrack}"
+                                        ThumbColor="{StaticResource DgGreenBtn}"
+                                        HeightRequest="30"
+                                        ValueChanged="OnSliderValueChanged"
+                                        DragCompleted="MySlider_DragCompleted" />
+
+                                <Grid ColumnDefinitions="*,120" ColumnSpacing="8" Margin="0,14,0,0">
+                                    <Label Text="Color" FontSize="11" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgLabel}" VerticalOptions="Center" />
+                                    <Picker Grid.Column="1"
+                                            x:Name="DDColorPicker1"
+                                            Title="Select color"
+                                            FontSize="13"
+                                            BackgroundColor="{StaticResource DgIconBg}"
+                                            TextColor="{StaticResource DgTitleAlt}"
+                                            SelectedIndexChanged="ColorPicker_SelectedIndexChanged" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Strip 2 -->
+                        <Border BackgroundColor="{StaticResource DgCard}"
+                                Stroke="White"
+                                StrokeThickness="1"
+                                Padding="14,13,14,21">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="18" />
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="0">
+                                <Label Text="Strip 2" FontSize="13" FontFamily="PJSSB"
+                                       TextColor="{StaticResource DgTitleAlt}" HeightRequest="18" />
+                                <Grid ColumnDefinitions="*,120" ColumnSpacing="8" Margin="0,14,0,0">
+                                    <Label Text="LED Count" FontSize="11" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgLabel}" VerticalOptions="Center" />
+                                    <Border Grid.Column="1" BackgroundColor="{StaticResource DgIconBg}"
+                                            StrokeThickness="0" HeightRequest="32">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="10" />
+                                        </Border.StrokeShape>
+                                        <Entry x:Name="DDNum2" MinimumHeightRequest="0" Text="10" FontSize="14"
+                                               Keyboard="Numeric"
+                                               BackgroundColor="Transparent"
+                                               TextColor="{StaticResource DgTitleAlt}"
+                                               Placeholder="Enter quantity"
+                                               Unfocused="MyEntry_Unfocused" />
+                                    </Border>
+                                </Grid>
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,14,0,0">
+                                    <Label Text="Frequency" FontSize="11" FontFamily="PJSM"
+                                           TextColor="{StaticResource DgLabel}" />
+                                    <Label x:Name="DDHzVal2" Grid.Column="1" Text="0%"
+                                           FontSize="10" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgGreenText2}" />
+                                </Grid>
+                                <Slider x:Name="DDHzSet2" Minimum="0" Maximum="100"
+                                        MinimumTrackColor="{StaticResource DgGreenBtn}"
+                                        MaximumTrackColor="{StaticResource DgTrack}"
+                                        ThumbColor="{StaticResource DgGreenBtn}"
+                                        HeightRequest="30"
+                                        ValueChanged="OnSliderValueChanged"
+                                        DragCompleted="MySlider_DragCompleted" />
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,6,0,0">
+                                    <Label Text="Brightness" FontSize="11" FontFamily="PJSM"
+                                           TextColor="{StaticResource DgLabel}" />
+                                    <Label x:Name="DDBrVal2" Grid.Column="1" Text="0%"
+                                           FontSize="10" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgGreenText2}" />
+                                </Grid>
+                                <Slider x:Name="DDBrightSet2" Minimum="0" Maximum="100"
+                                        MinimumTrackColor="{StaticResource DgGreenBtn}"
+                                        MaximumTrackColor="{StaticResource DgTrack}"
+                                        ThumbColor="{StaticResource DgGreenBtn}"
+                                        HeightRequest="30"
+                                        ValueChanged="OnSliderValueChanged"
+                                        DragCompleted="MySlider_DragCompleted" />
+                                <Grid ColumnDefinitions="*,120" ColumnSpacing="8" Margin="0,14,0,0">
+                                    <Label Text="Color" FontSize="11" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgLabel}" VerticalOptions="Center" />
+                                    <Picker Grid.Column="1"
+                                            x:Name="DDColorPicker2"
+                                            Title="Select color"
+                                            FontSize="13"
+                                            BackgroundColor="{StaticResource DgIconBg}"
+                                            TextColor="{StaticResource DgTitleAlt}"
+                                            SelectedIndexChanged="ColorPicker_SelectedIndexChanged" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <!-- Strip 3 -->
+                        <Border BackgroundColor="{StaticResource DgCard}"
+                                Stroke="White"
+                                StrokeThickness="1"
+                                Padding="14,13,14,21">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="18" />
+                            </Border.StrokeShape>
+                            <VerticalStackLayout Spacing="0">
+                                <Label Text="Strip 3" FontSize="13" FontFamily="PJSSB"
+                                       TextColor="{StaticResource DgTitleAlt}" HeightRequest="18" />
+                                <Grid ColumnDefinitions="*,120" ColumnSpacing="8" Margin="0,14,0,0">
+                                    <Label Text="LED Count" FontSize="11" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgLabel}" VerticalOptions="Center" />
+                                    <Border Grid.Column="1" BackgroundColor="{StaticResource DgIconBg}"
+                                            StrokeThickness="0" HeightRequest="32">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="10" />
+                                        </Border.StrokeShape>
+                                        <Entry x:Name="DDNum3" MinimumHeightRequest="0" Text="10" FontSize="14"
+                                               Keyboard="Numeric"
+                                               BackgroundColor="Transparent"
+                                               TextColor="{StaticResource DgTitleAlt}"
+                                               Placeholder="Enter quantity"
+                                               Unfocused="MyEntry_Unfocused" />
+                                    </Border>
+                                </Grid>
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,14,0,0">
+                                    <Label Text="Frequency" FontSize="11" FontFamily="PJSM"
+                                           TextColor="{StaticResource DgLabel}" />
+                                    <Label x:Name="DDHzVal3" Grid.Column="1" Text="0%"
+                                           FontSize="10" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgGreenText2}" />
+                                </Grid>
+                                <Slider x:Name="DDHzSet3" Minimum="0" Maximum="100"
+                                        MinimumTrackColor="{StaticResource DgGreenBtn}"
+                                        MaximumTrackColor="{StaticResource DgTrack}"
+                                        ThumbColor="{StaticResource DgGreenBtn}"
+                                        HeightRequest="30"
+                                        ValueChanged="OnSliderValueChanged"
+                                        DragCompleted="MySlider_DragCompleted" />
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,6,0,0">
+                                    <Label Text="Brightness" FontSize="11" FontFamily="PJSM"
+                                           TextColor="{StaticResource DgLabel}" />
+                                    <Label x:Name="DDBrVal3" Grid.Column="1" Text="0%"
+                                           FontSize="10" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgGreenText2}" />
+                                </Grid>
+                                <Slider x:Name="DDBrightSet3" Minimum="0" Maximum="100"
+                                        MinimumTrackColor="{StaticResource DgGreenBtn}"
+                                        MaximumTrackColor="{StaticResource DgTrack}"
+                                        ThumbColor="{StaticResource DgGreenBtn}"
+                                        HeightRequest="30"
+                                        ValueChanged="OnSliderValueChanged"
+                                        DragCompleted="MySlider_DragCompleted" />
+                                <Grid ColumnDefinitions="*,120" ColumnSpacing="8" Margin="0,14,0,0">
+                                    <Label Text="Color" FontSize="11" FontFamily="PJSSB"
+                                           TextColor="{StaticResource DgLabel}" VerticalOptions="Center" />
+                                    <Picker Grid.Column="1"
+                                            x:Name="DDColorPicker3"
+                                            Title="Select color"
+                                            FontSize="13"
+                                            BackgroundColor="{StaticResource DgIconBg}"
+                                            TextColor="{StaticResource DgTitleAlt}"
+                                            SelectedIndexChanged="ColorPicker_SelectedIndexChanged" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+
+                    </VerticalStackLayout>
+                </ScrollView>
+            </Grid>
+
+        </Grid>
+
+        <!-- 新手引导 第4步 · Figma Onboarding 4（高亮左侧 ＋ 添加 Box） -->
+        <local:CoachMark x:Name="Guide4"
+                         Step="4" CardY="306"
+                         Title="Add your first Box"
+                         Description="Tap + to add Boxes. Use the remote to assign their numbers in order, from bottom to top."
+                         ActionText="Start using"
+                         Illustration="guide4.png"
+                         SpotOffsetX="-7" SpotOffsetY="-8"
+                         SpotWidth="57" SpotHeight="55" />
+
+        <!-- Rename 弹窗（网关改名） -->
+        <local:RenameDialog x:Name="RenameDlg" />
+
+        <!-- ===== Save to scene 弹窗 · Figma 84:452 ===== -->
+        <Grid x:Name="SaveOverlay" IsVisible="False">
+            <BoxView Color="{StaticResource DgBackdrop}" Opacity="0.72">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSaveBackdrop" />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Border BackgroundColor="{StaticResource DgDialogBg2}"
+                    Stroke="White"
+                    StrokeThickness="1"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Center"
+                    Margin="20,0"
+                    Padding="21,25,21,25">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="26" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="0">
+                    <Label Text="Save to scene"
+                           FontSize="22"
+                           FontFamily="PJSM"
+                           TextColor="{StaticResource DgDialogText}" />
+                    <Label Text="Choose where to save these light settings."
+                           FontSize="12"
+                           FontFamily="PJSM"
+                           TextColor="{StaticResource DgDialogText}"
+                           Margin="0,16,0,0" />
+
+                    <VerticalStackLayout Spacing="8" Margin="0,16,0,0">
+                        <Border x:Name="SaveOpt1"
+                                BackgroundColor="{StaticResource DgGreenFaint}"
+                                Stroke="{StaticResource DgGreenBtn}"
+                                StrokeThickness="1"
+                                HeightRequest="54"
+                                Padding="17,18,18,18">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSaveScenePicked1" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="*,18" ColumnSpacing="0">
+                                <Label Grid.Column="0" Text="Scene 1"
+                                       FontSize="14" FontFamily="PJSM"
+                                       TextColor="{StaticResource DgDialogText}"
+                                       VerticalOptions="Center" />
+                                <Ellipse Grid.Column="1" x:Name="SaveDot1"
+                                         WidthRequest="18" HeightRequest="18"
+                                         Fill="{StaticResource DgGreenBtn}"
+                                         Stroke="#8cb09c" StrokeThickness="1"
+                                         VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
+
+                        <Border x:Name="SaveOpt2"
+                                BackgroundColor="White"
+                                Stroke="{StaticResource DgDialogBorder}"
+                                StrokeThickness="1"
+                                HeightRequest="54"
+                                Padding="17,18,18,18">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSaveScenePicked2" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="*,18" ColumnSpacing="0">
+                                <Label Grid.Column="0" Text="Scene 2"
+                                       FontSize="14" FontFamily="PJSM"
+                                       TextColor="{StaticResource DgDialogText}"
+                                       VerticalOptions="Center" />
+                                <Ellipse Grid.Column="1" x:Name="SaveDot2"
+                                         WidthRequest="18" HeightRequest="18"
+                                         Fill="White"
+                                         Stroke="#8cb09c" StrokeThickness="1"
+                                         VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
+
+                        <Border x:Name="SaveOpt3"
+                                BackgroundColor="White"
+                                Stroke="{StaticResource DgDialogBorder}"
+                                StrokeThickness="1"
+                                HeightRequest="54"
+                                Padding="17,18,18,18">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14" />
+                            </Border.StrokeShape>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSaveScenePicked3" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="*,18" ColumnSpacing="0">
+                                <Label Grid.Column="0" Text="Scene 3"
+                                       FontSize="14" FontFamily="PJSM"
+                                       TextColor="{StaticResource DgDialogText}"
+                                       VerticalOptions="Center" />
+                                <Ellipse Grid.Column="1" x:Name="SaveDot3"
+                                         WidthRequest="18" HeightRequest="18"
+                                         Fill="White"
+                                         Stroke="#8cb09c" StrokeThickness="1"
+                                         VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+
+    </Grid>
+</ContentPage>

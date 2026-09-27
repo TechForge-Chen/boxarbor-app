@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- 新手引导 coach-mark · Figma Onboarding 1~4（97:565 / 97:643 / 97:727 / 97:836）
+     结构：压暗层 #081a12@72%（4 个矩形围出聚光灯洞） + 引导卡 335x345 r24 #f7fcf9@95%。
+     卡内四步布局完全一致，只有卡片 Y、聚光灯位置、文案和插画不同：
+       进度行(N/4 徽标 + Skip) → 插画 299x100 → 标题 22/700 → 描述 13/400
+       → 4 个进度点(激活 18x6 胶囊) → Next 299x46 #12bd63 r15
+     字重：PJS=400 / PJSM=500 / PJSSB=600 / PJSB=700。 -->
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BluetoothMauiApp.CoachMark"
+             IsVisible="False"
+             HorizontalOptions="Fill"
+             VerticalOptions="Fill">
+
+    <Grid x:Name="Root">
+
+        <!-- 压暗层：4 块矩形，位置由代码按聚光灯矩形算出（留洞） -->
+        <BoxView x:Name="DimTop" Color="#081a12" Opacity="0.72"
+                 InputTransparent="False"
+                 HorizontalOptions="Start" VerticalOptions="Start" />
+        <BoxView x:Name="DimBottom" Color="#081a12" Opacity="0.72"
+                 InputTransparent="False"
+                 HorizontalOptions="Start" VerticalOptions="Start" />
+        <BoxView x:Name="DimLeft" Color="#081a12" Opacity="0.72"
+                 InputTransparent="False"
+                 HorizontalOptions="Start" VerticalOptions="Start" />
+        <BoxView x:Name="DimRight" Color="#081a12" Opacity="0.72"
+                 InputTransparent="False"
+                 HorizontalOptions="Start" VerticalOptions="Start" />
+
+        <!-- 引导卡 -->
+        <Border x:Name="Card"
+                BackgroundColor="#f7fcf9"
+                Opacity="0.95"
+                StrokeThickness="0"
+                HeightRequest="345"
+                HorizontalOptions="Fill"
+                VerticalOptions="Start"
+                Padding="19,21,17,19">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="24" />
+            </Border.StrokeShape>
+
+            <VerticalStackLayout Spacing="12">
+
+                <!-- 进度行 -->
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="0" HeightRequest="26">
+                    <Border Grid.Column="0"
+                            BackgroundColor="#ddf8e9"
+                            StrokeThickness="0"
+                            HeightRequest="26"
+                            Padding="10,0,8,0"
+                            VerticalOptions="Center">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="13" />
+                        </Border.StrokeShape>
+                        <Label x:Name="StepLabel"
+                               Text="1 / 4"
+                               FontSize="11"
+                               FontFamily="PJSSB"
+                               TextColor="#0a8f49"
+                               VerticalOptions="Center" />
+                    </Border>
+                    <Label Grid.Column="1"
+                           x:Name="SkipLabel"
+                           Text="Skip"
+                           FontSize="12"
+                           FontFamily="PJSM"
+                           TextColor="#64756c"
+                           HorizontalOptions="End"
+                           VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSkipTapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+
+                <!-- 插画 299x100 -->
+                <Image x:Name="IllustrationImg"
+                       Source="guide1.png"
+                       HeightRequest="100"
+                       Aspect="AspectFit"
+                       HorizontalOptions="Fill" />
+
+                <!-- 标题 -->
+                <Label x:Name="TitleLabel"
+                       Text="Open Devices"
+                       FontSize="22"
+                       FontFamily="PJSB"
+                       HeightRequest="25"
+                       TextColor="#10271d" />
+
+                <!-- 描述 -->
+                <Label x:Name="DescLabel"
+                       Text="Tap Devices below to view your gateways and connect a new one."
+                       FontSize="13"
+                       FontFamily="PJS"
+                       TextColor="#53675d"
+                       HeightRequest="42" />
+
+                <!-- 进度点：激活 18x6 胶囊，其余 6x6 -->
+                <HorizontalStackLayout x:Name="Dots" Spacing="6">
+                    <Border x:Name="Dot1" BackgroundColor="#16c66a" StrokeThickness="0"
+                            WidthRequest="18" HeightRequest="6">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="3" /></Border.StrokeShape>
+                    </Border>
+                    <Border x:Name="Dot2" BackgroundColor="#c6d5cd" StrokeThickness="0"
+                            WidthRequest="6" HeightRequest="6">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="3" /></Border.StrokeShape>
+                    </Border>
+                    <Border x:Name="Dot3" BackgroundColor="#c6d5cd" StrokeThickness="0"
+                            WidthRequest="6" HeightRequest="6">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="3" /></Border.StrokeShape>
+                    </Border>
+                    <Border x:Name="Dot4" BackgroundColor="#c6d5cd" StrokeThickness="0"
+                            WidthRequest="6" HeightRequest="6">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="3" /></Border.StrokeShape>
+                    </Border>
+                </HorizontalStackLayout>
+
+                <!-- Next / Start using -->
+                <Border x:Name="NextBtn"
+                        BackgroundColor="#12bd63"
+                        StrokeThickness="0"
+                        HeightRequest="46">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="15" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnNextTapped" />
+                    </Border.GestureRecognizers>
+                    <Label x:Name="NextLabel"
+                           Text="Next"
+                           FontSize="14"
+                           FontFamily="PJSSB"
+                           TextColor="White"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+
+            </VerticalStackLayout>
+        </Border>
+
+    </Grid>
+</ContentView>

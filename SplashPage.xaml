@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- 开屏页 · 设计稿 Figma 67:1289 "开屏页面"（375x812）
+     底色 #f2f9f4 + 三团 sage(#80b899) blur85 色晕 + 124x124 r34 毛玻璃 LOGO 方块
+     + slogan。色晕与 LOGO 方块都是从 Figma 导出的 PNG（模糊/投影已烘焙）。
+     系统启动屏（MauiSplashScreen）用同款底色 + LOGO 图，避免出现 MAUI 模板的紫色。 -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="BluetoothMauiApp.SplashPage"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="#f2f9f4">
+
+    <Grid>
+
+        <!-- Backdrop / diffused sage · 67:1292 框(130,190) blur85 -> (45,105) 500x550 -->
+        <Image Source="splash_topleft.png"
+               WidthRequest="500" HeightRequest="550"
+               Aspect="Fill"
+               HorizontalOptions="Start" VerticalOptions="Start"
+               TranslationX="45" TranslationY="105"
+               InputTransparent="true" />
+
+        <!-- Backdrop / diffused sage · 67:1291 框(-130,350) blur85 -> (-215,265) 500x500 -->
+        <Image Source="splash_left.png"
+               WidthRequest="500" HeightRequest="500"
+               Aspect="Fill"
+               HorizontalOptions="Start" VerticalOptions="Start"
+               TranslationX="-215" TranslationY="265"
+               InputTransparent="true" />
+
+        <!-- Backdrop / diffused sage · 67:1290 框(90,600) blur85 -> (5,515) 480x450 -->
+        <Image Source="splash_bottom.png"
+               WidthRequest="480" HeightRequest="450"
+               Aspect="Fill"
+               HorizontalOptions="Start" VerticalOptions="Start"
+               TranslationX="5" TranslationY="515"
+               InputTransparent="true" />
+
+        <!-- Logo / frosted glass tile · 框(126,292) 124x124，导出图含投影，render (100,283) 174x174 -->
+        <Image Source="splash_logo.png"
+               WidthRequest="174" HeightRequest="174"
+               Aspect="Fill"
+               HorizontalOptions="Center" VerticalOptions="Start"
+               Margin="0,283,0,0" />
+
+        <!-- Slogan / editable · (78,445) 219x19 · 15px/500 #4a6354 -->
+        <Label Text="Your home. Simply connected."
+               FontSize="15"
+               FontFamily="PJSM"
+               TextColor="#4a6354"
+               HorizontalOptions="Center"
+               VerticalOptions="Start"
+               Margin="0,445,0,0" />
+
+    </Grid>
+</ContentPage>
