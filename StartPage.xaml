@@ -370,15 +370,39 @@
         <!-- 自绘底部导航（设计稿 Frame 52） -->
         <local:AppTabBar x:Name="TabBar" />
 
-        <!-- 新手引导 第1步 · Figma Onboarding 1（View guide 入口） -->
+        <!-- 新手引导 四步 · Figma Onboarding 1~4（背景=画板渲染演示页，蒙层/卡片实时叠） -->
         <local:CoachMark x:Name="Guide1"
                          Step="1" CardY="340"
+                         DemoImage="guidebg1.png"
+                         SpotX="24" SpotY="724" SpotWidth="96" SpotHeight="76"
                          Title="Open Devices"
                          Description="Tap Devices below to view your gateways and connect a new one."
                          ActionText="Next"
-                         Illustration="guide1.png"
-                         SpotOffsetX="-25" SpotOffsetY="-26"
-                         SpotWidth="96" SpotHeight="76" />
+                         Illustration="guide1.png" />
+        <local:CoachMark x:Name="Guide2"
+                         Step="2" CardY="168"
+                         DemoImage="guidebg2.png"
+                         SpotX="40" SpotY="512" SpotWidth="295" SpotHeight="60"
+                         Title="Connect your gateway"
+                         Description="Scan for BoxArborMG devices. Enable Bluetooth and allow required access."
+                         ActionText="Next"
+                         Illustration="guide2.png" />
+        <local:CoachMark x:Name="Guide3"
+                         Step="3" CardY="340"
+                         DemoImage="guidebg3.png"
+                         SpotX="10" SpotY="188" SpotWidth="121" SpotHeight="133"
+                         Title="Open a gateway"
+                         Description="Tap any gateway card to configure the Boxes connected to it."
+                         ActionText="Next"
+                         Illustration="guide3.png" />
+        <local:CoachMark x:Name="Guide4"
+                         Step="4" CardY="306"
+                         DemoImage="guidebg4.png"
+                         SpotX="11" SpotY="208" SpotWidth="57" SpotHeight="55"
+                         Title="Add your first Box"
+                         Description="Tap + to add Boxes. Use the remote to assign their numbers in order, from bottom to top."
+                         ActionText="Start using"
+                         Illustration="guide4.png" />
 
         <!-- Rename 弹窗（场景改名） -->
         <local:RenameDialog x:Name="RenameDlg" />

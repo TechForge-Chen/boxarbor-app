@@ -243,10 +243,12 @@ public partial class StartPage : ContentPage
 
         switchAll.Toggled += OnAllDevicesToggled;
 
-        // 新手引导：View guide 入口 + 第1步高亮底部 Devices
-        Guide1.Target = TabBar.DevicesTarget;
-        Guide1.ActionTapped += OnGuideAction;
-        Guide1.SkipTapped += OnGuideSkip;
+        // 新手引导：View guide 入口 + 四步演示（背景为渲染图，不切真实页面）
+        foreach (var g in new[] { Guide1, Guide2, Guide3, Guide4 })
+        {
+            g.ActionTapped += OnGuideAction;
+            g.SkipTapped += OnGuideSkip;
+        }
 
         UpdateSceneUI();
     }
@@ -649,16 +651,13 @@ public partial class StartPage : ContentPage
     /// <summary>View guide → 开始引导（Figma: HOME → Onboarding 1，DISSOLVE）。</summary>
     private void OnViewGuideTapped(object sender, TappedEventArgs e)
     {
-        Console.WriteLine("[Onb] View guide tapped");
         Onboarding.Start();
     }
 
-    /// <summary>第1步 Next → 第2步并跳到 Devices 页。</summary>
+    /// <summary>引导 Next → 下一步（纯演示，不切换真实页面）。</summary>
     private void OnGuideAction()
     {
         Onboarding.Next();
-        if (Shell.Current is AppShell shell)
-            shell.SelectTab(AppTabBar.DevicesRoute);
     }
 
     private void OnGuideSkip() => Onboarding.Finish();

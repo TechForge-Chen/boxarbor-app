@@ -69,14 +69,6 @@ public partial class DataPage : ContentPage
 
         StartPage.OnDataReceivedAction = OnDataReceived;
 
-        // 新手引导 第2/3步（Figma Onboarding 2、3）
-        Guide2.ActionTapped += OnGuide2Action;
-        Guide2.SkipTapped += OnGuideSkip;
-        Guide3.ActionTapped += OnGuide3Action;
-        Guide3.SkipTapped += OnGuideSkip;
-        RefreshGuideTargets();
-        Onboarding.Changed += RefreshGuideTargets;
-
         RefreshViewState();
     }
 
@@ -158,54 +150,7 @@ public partial class DataPage : ContentPage
         EmptyView.IsVisible = !anyOnline;
     }
 
-    // ------------------------- 新手引导 -------------------------
-
-    /// <summary>按当前是空态还是网格态，把聚光灯指向对应的 Scan 按钮 / 网格区。</summary>
-    private void RefreshGuideTargets()
-    {
-        if (Onboarding.Step == 2)
-        {
-            if (GridView.IsVisible)
-            {
-                Guide2.Target = ScanBtnGrid;
-                Guide2.SpotWidth = 345; Guide2.SpotHeight = 52; Guide2.CardY = 190;
-            }
-            else
-            {
-                Guide2.Target = ScanBtnEmpty;
-                Guide2.SpotWidth = 295; Guide2.SpotHeight = 60; Guide2.CardY = 168;
-            }
-        }
-        else if (Onboarding.Step == 3)
-        {
-            Guide3.Target = GridView.IsVisible ? (VisualElement)GatewayCV : EmptyView;
-        }
-    }
-
-    /// <summary>第2步 Next → 第3步；没有在线网关时无法演示"点开网关"，直接跳到第4步。</summary>
-    private void OnGuide2Action()
-    {
-        bool hasGateway = GridView.IsVisible;
-        Onboarding.Next();                 // 2 -> 3
-        if (!hasGateway)
-        {
-            Onboarding.Next();             // 3 -> 4
-            OpenGateway(1);
-        }
-        else
-        {
-            RefreshGuideTargets();
-        }
-    }
-
-    /// <summary>第3步 Next → 第4步并打开网关页。</summary>
-    private void OnGuide3Action()
-    {
-        Onboarding.Next();                 // 3 -> 4
-        OpenGateway(1);
-    }
-
-    private void OnGuideSkip() => Onboarding.Finish();
+    // ------------------------- 网关跳转 -------------------------
 
     private void OpenGateway(int id)
     {
@@ -254,7 +199,6 @@ public partial class DataPage : ContentPage
         }
         _ = StartPage.StopScanAsync();
         StartPage.DevicesChanged -= OnDevicesChanged;
-        Onboarding.Changed -= RefreshGuideTargets;
         base.OnDisappearing();
     }
 

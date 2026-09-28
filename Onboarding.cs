@@ -1,4 +1,4 @@
-﻿namespace BluetoothMauiApp;
+namespace BluetoothMauiApp;
 
 /// <summary>
 /// 新手引导流程状态（Figma 演示模式：View guide → Onboarding 1→2→3→4 → HOME，均为 DISSOLVE）。
@@ -16,17 +16,15 @@ public static class Onboarding
     /// <summary>View guide 入口 → 显示第 1 步。</summary>
     public static void Start()
     {
-        Console.WriteLine($"[Onb] Start called, current Step={Step}");
         if (Step != Off) return;
         Step = 1;
+        SetGuideBars(true);
         Changed?.Invoke();
-        Console.WriteLine($"[Onb] -> Step={Step}");
     }
 
     /// <summary>Next → 进入下一步（>4 时自动结束）。</summary>
     public static void Next()
     {
-        Console.WriteLine($"[Onb] Next called, current Step={Step}");
         if (Step == Off) return;
         Step++;
         if (Step > 4) Finish();
@@ -36,10 +34,48 @@ public static class Onboarding
     /// <summary>Skip / Start using → 结束引导。</summary>
     public static void Finish()
     {
-        Console.WriteLine($"[Onb] Finish called, current Step={Step}");
         if (Step == Off) return;
         Step = Off;
+        SetGuideBars(false);
         Changed?.Invoke();
-        Console.WriteLine($"[Onb] -> Step={Step}");
     }
+
+#if ANDROID
+    /// <summary>设计稿蒙层盖到屏幕顶：引导期间隐藏系统状态栏/导航栏（全屏沉浸，
+    /// 演示图自带深色状态栏带顶到屏幕顶），结束恢复。</summary>
+    private static void SetGuideBars(bool dim)
+    {
+        try
+        {
+            var window = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity?.Window;
+            if (window is null) return;
+            var ctrl = window.DecorView.WindowInsetsController ?? window.InsetsController;
+            if (ctrl is null) return;
+
+            int bars = (int)(Android.Views.WindowInsets.Type.StatusBars() |
+                             Android.Views.WindowInsets.Type.NavigationBars());
+            if (dim)
+            {
+                ctrl.Hide(bars);
+                ctrl.SetSystemBarsAppearance(0,
+                    (int)(Android.Views.WindowInsetsControllerAppearance.LightStatusBars |
+                          Android.Views.WindowInsetsControllerAppearance.LightNavigationBars));
+            }
+            else
+            {
+                ctrl.Show(bars);
+                ctrl.SetSystemBarsAppearance(
+                    (int)(Android.Views.WindowInsetsControllerAppearance.LightStatusBars |
+                          Android.Views.WindowInsetsControllerAppearance.LightNavigationBars),
+                    (int)(Android.Views.WindowInsetsControllerAppearance.LightStatusBars |
+                          Android.Views.WindowInsetsControllerAppearance.LightNavigationBars));
+            }
+        }
+        catch (Exception ex)
+        {
+        }
+    }
+#else
+    private static void SetGuideBars(bool dim) { }
+#endif
 }

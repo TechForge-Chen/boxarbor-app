@@ -1,10 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<!-- 新手引导 coach-mark · Figma Onboarding 1~4（97:565 / 97:643 / 97:727 / 97:836）
-     结构：压暗层 #081a12@72%（4 个矩形围出聚光灯洞） + 引导卡 335x345 r24 #f7fcf9@95%。
-     卡内四步布局完全一致，只有卡片 Y、聚光灯位置、文案和插画不同：
-       进度行(N/4 徽标 + Skip) → 插画 299x100 → 标题 22/700 → 描述 13/400
-       → 4 个进度点(激活 18x6 胶囊) → Next 299x46 #12bd63 r15
-     字重：PJS=400 / PJSM=500 / PJSSB=600 / PJSB=700。 -->
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- 新手引导 · Figma Onboarding 1~4（97:565 / 97:643 / 97:727 / 97:836）
+     结构：演示页渲染图（静态背景，非真实页面）→ 4 块蒙层 #081a12@72%（颜色 alpha）
+     → 聚光灯绿描边 #27d477 2dp + 洞内点击捕获 → 引导卡 335x345 r24 #f7fcf9@95%。
+     演示图已裁状态栏条带；描边用4条BoxView（Border描边不渲染）。 -->
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BluetoothMauiApp.CoachMark"
@@ -12,27 +10,62 @@
              HorizontalOptions="Fill"
              VerticalOptions="Fill">
 
-    <Grid x:Name="Root">
+    <Grid x:Name="Root" BackgroundColor="#081a12">
 
-        <!-- 压暗层：4 块矩形，位置由代码按聚光灯矩形算出（留洞） -->
-        <BoxView x:Name="DimTop" Color="#081a12" Opacity="0.72"
-                 InputTransparent="False"
+        <!-- 演示页背景（宽度铺满，等比高度由代码设置） -->
+        <Image x:Name="DemoImg"
+               Aspect="AspectFill"
+               HorizontalOptions="Fill"
+               VerticalOptions="Start" />
+
+        <!-- 压暗层：4 块矩形按聚光灯矩形围出洞。
+             透明度统一放在父层 Opacity（#081a12 实底）：本机 BoxView 的 Opacity 和颜色 alpha 都不生效 -->
+        <Grid x:Name="DimRoot"
+              Opacity="0.72"
+              HorizontalOptions="Fill"
+              VerticalOptions="Fill">
+            <BoxView x:Name="DimTop" Color="#081a12"
+                     InputTransparent="False"
+                     HorizontalOptions="Start" VerticalOptions="Start" />
+            <BoxView x:Name="DimBottom" Color="#081a12"
+                     InputTransparent="False"
+                     HorizontalOptions="Start" VerticalOptions="Start" />
+            <BoxView x:Name="DimLeft" Color="#081a12"
+                     InputTransparent="False"
+                     HorizontalOptions="Start" VerticalOptions="Start" />
+            <BoxView x:Name="DimRight" Color="#081a12"
+                     InputTransparent="False"
+                     HorizontalOptions="Start" VerticalOptions="Start" />
+        </Grid>
+
+        <!-- 聚光灯高亮描边 · Figma Spotlight target #27d477 2dp（4条BoxView画框，Border描边在本机不渲染） -->
+        <BoxView x:Name="StrokeTop"    Color="#27d477" IsVisible="False" InputTransparent="True"
                  HorizontalOptions="Start" VerticalOptions="Start" />
-        <BoxView x:Name="DimBottom" Color="#081a12" Opacity="0.72"
-                 InputTransparent="False"
+        <BoxView x:Name="StrokeBottom" Color="#27d477" IsVisible="False" InputTransparent="True"
                  HorizontalOptions="Start" VerticalOptions="Start" />
-        <BoxView x:Name="DimLeft" Color="#081a12" Opacity="0.72"
-                 InputTransparent="False"
+        <BoxView x:Name="StrokeLeft"   Color="#27d477" IsVisible="False" InputTransparent="True"
                  HorizontalOptions="Start" VerticalOptions="Start" />
-        <BoxView x:Name="DimRight" Color="#081a12" Opacity="0.72"
-                 InputTransparent="False"
+        <BoxView x:Name="StrokeRight"  Color="#27d477" IsVisible="False" InputTransparent="True"
                  HorizontalOptions="Start" VerticalOptions="Start" />
+
+        <!-- 洞内点击 = 推进（防止穿透到底层演示图） -->
+        <Border x:Name="SpotCatcher"
+                BackgroundColor="Transparent"
+                IsVisible="False"
+                InputTransparent="False"
+                HorizontalOptions="Start"
+                VerticalOptions="Start">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnNextTapped" />
+            </Border.GestureRecognizers>
+        </Border>
 
         <!-- 引导卡 -->
         <Border x:Name="Card"
                 BackgroundColor="#f7fcf9"
                 Opacity="0.95"
-                StrokeThickness="0"
+                Stroke="#D9FFFFFF"
+                StrokeThickness="1"
                 HeightRequest="345"
                 HorizontalOptions="Fill"
                 VerticalOptions="Start"

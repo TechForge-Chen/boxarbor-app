@@ -65,11 +65,6 @@ public partial class Board : ContentPage
         RefreshAllSliderLabels();
 
         _initFlag = true;   // 初始化完成，之后的控件回填才允许下发
-
-        // 新手引导 第4步：高亮左侧 ＋（Figma Onboarding 4）
-        Guide4.ActionTapped += OnGuide4Action;
-        Guide4.SkipTapped += OnGuide4Action;
-        RetargetGuide();
     }
 
     private void MapSliderLabels()
@@ -113,7 +108,6 @@ public partial class Board : ContentPage
         _isConnect = MauiProgram.蓝牙连接;
         RebuildGateList(GetBoardCount());
         RefreshNetLabel();
-        RetargetGuide();
         // 打开界面自动查询当前状态（不弹未连接提示）
         GetNetPara(false);
     }
@@ -125,27 +119,6 @@ public partial class Board : ContentPage
         _queryFlag = 0;
     }
 
-    /// <summary>聚光灯指向左侧轨道最上面那块（设计稿高亮的是绿色 ＋）。</summary>
-    private void RetargetGuide()
-    {
-        if (Guide4 is null || GateListLayout is null) return;
-        Guide4.Target = GateListLayout.Children.Count > 0
-            && GateListLayout.Children[0] is VisualElement ve ? ve : null;
-    }
-
-    /// <summary>第4步 Start using / Skip → 结束引导并回 HOME（Figma 均为 DISSOLVE）。</summary>
-    private async void OnGuide4Action()
-    {
-        Onboarding.Finish();
-        try
-        {
-            if (Navigation.NavigationStack.Count > 1)
-                await Navigation.PopAsync();
-        }
-        catch { /* 已在栈底 */ }
-        if (Shell.Current is AppShell sh)
-            sh.SelectTab(AppTabBar.HomeRoute);
-    }
 
     private void RefreshNetLabel()
     {

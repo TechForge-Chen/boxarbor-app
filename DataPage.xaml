@@ -210,29 +210,11 @@
         <!-- 自绘底部导航（设计稿 Frame 52） -->
         <local:AppTabBar x:Name="TabBar" />
 
-        <!-- 新手引导 第2步 · Figma Onboarding 2（空态高亮 Scan 按钮） -->
-        <local:CoachMark x:Name="Guide2"
-                         Step="2" CardY="168"
-                         Title="Connect your gateway"
-                         Description="Scan for BoxArborMG devices. Enable Bluetooth and allow required access."
-                         ActionText="Next"
-                         Illustration="guide2.png"
-                         SpotOffsetX="-5" SpotOffsetY="-6"
-                         SpotWidth="295" SpotHeight="60" />
-
-        <!-- 新手引导 第3步 · Figma Onboarding 3（网格高亮第一张网关卡） -->
-        <local:CoachMark x:Name="Guide3"
-                         Step="3" CardY="340"
-                         Title="Open a gateway"
-                         Description="Tap any gateway card to configure the Boxes connected to it."
-                         ActionText="Next"
-                         Illustration="guide3.png"
-                         SpotOffsetX="-8" SpotOffsetY="1"
-                         SpotWidth="121" SpotHeight="133" />
 
         <!-- ========== 蓝牙设备选择弹窗 · Figma 191:240 ========== -->
         <Grid x:Name="PickerOverlay" IsVisible="False">
-            <BoxView Color="{StaticResource DgBackdrop}" Opacity="0.72">
+            <!-- 透明度走颜色 alpha（#80=0.50，Figma Modal backdrop）：BoxView 的 Opacity 属性在本机不生效 -->
+            <BoxView Color="#800d241b">
                 <BoxView.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnPickerBackdrop" />
                 </BoxView.GestureRecognizers>
