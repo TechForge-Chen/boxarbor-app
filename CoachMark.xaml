@@ -25,6 +25,7 @@
 
             <Border x:Name="SkipZone"
                     BackgroundColor="Transparent"
+                    StrokeThickness="0"
                     HorizontalOptions="Start"
                     VerticalOptions="Start"
                     InputTransparent="False">
