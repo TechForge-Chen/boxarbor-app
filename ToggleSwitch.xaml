@@ -8,7 +8,7 @@
              BackgroundColor="Transparent">
     <Border x:Name="Track"
             StrokeThickness="0"
-            BackgroundColor="{StaticResource DgSwitchOff}"
+            BackgroundColor="{DynamicResource DgSwitchOff}"
             InputTransparent="False">
         <Border.StrokeShape>
             <RoundRectangle CornerRadius="13" />

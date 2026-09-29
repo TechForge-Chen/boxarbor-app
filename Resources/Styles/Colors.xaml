@@ -83,7 +83,9 @@
 
     <!-- ============================================================
          智能控制APP (Figma MhfMUp4iE1xpXK6pDrXBZn) 设计令牌
-         仅亮色：设计稿未提供深色画板，交接文档已注明深色未交付。
+         明/暗值来源：Value.tokens.json（成对 token）+ Figma "Theme preview · Dark"
+         (256:988) 按图层名配对提取；切换入口 ThemeManager.Apply。
+         DgIconBg/DgIconBgAlt 故意不做暗值：图标为深色 PNG，浅色圆底保证可读。
          ============================================================ -->
     <Color x:Key="DgPageBg">#f6f7f7</Color>
     <Color x:Key="DgCard">#ffffff</Color>
@@ -138,5 +140,11 @@
     <Color x:Key="DgAtmosGreen">#b1ffd4</Color>
     <Color x:Key="DgAtmosBlue">#cce0f5</Color>
     <Color x:Key="DgAtmosGreen2">#cfe8db</Color>
+
+    <!-- 暗色专用/场景专用（ThemeManager 切换） -->
+    <Color x:Key="DgSceneCard">#ffffff</Color>
+    <Color x:Key="DgSceneCardStroke">#ffffff</Color>
+    <Color x:Key="DgIllustrationCard">#ffffff</Color>
+    <Color x:Key="DgGuideChip">#ffffff</Color>
 
 </ResourceDictionary>

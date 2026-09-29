@@ -11,10 +11,10 @@
              HorizontalOptions="Fill"
              VerticalOptions="Fill"
              InputTransparent="true">
-    <Grid BackgroundColor="{StaticResource DgAtmosBase}">
+    <Grid BackgroundColor="{DynamicResource DgAtmosBase}">
 
         <!-- Atmosphere / diffuse tint · 左上绿 -->
-        <Image Source="atmos_topleft.png"
+        <Image x:Name="GlowTop" Source="atmos_topleft.png"
                WidthRequest="590" HeightRequest="570"
                Aspect="Fill"
                HorizontalOptions="Start" VerticalOptions="Start"
@@ -22,7 +22,7 @@
                InputTransparent="true" />
 
         <!-- Atmosphere / diffuse tint · 右侧蓝 -->
-        <Image Source="atmos_right.png"
+        <Image x:Name="GlowRight" Source="atmos_right.png"
                WidthRequest="550" HeightRequest="730"
                Aspect="Fill"
                HorizontalOptions="Start" VerticalOptions="Start"
@@ -30,7 +30,7 @@
                InputTransparent="true" />
 
         <!-- Atmosphere / diffuse tint · 下方绿 -->
-        <Image Source="atmos_bottom.png"
+        <Image x:Name="GlowBottom" Source="atmos_bottom.png"
                WidthRequest="600" HeightRequest="530"
                Aspect="Fill"
                HorizontalOptions="Start" VerticalOptions="Start"

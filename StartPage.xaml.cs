@@ -24,7 +24,6 @@ namespace BluetoothMauiApp;
 public partial class StartPage : ContentPage
 {
     private int _selectedSceneId = 1;
-    private readonly Color GreenMain = Color.FromHex("#16c95c");
 
     // 本页的 UI 更新回调（静态 BLE 回调需要回到实例上刷 lblConnState）
     private static StartPage? _current;
@@ -243,6 +242,11 @@ public partial class StartPage : ContentPage
 
         switchAll.Toggled += OnAllDevicesToggled;
 
+        // 深色主题下换成白版图标（图标描边为深色）
+        ThemeManager.BindIcon(imgSceneEdit1, "ic_edit_sm.png", "ic_edit_sm_w.png");
+        ThemeManager.BindIcon(imgSceneEdit2, "ic_edit_sm.png", "ic_edit_sm_w.png");
+        ThemeManager.BindIcon(imgSceneEdit3, "ic_edit_sm.png", "ic_edit_sm_w.png");
+
         // 新手引导：View guide 入口 + 四步演示（背景为渲染图，不切真实页面）
         foreach (var g in new[] { Guide1, Guide2, Guide3, Guide4 })
         {
@@ -260,12 +264,21 @@ public partial class StartPage : ContentPage
         // 先减后加，避免页面被重复构造时重复订阅
         DevicesChanged -= OnDevicesChanged;
         DevicesChanged += OnDevicesChanged;
+        ThemeManager.Changed -= OnThemeChanged;
+        ThemeManager.Changed += OnThemeChanged;
+        OnThemeChanged();   // 后台期间主题可能已切换，回前台重刷
+    }
+
+    private void OnThemeChanged()
+    {
+        ApplySceneStyles();
         UpdateStatus();
     }
 
     protected override void OnDisappearing()
     {
         DevicesChanged -= OnDevicesChanged;
+        ThemeManager.Changed -= OnThemeChanged;
         base.OnDisappearing();
     }
 
@@ -520,12 +533,12 @@ public partial class StartPage : ContentPage
             if (_connectedDevice == null)
             {
                 lblConnState.Text = "Offline";
-                lblConnState.TextColor = Color.FromHex("#f2402e");
+                lblConnState.TextColor = ThemeManager.Color("DgOffline");
             }
             else
             {
                 lblConnState.Text = "Online";
-                lblConnState.TextColor = Color.FromHex("#20914d");
+                lblConnState.TextColor = ThemeManager.Color("DgGreenText");
             }
         });
     }
@@ -576,10 +589,10 @@ public partial class StartPage : ContentPage
 
     private void SetSceneStyle(int index, bool selected)
     {
-        Color cardBg = selected ? Color.FromHex("#fafbfd") : Colors.White;
-        Color cardStroke = selected ? GreenMain : Colors.White;
-        Color iconBg = selected ? Colors.White : Color.FromHex("#f0f2ef");
-        Color ringStroke = selected ? GreenMain : Color.FromHex("#bcc5be");
+        Color cardBg = ThemeManager.Color(selected ? "DgCardSelected" : "DgSceneCard");
+        Color cardStroke = selected ? ThemeManager.Color("DgGreen") : ThemeManager.Color("DgSceneCardStroke");
+        Color iconBg = selected ? Colors.White : ThemeManager.Color("DgIconBg");
+        Color ringStroke = selected ? ThemeManager.Color("DgGreenRing") : ThemeManager.Color("DgTrackRing");
         string sub = selected ? "Active scene" : "Standby";
 
         switch (index)

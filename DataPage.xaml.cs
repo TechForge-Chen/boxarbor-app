@@ -30,7 +30,7 @@ public class GatewayState : INotifyPropertyChanged
         }
     }
     public string StatusText => IsOnline ? "Online" : "Offline";
-    public Color StatusColor => IsOnline ? Color.FromHex("#20914d") : Color.FromHex("#f2402e");
+    public Color StatusColor => IsOnline ? ThemeManager.Color("DgGreenText") : ThemeManager.Color("DgOffline");
 
     public event PropertyChangedEventHandler? PropertyChanged;
     protected void OnPropertyChanged([CallerMemberName] string? name = null)
@@ -69,6 +69,17 @@ public partial class DataPage : ContentPage
 
         StartPage.OnDataReceivedAction = OnDataReceived;
 
+        ThemeManager.Changed -= OnThemeChanged;
+        ThemeManager.Changed += OnThemeChanged;
+
+        RefreshViewState();
+    }
+
+    /// <summary>主题切换后重刷网关状态色（绑定值不会自动重算）。</summary>
+    private void OnThemeChanged()
+    {
+        foreach (var g in GatewayList)
+            g.IsOnline = g.IsOnline;
         RefreshViewState();
     }
 

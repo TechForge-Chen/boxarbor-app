@@ -64,14 +64,13 @@ public static class Onboarding
             else
             {
                 ctrl.Show(bars);
-                ctrl.SetSystemBarsAppearance(
-                    (int)(Android.Views.WindowInsetsControllerAppearance.LightStatusBars |
-                          Android.Views.WindowInsetsControllerAppearance.LightNavigationBars),
-                    (int)(Android.Views.WindowInsetsControllerAppearance.LightStatusBars |
-                          Android.Views.WindowInsetsControllerAppearance.LightNavigationBars));
+                // 图标明暗跟当前主题：暗色模式下必须保持浅色图标
+                int mask = (int)(Android.Views.WindowInsetsControllerAppearance.LightStatusBars |
+                                 Android.Views.WindowInsetsControllerAppearance.LightNavigationBars);
+                ctrl.SetSystemBarsAppearance(ThemeManager.IsDark ? 0 : mask, mask);
             }
         }
-        catch (Exception ex)
+        catch
         {
         }
     }

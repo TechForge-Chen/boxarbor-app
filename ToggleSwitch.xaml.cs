@@ -13,13 +13,13 @@ public partial class ToggleSwitch : ContentView
         nameof(IsOn), typeof(bool), typeof(ToggleSwitch), false,
         propertyChanged: OnIsOnChanged);
 
-    /// <summary>开启色，默认 DgGreen #16c95c。</summary>
+    /// <summary>开启色。未显式设置时跟随主题（DgGreen）。</summary>
     public static readonly BindableProperty OnColorProperty = BindableProperty.Create(
-        nameof(OnColor), typeof(Color), typeof(ToggleSwitch), Color.FromHex("#16c95c"));
+        nameof(OnColor), typeof(Color), typeof(ToggleSwitch), null);
 
-    /// <summary>关闭色，默认 DgSwitchOff #bababa。</summary>
+    /// <summary>关闭色。未显式设置时跟随主题（DgSwitchOff）。</summary>
     public static readonly BindableProperty OffColorProperty = BindableProperty.Create(
-        nameof(OffColor), typeof(Color), typeof(ToggleSwitch), Color.FromHex("#bababa"));
+        nameof(OffColor), typeof(Color), typeof(ToggleSwitch), null);
 
     /// <summary>滑块颜色，默认白色。设计稿总开关那张卡底是绿的，滑块是绿的。</summary>
     public static readonly BindableProperty KnobColorProperty = BindableProperty.Create(
@@ -43,6 +43,14 @@ public partial class ToggleSwitch : ContentView
     {
         InitializeComponent();
         SizeChanged += (_, _) => OnGeometryChanged();
+        Loaded += (_, _) => { ThemeManager.Changed -= OnTheme; ThemeManager.Changed += OnTheme; OnTheme(); };
+        Unloaded += (_, _) => ThemeManager.Changed -= OnTheme;
+    }
+
+    private void OnTheme()
+    {
+        if (Track is null) return;
+        Track.BackgroundColor = TrackColor;
     }
 
     public bool IsOn
@@ -51,15 +59,15 @@ public partial class ToggleSwitch : ContentView
         set => SetValue(IsOnProperty, value);
     }
 
-    public Color OnColor
+    public Color? OnColor
     {
-        get => (Color)GetValue(OnColorProperty)!;
+        get => (Color?)GetValue(OnColorProperty);
         set => SetValue(OnColorProperty, value);
     }
 
-    public Color OffColor
+    public Color? OffColor
     {
-        get => (Color)GetValue(OffColorProperty)!;
+        get => (Color?)GetValue(OffColorProperty);
         set => SetValue(OffColorProperty, value);
     }
 
@@ -87,7 +95,9 @@ public partial class ToggleSwitch : ContentView
 
     private void OnTapped(object sender, TappedEventArgs e) => IsOn = !IsOn;
 
-    private Color TrackColor => IsOn ? OnColor : OffColor;
+    private Color TrackColor => IsOn
+        ? (OnColor ?? ThemeManager.Color("DgGreen"))
+        : (OffColor ?? ThemeManager.Color("DgSwitchOff"));
 
     /// <summary>状态切换：滑块滑动 + 轨道变色，两个动画同步播 180ms。
     /// 首次布局前不播（位置还没算出来），直接落位。</summary>
@@ -96,7 +106,9 @@ public partial class ToggleSwitch : ContentView
         if (Track is null || Knob is null)
             return;
 
-        Color target = on ? OnColor : OffColor;
+        Color target = on
+            ? (OnColor ?? ThemeManager.Color("DgGreen"))
+            : (OffColor ?? ThemeManager.Color("DgSwitchOff"));
 
         if (!_laidOut)
         {

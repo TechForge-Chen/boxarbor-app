@@ -15,11 +15,13 @@ public partial class AppTabBar : ContentView
     public const string SettingsRoute = "settab";
 
     private static readonly Color Selected = Color.FromHex("#16c95c");
-    private static readonly Color Unselected = Color.FromHex("#8b938e");
 
     public AppTabBar()
     {
         InitializeComponent();
+        ThemeManager.BindIcon(BarBg, "tabbar_bg.png", "tabbar_bg_dark.png");
+        Loaded += (_, _) => { ThemeManager.Changed -= OnTheme; ThemeManager.Changed += OnTheme; OnTheme(); };
+        Unloaded += (_, _) => ThemeManager.Changed -= OnTheme;
         // 选中态从 Shell 派生：每页各有一个 TabBar 实例，实例各自记状态会在跨页导航后不同步
         if (Shell.Current != null)
             Shell.Current.Navigated += OnShellNavigated;
@@ -44,16 +46,21 @@ public partial class AppTabBar : ContentView
         StartPage.TapHaptic();
     }
 
+    private void OnTheme() => ApplyState();
+
     private void ApplyState()
     {
         string current = Shell.Current?.CurrentItem?.CurrentItem?.Route ?? HomeRoute;
         bool dev = current == DevicesRoute;
         bool set = current == SettingsRoute;
 
-        IconDevices.Source = dev ? "tab_devices_green.png" : "tab_devices_gray.png";
-        LabelDevices.TextColor = dev ? Selected : Unselected;
+        string grayDev = ThemeManager.IsDark ? "tab_devices_gray_w.png" : "tab_devices_gray.png";
+        string graySet = ThemeManager.IsDark ? "tab_settings_gray_w.png" : "tab_settings_gray.png";
 
-        IconSettings.Source = set ? "tab_settings_green.png" : "tab_settings_gray.png";
-        LabelSettings.TextColor = set ? Selected : Unselected;
+        IconDevices.Source = dev ? "tab_devices_green.png" : grayDev;
+        LabelDevices.TextColor = dev ? Selected : ThemeManager.Color("DgMuted");
+
+        IconSettings.Source = set ? "tab_settings_green.png" : graySet;
+        LabelSettings.TextColor = set ? Selected : ThemeManager.Color("DgMuted");
     }
 }

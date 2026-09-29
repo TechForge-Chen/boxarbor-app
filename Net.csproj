@@ -51,7 +51,7 @@
 
 	<ItemGroup>
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
-		<MauiSplashScreen Include="Resources\Splash\splash_icon.png" Color="#f2f9f4" BaseSize="174,174" />
+		<MauiSplashScreen Include="Resources\Splash\splash_icon.png" Color="#16c95c" BaseSize="128,138" />
 		<MauiImage Include="Resources\Images\*" />
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 		<MauiFont Include="Resources\Fonts\*" />

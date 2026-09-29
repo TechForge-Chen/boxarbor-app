@@ -13,8 +13,8 @@
 
     <Grid>
 
-        <!-- 挖孔白条（含中央凸起） -->
-        <Image Source="tabbar_bg.png"
+        <!-- 挖孔条（含中央凸起）；暗色换 tabbar_bg_dark.png -->
+        <Image x:Name="BarBg" Source="tabbar_bg.png"
                Aspect="Fill"
                HorizontalOptions="Fill" VerticalOptions="Fill"
                InputTransparent="true" />
@@ -52,7 +52,7 @@
                            Text="Devices"
                            FontSize="12"
                            FontFamily="PJSM"
-                           TextColor="{StaticResource DgMuted}"
+                           TextColor="{DynamicResource DgMuted}"
                            LineBreakMode="NoWrap" />
                 </StackLayout>
             </Border>
@@ -91,7 +91,7 @@
                            Text="Settings"
                            FontSize="12"
                            FontFamily="PJSM"
-                           TextColor="{StaticResource DgMuted}"
+                           TextColor="{DynamicResource DgMuted}"
                            LineBreakMode="NoWrap" />
                 </StackLayout>
             </Border>

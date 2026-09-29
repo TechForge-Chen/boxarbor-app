@@ -22,18 +22,18 @@
                         <Label Text="Good evening"
                                FontSize="12"
                                FontFamily="PJS"
-                               TextColor="{StaticResource DgSub}" />
+                               TextColor="{DynamicResource DgSub}" />
                         <Label Text="My Home"
                                FontSize="28"
                                FontFamily="PJSB"
-                               TextColor="{StaticResource DgTitle}" />
+                               TextColor="{DynamicResource DgTitle}" />
                     </VerticalStackLayout>
 
                     <!-- View guide · 引导入口，本轮只做占位 -->
                     <Border Grid.Column="1"
                             x:Name="BtnViewGuide"
-                            BackgroundColor="White"
-                            Stroke="White"
+                            BackgroundColor="{DynamicResource DgGuideChip}"
+                            Stroke="{DynamicResource DgGuideChip}"
                             StrokeThickness="1"
                             WidthRequest="97"
                             HeightRequest="40"
@@ -55,14 +55,14 @@
                             <Label Grid.Column="2" Text="View guide"
                                    FontSize="11"
                                    FontFamily="PJSSB"
-                                   TextColor="{StaticResource DgGreenLink}"
+                                   TextColor="{DynamicResource DgGreenLink}"
                                    VerticalOptions="Center" />
                         </Grid>
                     </Border>
                 </Grid>
 
                 <!-- ===== All Devices 总开关 ===== -->
-                <Border BackgroundColor="{StaticResource DgGreen}"
+                <Border BackgroundColor="{DynamicResource DgGreen}"
                         StrokeThickness="0"
                         HeightRequest="130"
                         Margin="0,20,0,0"
@@ -103,7 +103,7 @@
                                                 IsOn="True"
                                                 OnColor="White"
                                                 OffColor="White"
-                                                KnobColor="{StaticResource DgGreen}"
+                                                KnobColor="{DynamicResource DgGreen}"
                                                 VerticalOptions="Center"
                                                 HorizontalOptions="End" />
                         </Grid>
@@ -123,7 +123,7 @@
                 </Border>
 
                 <!-- ===== 网关连接状态（只读） ===== -->
-                <Border BackgroundColor="{StaticResource DgCard}"
+                <Border BackgroundColor="{DynamicResource DgCard}"
                         Stroke="White"
                         StrokeThickness="1"
                         HeightRequest="56"
@@ -136,7 +136,7 @@
                     <Grid ColumnDefinitions="101,*,Auto" ColumnSpacing="0">
                         <!-- Offline badge -->
                         <Border Grid.Column="0"
-                                BackgroundColor="{StaticResource DgOfflineBg}"
+                                BackgroundColor="{DynamicResource DgOfflineBg}"
                                 StrokeThickness="0"
                                 WidthRequest="101"
                                 HeightRequest="40"
@@ -152,7 +152,7 @@
                                        Text="Offline"
                                        FontSize="12"
                                        FontFamily="PJSM"
-                                       TextColor="{StaticResource DgOffline}"
+                                       TextColor="{DynamicResource DgOffline}"
                                        VerticalOptions="Center"
                                        LineBreakMode="NoWrap" />
                             </Grid>
@@ -161,7 +161,7 @@
                         <Label Grid.Column="2" Text="Gateway status"
                                FontSize="12"
                                FontFamily="PJS"
-                               TextColor="{StaticResource DgSub4}"
+                               TextColor="{DynamicResource DgSub4}"
                                VerticalOptions="Center" />
                     </Grid>
                 </Border>
@@ -170,20 +170,20 @@
                 <Label Text="Quick scenes"
                        FontSize="21"
                        FontFamily="PJSB"
-                       TextColor="{StaticResource DgTitle}"
+                       TextColor="{DynamicResource DgTitle}"
                        Margin="0,20,0,0" />
                 <Label Text="Choose the mood for your space"
                        FontSize="12"
                        FontFamily="PJS"
-                       TextColor="{StaticResource DgSub}"
+                       TextColor="{DynamicResource DgSub}"
                        Margin="0,4,0,0" />
 
                 <VerticalStackLayout Spacing="12" Margin="0,15,0,0">
 
                     <!-- Scene 1 · 选中态 -->
                     <Border x:Name="frameScene1"
-                            BackgroundColor="{StaticResource DgCardSelected}"
-                            Stroke="{StaticResource DgGreenRing}"
+                            BackgroundColor="{DynamicResource DgCardSelected}"
+                            Stroke="{DynamicResource DgGreenRing}"
                             StrokeThickness="1.5"
                             HeightRequest="82"
                             Padding="16,15,22,15">
@@ -211,9 +211,9 @@
                                     <Label x:Name="sceneTitle1" Text="Scene 1"
                                            FontSize="17"
                                            FontFamily="PJSSB"
-                                           TextColor="{StaticResource DgSceneTitle}"
+                                           TextColor="{DynamicResource DgSceneTitle}"
                                            LineBreakMode="NoWrap" />
-                                    <Image Source="ic_edit_sm.png" WidthRequest="16" HeightRequest="16"
+                                    <Image x:Name="imgSceneEdit1" Source="ic_edit_sm.png" WidthRequest="16" HeightRequest="16"
                                            VerticalOptions="Center">
                                         <Image.GestureRecognizers>
                                             <TapGestureRecognizer Tapped="OnScene1Rename" />
@@ -223,18 +223,18 @@
                                 <Label x:Name="sceneSub1" Text="Active scene"
                                        FontSize="11"
                                        FontFamily="PJSM"
-                                       TextColor="{StaticResource DgSub3}"
+                                       TextColor="{DynamicResource DgSub3}"
                                        Margin="0,6,0,0" />
                             </VerticalStackLayout>
                             <Grid Grid.Column="3" WidthRequest="22" HeightRequest="22"
                                   VerticalOptions="Center">
                                 <Ellipse x:Name="ring1"
                                          Fill="White"
-                                         Stroke="{StaticResource DgGreen}"
+                                         Stroke="{DynamicResource DgGreen}"
                                          StrokeThickness="2" />
                                 <Ellipse x:Name="ringCore1"
                                          WidthRequest="12" HeightRequest="12"
-                                         Fill="{StaticResource DgGreen}"
+                                         Fill="{DynamicResource DgGreen}"
                                          HorizontalOptions="Center" VerticalOptions="Center" />
                             </Grid>
                         </Grid>
@@ -242,7 +242,7 @@
 
                     <!-- Scene 2 · 未选中 -->
                     <Border x:Name="frameScene2"
-                            BackgroundColor="{StaticResource DgCard}"
+                            BackgroundColor="{DynamicResource DgCard}"
                             Stroke="White"
                             StrokeThickness="1"
                             HeightRequest="82"
@@ -255,7 +255,7 @@
                         </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="52,16,*,22" ColumnSpacing="0">
                             <Border Grid.Column="0" x:Name="iconBg2"
-                                    BackgroundColor="{StaticResource DgIconBg}"
+                                    BackgroundColor="{DynamicResource DgIconBg}"
                                     StrokeThickness="0"
                                     WidthRequest="52" HeightRequest="52"
                                     VerticalOptions="Center">
@@ -271,9 +271,9 @@
                                     <Label x:Name="sceneTitle2" Text="Scene 2"
                                            FontSize="17"
                                            FontFamily="PJSSB"
-                                           TextColor="{StaticResource DgSceneTitle}"
+                                           TextColor="{DynamicResource DgSceneTitle}"
                                            LineBreakMode="NoWrap" />
-                                    <Image Source="ic_edit_sm.png" WidthRequest="16" HeightRequest="16"
+                                    <Image x:Name="imgSceneEdit2" Source="ic_edit_sm.png" WidthRequest="16" HeightRequest="16"
                                            VerticalOptions="Center">
                                         <Image.GestureRecognizers>
                                             <TapGestureRecognizer Tapped="OnScene2Rename" />
@@ -283,18 +283,18 @@
                                 <Label x:Name="sceneSub2" Text="Standby"
                                        FontSize="11"
                                        FontFamily="PJSM"
-                                       TextColor="{StaticResource DgSub3}"
+                                       TextColor="{DynamicResource DgSub3}"
                                        Margin="0,6,0,0" />
                             </VerticalStackLayout>
                             <Grid Grid.Column="3" WidthRequest="22" HeightRequest="22"
                                   VerticalOptions="Center">
                                 <Ellipse x:Name="ring2"
                                          Fill="Transparent"
-                                         Stroke="{StaticResource DgTrackRing}"
+                                         Stroke="{DynamicResource DgTrackRing}"
                                          StrokeThickness="2" />
                                 <Ellipse x:Name="ringCore2"
                                          WidthRequest="12" HeightRequest="12"
-                                         Fill="{StaticResource DgGreen}"
+                                         Fill="{DynamicResource DgGreen}"
                                          HorizontalOptions="Center" VerticalOptions="Center"
                                          IsVisible="False" />
                             </Grid>
@@ -303,7 +303,7 @@
 
                     <!-- Scene 3 · 未选中 -->
                     <Border x:Name="frameScene3"
-                            BackgroundColor="{StaticResource DgCard}"
+                            BackgroundColor="{DynamicResource DgCard}"
                             Stroke="White"
                             StrokeThickness="1"
                             HeightRequest="82"
@@ -316,7 +316,7 @@
                         </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="52,16,*,22" ColumnSpacing="0">
                             <Border Grid.Column="0" x:Name="iconBg3"
-                                    BackgroundColor="{StaticResource DgIconBg}"
+                                    BackgroundColor="{DynamicResource DgIconBg}"
                                     StrokeThickness="0"
                                     WidthRequest="52" HeightRequest="52"
                                     VerticalOptions="Center">
@@ -332,9 +332,9 @@
                                     <Label x:Name="sceneTitle3" Text="Scene 3"
                                            FontSize="17"
                                            FontFamily="PJSSB"
-                                           TextColor="{StaticResource DgSceneTitle}"
+                                           TextColor="{DynamicResource DgSceneTitle}"
                                            LineBreakMode="NoWrap" />
-                                    <Image Source="ic_edit_sm.png" WidthRequest="16" HeightRequest="16"
+                                    <Image x:Name="imgSceneEdit3" Source="ic_edit_sm.png" WidthRequest="16" HeightRequest="16"
                                            VerticalOptions="Center">
                                         <Image.GestureRecognizers>
                                             <TapGestureRecognizer Tapped="OnScene3Rename" />
@@ -344,18 +344,18 @@
                                 <Label x:Name="sceneSub3" Text="Standby"
                                        FontSize="11"
                                        FontFamily="PJSM"
-                                       TextColor="{StaticResource DgSub3}"
+                                       TextColor="{DynamicResource DgSub3}"
                                        Margin="0,6,0,0" />
                             </VerticalStackLayout>
                             <Grid Grid.Column="3" WidthRequest="22" HeightRequest="22"
                                   VerticalOptions="Center">
                                 <Ellipse x:Name="ring3"
                                          Fill="Transparent"
-                                         Stroke="{StaticResource DgTrackRing}"
+                                         Stroke="{DynamicResource DgTrackRing}"
                                          StrokeThickness="2" />
                                 <Ellipse x:Name="ringCore3"
                                          WidthRequest="12" HeightRequest="12"
-                                         Fill="{StaticResource DgGreen}"
+                                         Fill="{DynamicResource DgGreen}"
                                          HorizontalOptions="Center" VerticalOptions="Center"
                                          IsVisible="False" />
                             </Grid>

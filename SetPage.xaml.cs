@@ -1,5 +1,4 @@
 using Microsoft.Maui.ApplicationModel;
-using Microsoft.Maui.Storage;
 
 namespace BluetoothMauiApp;
 
@@ -14,12 +13,15 @@ public partial class SetPage : ContentPage
         swOfflineAlerts.IsOn = Preferences.Get("offline_alerts", true);
         swAutomationAlerts.IsOn = Preferences.Get("automation_alerts", true);
         swHapticFeedback.IsOn = Preferences.Get("haptic_feedback", true);
-        swDarkMode.IsOn = Preferences.Get("dark_mode", false);
+        swDarkMode.IsOn = ThemeManager.IsDark;
 
         swOfflineAlerts.Toggled += (_, v) => Preferences.Set("offline_alerts", v);
         swAutomationAlerts.Toggled += (_, v) => Preferences.Set("automation_alerts", v);
         swHapticFeedback.Toggled += (_, v) => Preferences.Set("haptic_feedback", v);
-        // 深色画板未交付，只记住偏好；主题切换待完整深色页面后再启用
-        swDarkMode.Toggled += (_, v) => Preferences.Set("dark_mode", v);
+        swDarkMode.Toggled += (_, v) => ThemeManager.Apply(v);
+
+        // 深色版图标（图标 PNG 为深色，深色卡片上换白版）
+        ThemeManager.BindIcon(imgInfo, "ic_info.png", "ic_info_w.png");
+        ThemeManager.BindIcon(imgChevron, "ic_chevron.png", "ic_chevron_w.png");
     }
 }

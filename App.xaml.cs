@@ -11,9 +11,10 @@ namespace BluetoothMauiApp
         {
             InitializeComponent();
 
-            // 设计稿只提供亮色画板，交接文档已注明「深色未交付」。
-            // 强制亮色可避免 Styles.xaml 的 AppThemeBinding 把标签字色翻成白色。
+            // AppTheme 固定 Light：暗色由 ThemeManager 按 Figma token 整体换 Dg* 资源实现，
+            // 不走系统主题（避免 Styles.xaml 的 AppThemeBinding 把标签字色翻成白色）。
             UserAppTheme = AppTheme.Light;
+            ThemeManager.Initialize();     // 按保存的偏好套用明/暗
 
             MainPage = new SplashPage();   // 开屏页 -> AppShell
         }

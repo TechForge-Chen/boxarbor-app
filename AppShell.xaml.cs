@@ -22,6 +22,7 @@ namespace BluetoothMauiApp
             // 视觉顺序仍按设计稿 Devices | Home | Settings，这里把初始 Tab 挪到 Home。
             SelectTab("hometab");
             RefreshTabIcons();
+            ThemeManager.RefreshSystemBars();
         }
 
         private void OnShellNavigated(object? sender, ShellNavigatedEventArgs e)

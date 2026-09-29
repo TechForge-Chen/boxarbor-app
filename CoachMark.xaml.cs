@@ -39,7 +39,25 @@ public partial class CoachMark : ContentView
         bool show = Onboarding.Step == _step;
         IsVisible = show;
         if (show)
+        {
             ApplyContent();
+            ScheduleLayout();
+        }
+    }
+
+    /// <summary>刚可见时可能还没完成测量，延后补一次布局（热区依赖它）。</summary>
+    private void ScheduleLayout()
+    {
+        _ = Task.Run(async () =>
+        {
+            await Task.Delay(200);
+            await MainThread.InvokeOnMainThreadAsync(ApplyLayout);
+        });
+        _ = Task.Run(async () =>
+        {
+            await Task.Delay(600);
+            await MainThread.InvokeOnMainThreadAsync(ApplyLayout);
+        });
     }
 
     private void ApplyContent()
@@ -49,6 +67,7 @@ public partial class CoachMark : ContentView
         if (!string.IsNullOrEmpty(_demoImage))
             DemoImg.Source = _demoImage;
         ApplyLayout();
+        ScheduleLayout();
     }
 
     private void ApplyLayout()

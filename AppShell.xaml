@@ -5,9 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:BluetoothMauiApp"
     Shell.TabBarBackgroundColor="White"
-    Shell.TabBarForegroundColor="{StaticResource DgGreen}"
-    Shell.TabBarTitleColor="{StaticResource DgGreen}"
-    Shell.TabBarUnselectedColor="{StaticResource DgMuted}">
+    Shell.TabBarForegroundColor="{DynamicResource DgGreen}"
+    Shell.TabBarTitleColor="{DynamicResource DgGreen}"
+    Shell.TabBarUnselectedColor="{DynamicResource DgMuted}">
 
     <!-- 底部导航对应设计稿 Frame 52（375x105）：Devices | Home | Settings
          白底；文字选中 #16c95c、未选中 #8b938e，图标走 tab_*_gray / tab_*_green

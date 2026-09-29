@@ -20,16 +20,16 @@
                 <Label Text="Devices"
                        FontSize="30"
                        FontFamily="PJSB"
-                       TextColor="{StaticResource DgTitle}"
+                       TextColor="{DynamicResource DgTitle}"
                        Margin="9,0,0,0" />
                 <Label Text="Gateway grid · Up to 100 gateways"
                        FontSize="14"
                        FontFamily="PJS"
-                       TextColor="{StaticResource DgSub2}"
+                       TextColor="{DynamicResource DgSub2}"
                        Margin="10,5,0,0" />
 
                 <!-- Scan with Bluetooth · 335x40 · r24 -->
-                <Border BackgroundColor="{StaticResource DgGreenScan}"
+                <Border BackgroundColor="{DynamicResource DgGreenScan}"
                         Stroke="White"
                         StrokeThickness="1"
                         HeightRequest="40"
@@ -68,7 +68,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <!-- Gateway card · 105x115 · r18 -->
-                        <Border BackgroundColor="{StaticResource DgCard}"
+                        <Border BackgroundColor="{DynamicResource DgCard}"
                                 Stroke="White"
                                 StrokeThickness="1"
                                 HeightRequest="115"
@@ -87,7 +87,7 @@
                                     <Label Grid.Column="0" Text="SUB"
                                            FontSize="9"
                                            FontFamily="PJSB"
-                                           TextColor="{StaticResource DgGreenText3}"
+                                           TextColor="{DynamicResource DgGreenText3}"
                                            VerticalOptions="Center" />
                                     <!-- SUB 开关：本轮只做视觉，不接协议 -->
                                     <local:ToggleSwitch Grid.Column="1"
@@ -102,7 +102,7 @@
                                        Text="{Binding Name}"
                                        FontSize="12"
                                        FontFamily="PJSSB"
-                                       TextColor="{StaticResource DgTitleAlt}"
+                                       TextColor="{DynamicResource DgTitleAlt}"
                                        VerticalOptions="Center"
                                        LineBreakMode="TailTruncation" />
 
@@ -133,16 +133,16 @@
                 <Label Text="Devices"
                        FontSize="30"
                        FontFamily="PJSB"
-                       TextColor="{StaticResource DgTitle}"
+                       TextColor="{DynamicResource DgTitle}"
                        Margin="9,0,0,0" />
                 <Label Text="Manage your connected home"
                        FontSize="14"
                        FontFamily="PJS"
-                       TextColor="{StaticResource DgSub2}"
+                       TextColor="{DynamicResource DgSub2}"
                        Margin="10,5,0,0" />
 
-                <!-- 插画卡片 · 339x338 · r20（插画为 Figma 导出图；标题/副标题仍用 XAML 渲染） -->
-                <Border BackgroundColor="{StaticResource DgCard}"
+                <!-- 插画卡片 · 339x338 · r20（插画为深色线稿，明暗两态都保持白底） -->
+                <Border BackgroundColor="{DynamicResource DgIllustrationCard}"
                         Stroke="White"
                         StrokeThickness="1"
                         HeightRequest="338"
@@ -163,13 +163,13 @@
                         <Label Text="No devices yet"
                                FontSize="23"
                                FontFamily="PJSB"
-                               TextColor="{StaticResource DgTitle}"
+                               TextColor="{DynamicResource DgTitle}"
                                HorizontalOptions="Center"
                                Margin="0,8,0,0" />
                         <Label Text="Connect a gateway and bring your home online."
                                FontSize="12"
                                FontFamily="PJS"
-                               TextColor="{StaticResource DgSub2}"
+                               TextColor="{DynamicResource DgSub2}"
                                HorizontalOptions="Center"
                                HorizontalTextAlignment="Center"
                                Margin="0,8,0,0" />
@@ -177,7 +177,7 @@
                 </Border>
 
                 <!-- Scan with Bluetooth · 285x48 · r24 -->
-                <Border BackgroundColor="{StaticResource DgGreenScan}"
+                <Border BackgroundColor="{DynamicResource DgGreenScan}"
                         x:Name="ScanBtnEmpty"
                         Stroke="White"
                         StrokeThickness="1"
@@ -220,7 +220,7 @@
                 </BoxView.GestureRecognizers>
             </BoxView>
 
-            <Border BackgroundColor="{StaticResource DgPickerBg}"
+            <Border BackgroundColor="{DynamicResource DgPickerBg}"
                     Stroke="White"
                     StrokeThickness="1"
                     HeightRequest="478"
@@ -236,11 +236,11 @@
                     <Label Text="Bluetooth devices"
                            FontSize="22"
                            FontFamily="PJSB"
-                           TextColor="{StaticResource DgPickerTitle}" />
+                           TextColor="{DynamicResource DgPickerTitle}" />
                     <Label Text="Select a nearby BoxArborMG device."
                            FontSize="12"
                            FontFamily="PJSSB"
-                           TextColor="{StaticResource DgPickerSub}"
+                           TextColor="{DynamicResource DgPickerSub}"
                            Margin="0,16,0,0" />
 
                     <!-- 扫描中 -->
@@ -249,12 +249,12 @@
                         <Label Text="Searching nearby…"
                                FontSize="19"
                                FontFamily="PJSB"
-                               TextColor="{StaticResource DgPickerTitle}"
+                               TextColor="{DynamicResource DgPickerTitle}"
                                Margin="0,58,0,0" />
                         <Label Text="Keep your BoxArborMG device powered on and nearby."
                                FontSize="13"
                                FontFamily="PJSSB"
-                               TextColor="{StaticResource DgPickerSub}"
+                               TextColor="{DynamicResource DgPickerSub}"
                                Margin="0,12,0,0" />
                     </VerticalStackLayout>
 
@@ -276,16 +276,16 @@
                                             <Label Text="{Binding Name}"
                                                    FontSize="15"
                                                    FontFamily="PJSSB"
-                                                   TextColor="{StaticResource DgPickerTitle}"
+                                                   TextColor="{DynamicResource DgPickerTitle}"
                                                    LineBreakMode="TailTruncation" />
                                             <Label Text="{Binding RowHint}"
                                                    FontSize="11"
                                                    FontFamily="PJSSB"
-                                                   TextColor="{StaticResource DgPickerSub}" />
+                                                   TextColor="{DynamicResource DgPickerSub}" />
                                         </VerticalStackLayout>
                                     </Grid>
                                     <BoxView Grid.Row="1" HeightRequest="1"
-                                             BackgroundColor="{StaticResource DgDivider2}" />
+                                             BackgroundColor="{DynamicResource DgDivider2}" />
                                 </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
@@ -297,12 +297,12 @@
                         <Label Text="No devices found"
                                FontSize="19"
                                FontFamily="PJSB"
-                               TextColor="{StaticResource DgPickerTitle}"
+                               TextColor="{DynamicResource DgPickerTitle}"
                                Margin="0,58,0,0" />
                         <Label Text="Make sure your BoxArborMG device is powered on and nearby."
                                FontSize="13"
                                FontFamily="PJSSB"
-                               TextColor="{StaticResource DgPickerSub}"
+                               TextColor="{DynamicResource DgPickerSub}"
                                Margin="0,12,0,0" />
                     </VerticalStackLayout>
 
@@ -312,12 +312,12 @@
                         <Label Text="Connecting…"
                                FontSize="19"
                                FontFamily="PJSB"
-                               TextColor="{StaticResource DgPickerTitle}"
+                               TextColor="{DynamicResource DgPickerTitle}"
                                Margin="0,58,0,0" />
                         <Label Text="Connecting to the selected device. Keep the device nearby."
                                FontSize="13"
                                FontFamily="PJSSB"
-                               TextColor="{StaticResource DgPickerSub}"
+                               TextColor="{DynamicResource DgPickerSub}"
                                Margin="0,12,0,0" />
                     </VerticalStackLayout>
 
@@ -327,12 +327,12 @@
                         <Label Text="Unable to connect"
                                FontSize="19"
                                FontFamily="PJSB"
-                               TextColor="{StaticResource DgPickerTitle}"
+                               TextColor="{DynamicResource DgPickerTitle}"
                                Margin="0,58,0,0" />
                         <Label Text="Keep the device nearby and powered on, then try again."
                                FontSize="13"
                                FontFamily="PJSSB"
-                               TextColor="{StaticResource DgPickerSub}"
+                               TextColor="{DynamicResource DgPickerSub}"
                                Margin="0,12,0,0" />
                     </VerticalStackLayout>
 
@@ -342,12 +342,12 @@
                         <Label Text="Connected"
                                FontSize="19"
                                FontFamily="PJSB"
-                               TextColor="{StaticResource DgPickerTitle}"
+                               TextColor="{DynamicResource DgPickerTitle}"
                                Margin="0,58,0,0" />
                         <Label Text="Gateway connected successfully."
                                FontSize="13"
                                FontFamily="PJSSB"
-                               TextColor="{StaticResource DgPickerSub}"
+                               TextColor="{DynamicResource DgPickerSub}"
                                Margin="0,12,0,0" />
                     </VerticalStackLayout>
 
@@ -355,12 +355,12 @@
                            Text=""
                            FontSize="11"
                            FontFamily="PJSSB"
-                           TextColor="{StaticResource DgPickerSub}"
+                           TextColor="{DynamicResource DgPickerSub}"
                            Margin="0,16,0,0" />
 
                     <!-- Scan again / Scanning… -->
                     <Border x:Name="ScanAgainBtn"
-                            BackgroundColor="{StaticResource DgGreenBtn}"
+                            BackgroundColor="{DynamicResource DgGreenBtn}"
                             StrokeThickness="0"
                             HeightRequest="46"
                             Margin="0,16,0,0"
@@ -382,7 +382,7 @@
 
                     <!-- Cancel / Done（连接成功后变为 Done） -->
                     <Border x:Name="CancelBtn"
-                            BackgroundColor="{StaticResource DgPickerCancelBg}"
+                            BackgroundColor="{DynamicResource DgPickerCancelBg}"
                             StrokeThickness="0"
                             HeightRequest="46"
                             Margin="0,16,0,0">
@@ -396,7 +396,7 @@
                                Text="Cancel"
                                FontSize="14"
                                FontFamily="PJSSB"
-                               TextColor="{StaticResource DgPickerCancelText}"
+                               TextColor="{DynamicResource DgPickerCancelText}"
                                HorizontalOptions="Center"
                                VerticalOptions="Center" />
                     </Border>

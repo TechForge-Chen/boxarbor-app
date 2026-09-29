@@ -21,22 +21,22 @@
                 <Label Text="Settings"
                        FontSize="30"
                        FontFamily="PJSB"
-                       TextColor="{StaticResource DgTitle}"
+                       TextColor="{DynamicResource DgTitle}"
                        Margin="6,0,0,0" />
                 <Label Text="Make the app feel like home"
                        FontSize="14"
                        FontFamily="PJS"
-                       TextColor="{StaticResource DgSub2}"
+                       TextColor="{DynamicResource DgSub2}"
                        Margin="6,7,0,0" />
 
                 <!-- ===== Notifications ===== -->
                 <Label Text="Notifications"
                        FontSize="14"
                        FontFamily="PJSSB"
-                       TextColor="{StaticResource DgTitle}"
+                       TextColor="{DynamicResource DgTitle}"
                        Margin="3,39,0,0" />
 
-                <Border BackgroundColor="{StaticResource DgCard}"
+                <Border BackgroundColor="{DynamicResource DgCard}"
                         Stroke="White"
                         StrokeThickness="1"
                         Margin="0,12,0,0"
@@ -49,7 +49,7 @@
                         <!-- Offline alerts -->
                         <Grid ColumnDefinitions="43,13,*,47" ColumnSpacing="0" HeightRequest="43">
                             <Border Grid.Column="0"
-                                    BackgroundColor="{StaticResource DgIconBgAlt}"
+                                    BackgroundColor="{DynamicResource DgIconBgAlt}"
                                     StrokeThickness="0"
                                     HeightRequest="43"
                                     WidthRequest="43"
@@ -64,12 +64,12 @@
                                 <Label Text="Offline alerts"
                                        FontSize="12"
                                        FontFamily="PJSM"
-                                       TextColor="{StaticResource DgTitle}"
+                                       TextColor="{DynamicResource DgTitle}"
                                        LineBreakMode="NoWrap" />
                                 <Label Text="Get notified when a device disconnects"
                                        FontSize="10.5"
                                        FontFamily="PJS"
-                                       TextColor="{StaticResource DgSub2}" />
+                                       TextColor="{DynamicResource DgSub2}" />
                             </VerticalStackLayout>
                             <local:ToggleSwitch x:Name="swOfflineAlerts"
                                                 Grid.Column="3"
@@ -81,13 +81,13 @@
                         </Grid>
 
                         <BoxView HeightRequest="1"
-                                 BackgroundColor="{StaticResource DgDivider}"
+                                 BackgroundColor="{DynamicResource DgDivider}"
                                  Margin="0,10,0,0" />
 
                         <!-- Automation alerts -->
                         <Grid ColumnDefinitions="43,13,*,47" ColumnSpacing="0" HeightRequest="43" Margin="0,9,0,0">
                             <Border Grid.Column="0"
-                                    BackgroundColor="{StaticResource DgIconBgAlt}"
+                                    BackgroundColor="{DynamicResource DgIconBgAlt}"
                                     StrokeThickness="0"
                                     HeightRequest="43"
                                     WidthRequest="43"
@@ -102,12 +102,12 @@
                                 <Label Text="Automation alerts"
                                        FontSize="12"
                                        FontFamily="PJSM"
-                                       TextColor="{StaticResource DgTitle}"
+                                       TextColor="{DynamicResource DgTitle}"
                                        LineBreakMode="NoWrap" />
                                 <Label Text="Know when a scene is triggered"
                                        FontSize="10.5"
                                        FontFamily="PJS"
-                                       TextColor="{StaticResource DgSub2}" />
+                                       TextColor="{DynamicResource DgSub2}" />
                             </VerticalStackLayout>
                             <local:ToggleSwitch x:Name="swAutomationAlerts"
                                                 Grid.Column="3"
@@ -125,10 +125,10 @@
                 <Label Text="Experience"
                        FontSize="14"
                        FontFamily="PJSSB"
-                       TextColor="{StaticResource DgTitle}"
+                       TextColor="{DynamicResource DgTitle}"
                        Margin="3,29,0,0" />
 
-                <Border BackgroundColor="{StaticResource DgCard}"
+                <Border BackgroundColor="{DynamicResource DgCard}"
                         Stroke="White"
                         StrokeThickness="1"
                         Margin="0,12,0,0"
@@ -141,7 +141,7 @@
                         <!-- Haptic feedback -->
                         <Grid ColumnDefinitions="43,13,*,47" ColumnSpacing="0" HeightRequest="43">
                             <Border Grid.Column="0"
-                                    BackgroundColor="{StaticResource DgIconBgAlt}"
+                                    BackgroundColor="{DynamicResource DgIconBgAlt}"
                                     StrokeThickness="0"
                                     HeightRequest="43"
                                     WidthRequest="43"
@@ -156,12 +156,12 @@
                                 <Label Text="Haptic feedback"
                                        FontSize="12"
                                        FontFamily="PJSM"
-                                       TextColor="{StaticResource DgTitle}"
+                                       TextColor="{DynamicResource DgTitle}"
                                        LineBreakMode="NoWrap" />
                                 <Label Text="A subtle tap response"
                                        FontSize="10.5"
                                        FontFamily="PJS"
-                                       TextColor="{StaticResource DgSub2}" />
+                                       TextColor="{DynamicResource DgSub2}" />
                             </VerticalStackLayout>
                             <local:ToggleSwitch x:Name="swHapticFeedback"
                                                 Grid.Column="3"
@@ -173,13 +173,13 @@
                         </Grid>
 
                         <BoxView HeightRequest="1"
-                                 BackgroundColor="{StaticResource DgDivider}"
+                                 BackgroundColor="{DynamicResource DgDivider}"
                                  Margin="0,10,0,0" />
 
                         <!-- Dark mode -->
                         <Grid ColumnDefinitions="43,13,*,47" ColumnSpacing="0" HeightRequest="43" Margin="0,9,0,0">
                             <Border Grid.Column="0"
-                                    BackgroundColor="{StaticResource DgIconBgAlt}"
+                                    BackgroundColor="{DynamicResource DgIconBgAlt}"
                                     StrokeThickness="0"
                                     HeightRequest="43"
                                     WidthRequest="43"
@@ -194,12 +194,12 @@
                                 <Label Text="Dark mode"
                                        FontSize="12"
                                        FontFamily="PJSM"
-                                       TextColor="{StaticResource DgTitle}"
+                                       TextColor="{DynamicResource DgTitle}"
                                        LineBreakMode="NoWrap" />
                                 <Label Text="Reduce glare at night"
                                        FontSize="10.5"
                                        FontFamily="PJS"
-                                       TextColor="{StaticResource DgSub2}" />
+                                       TextColor="{DynamicResource DgSub2}" />
                             </VerticalStackLayout>
                             <!-- 设计稿此开关为关闭态；本轮只做亮色，开关不切主题（深色画板未交付，仅记住偏好） -->
                             <local:ToggleSwitch x:Name="swDarkMode"
@@ -215,7 +215,7 @@
                 </Border>
 
                 <!-- ===== App version ===== -->
-                <Border BackgroundColor="{StaticResource DgCard}"
+                <Border BackgroundColor="{DynamicResource DgCard}"
                         Stroke="White"
                         StrokeThickness="1"
                         Margin="0,27,0,0"
@@ -225,7 +225,7 @@
                         <RoundRectangle CornerRadius="20" />
                     </Border.StrokeShape>
                     <Grid ColumnDefinitions="17,16,*,7" ColumnSpacing="0">
-                        <Image Grid.Column="0" Source="ic_info.png"
+                        <Image x:Name="imgInfo" Grid.Column="0" Source="ic_info.png"
                                WidthRequest="17" HeightRequest="17"
                                VerticalOptions="Center" />
                         <Label Grid.Column="2"
@@ -233,9 +233,9 @@
                                Text="App version"
                                FontSize="11"
                                FontFamily="PJSM"
-                               TextColor="{StaticResource DgTitle}"
+                               TextColor="{DynamicResource DgTitle}"
                                VerticalOptions="Center" />
-                        <Image Grid.Column="3" Source="ic_chevron.png"
+                        <Image x:Name="imgChevron" Grid.Column="3" Source="ic_chevron.png"
                                WidthRequest="7" HeightRequest="11"
                                VerticalOptions="Center" />
                     </Grid>

@@ -108,12 +108,25 @@ public partial class Board : ContentPage
         _isConnect = MauiProgram.蓝牙连接;
         RebuildGateList(GetBoardCount());
         RefreshNetLabel();
+        ThemeManager.Changed -= OnThemeChanged;
+        ThemeManager.Changed += OnThemeChanged;
+        ThemeManager.BindIcon(imgGatewayEdit, "ic_edit.png", "ic_edit_w.png");
+        OnThemeChanged();   // 后台期间主题可能已切换，回前台重刷
         // 打开界面自动查询当前状态（不弹未连接提示）
         GetNetPara(false);
     }
 
+    private void OnThemeChanged()
+    {
+        RebuildGateList(GetBoardCount());
+        RefreshGateStyle();
+        if (SaveOverlay is { IsVisible: true })
+            HighlightSaveScene(ModePicker.SelectedIndex >= 0 ? ModePicker.SelectedIndex + 1 : 1);
+    }
+
     protected override void OnDisappearing()
     {
+        ThemeManager.Changed -= OnThemeChanged;
         StartPage.OnDataReceivedAction -= OnDataReceived;
         // 页面退出强制清零，防止常驻锁死
         _queryFlag = 0;
@@ -169,8 +182,8 @@ public partial class Board : ContentPage
                 continue;
 
             bool isCurrent = gateNum == _currentGate;
-            frame.BackgroundColor = isCurrent ? Color.FromHex("#12bd63") : Colors.White;
-            label.TextColor = isCurrent ? Colors.White : Color.FromHex("#4c6858");
+            frame.BackgroundColor = isCurrent ? ThemeManager.Color("DgGreenBtn") : ThemeManager.Color("DgCard");
+            label.TextColor = isCurrent ? Colors.White : ThemeManager.Color("DgNum");
         }
     }
 
@@ -203,8 +216,8 @@ public partial class Board : ContentPage
         // 设计稿最上方是绿色 ＋（添加 Box）：本轮仅视觉，不接协议
         var addFrame = new Frame
         {
-            BackgroundColor = Color.FromHex("#12bd63"),
-            BorderColor = Colors.White,
+            BackgroundColor = ThemeManager.Color("DgGreenBtn"),
+            BorderColor = ThemeManager.Color("DgCard"),
             HasShadow = false,
             CornerRadius = 18,
             Padding = 0,
@@ -228,8 +241,8 @@ public partial class Board : ContentPage
 
             var frame = new Frame
             {
-                BackgroundColor = isCurrent ? Color.FromHex("#12bd63") : Colors.White,
-                BorderColor = Colors.White,
+                BackgroundColor = isCurrent ? ThemeManager.Color("DgGreenBtn") : ThemeManager.Color("DgCard"),
+                BorderColor = ThemeManager.Color("DgCard"),
                 HasShadow = false,
                 CornerRadius = 18,
                 Padding = 0,
@@ -244,7 +257,7 @@ public partial class Board : ContentPage
                 FontFamily = "PJSM",
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
-                TextColor = isCurrent ? Colors.White : Color.FromHex("#4c6858"),
+                TextColor = isCurrent ? Colors.White : ThemeManager.Color("DgNum"),
                 InputTransparent = true
             };
             frame.Content = label;
@@ -565,21 +578,22 @@ public partial class Board : ContentPage
 
     private void HighlightSaveScene(int scene)
     {
-        Color green = Color.FromHex("#12bd63");
-        Color greenFaint = Color.FromHex("#e0faeb");
-        Color border = Color.FromHex("#dbe8e0");
+        Color green = ThemeManager.Color("DgGreenBtn");
+        Color greenFaint = ThemeManager.Color("DgGreenFaint");
+        Color border = ThemeManager.Color("DgDialogBorder");
+        Color plain = ThemeManager.Color("DgCard");
 
-        SaveOpt1.BackgroundColor = scene == 1 ? greenFaint : Colors.White;
+        SaveOpt1.BackgroundColor = scene == 1 ? greenFaint : plain;
         SaveOpt1.Stroke = new SolidColorBrush(scene == 1 ? green : border);
-        SaveDot1.Fill = new SolidColorBrush(scene == 1 ? green : Colors.White);
+        SaveDot1.Fill = new SolidColorBrush(scene == 1 ? green : plain);
 
-        SaveOpt2.BackgroundColor = scene == 2 ? greenFaint : Colors.White;
+        SaveOpt2.BackgroundColor = scene == 2 ? greenFaint : plain;
         SaveOpt2.Stroke = new SolidColorBrush(scene == 2 ? green : border);
-        SaveDot2.Fill = new SolidColorBrush(scene == 2 ? green : Colors.White);
+        SaveDot2.Fill = new SolidColorBrush(scene == 2 ? green : plain);
 
-        SaveOpt3.BackgroundColor = scene == 3 ? greenFaint : Colors.White;
+        SaveOpt3.BackgroundColor = scene == 3 ? greenFaint : plain;
         SaveOpt3.Stroke = new SolidColorBrush(scene == 3 ? green : border);
-        SaveDot3.Fill = new SolidColorBrush(scene == 3 ? green : Colors.White);
+        SaveDot3.Fill = new SolidColorBrush(scene == 3 ? green : plain);
     }
 
 
