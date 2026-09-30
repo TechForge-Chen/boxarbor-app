@@ -27,7 +27,7 @@ public partial class Board : ContentPage
     private const byte FRAME_END = 0xBB;
     private const int SINGLE_GATE_DATA_LEN = 28;
     private const int MaxGates = 18;
-    private int _displayedGateCount = 0;
+    private int _displayedGateCount = -1;   // 首次必须构建（0 也要画出 +/- 按钮）
 
     public Board()
     {
@@ -189,16 +189,38 @@ public partial class Board : ContentPage
 
     private int GetBoardCount()
     {
-        if (int.TryParse(DBTNum.Text, out int c) && c >= 1)
+        if (int.TryParse(DBTNum.Text, out int c) && c >= 0)
             return Math.Min(c, MaxGates);
-        return 1;
+        return 0;
     }
 
-    // 根据Board Count动态生成左侧 Box 选择轨（Figma：＋ 在最上，其下按 43x39 / r18 递减排列）
+    /// <summary>＋ 加一个 Box（0→1→…→18）。</summary>
+    private void OnAddBox(object sender, TappedEventArgs e)
+    {
+        int cur = GetBoardCount();
+        int next = Math.Min(cur + 1, MaxGates);
+        if (next == cur) return;
+        DBTNum.Text = next.ToString();
+        ApplyBoardCountChange();
+        StartPage.TapHaptic();
+    }
+
+    /// <summary>− 减一个 Box（从最大编号往回减：…→2→1→0，0 时轨只剩 +/-）。</summary>
+    private void OnRemoveBox(object sender, TappedEventArgs e)
+    {
+        int cur = GetBoardCount();
+        int next = Math.Max(cur - 1, 0);
+        if (next == cur) return;
+        DBTNum.Text = next.ToString();
+        ApplyBoardCountChange();
+        StartPage.TapHaptic();
+    }
+
+    // 根据Board Count动态生成左侧 Box 选择轨（＋ 在最上、− 紧随，其下按 43x39 / r18 递减排列）
     private void RebuildGateList(int count)
     {
-        if (count < 1) count = 1;
         if (count > MaxGates) count = MaxGates;
+        if (count < 0) count = 0;
 
         // 当前选中的通道若超出范围则回退
         if (_currentGate > count) _currentGate = count;
@@ -213,7 +235,8 @@ public partial class Board : ContentPage
 
         GateListLayout.Children.Clear();
 
-        // 设计稿最上方是绿色 ＋（添加 Box）：本轮仅视觉，不接协议
+        // 最上方 ＋（加 Box）与紧随其下的 −（减 Box）：数量 0..18，
+        // 改动走与直接编辑 Board Count 相同的 ApplyBoardCountChange（含协议下发）
         var addFrame = new Frame
         {
             BackgroundColor = ThemeManager.Color("DgGreenBtn"),
@@ -233,7 +256,34 @@ public partial class Board : ContentPage
             VerticalOptions = LayoutOptions.Center,
             InputTransparent = true
         };
+        var addTap = new TapGestureRecognizer();
+        addTap.Tapped += OnAddBox;
+        addFrame.GestureRecognizers.Add(addTap);
         GateListLayout.Children.Add(addFrame);
+
+        var removeFrame = new Frame
+        {
+            BackgroundColor = ThemeManager.Color("DgGreenBtn"),
+            BorderColor = ThemeManager.Color("DgCard"),
+            HasShadow = false,
+            CornerRadius = 18,
+            Padding = 0,
+            HeightRequest = 39,
+            WidthRequest = 43
+        };
+        removeFrame.Content = new Image
+        {
+            Source = "ic_minus.png",
+            WidthRequest = 18,
+            HeightRequest = 18,
+            HorizontalOptions = LayoutOptions.Center,
+            VerticalOptions = LayoutOptions.Center,
+            InputTransparent = true
+        };
+        var removeTap = new TapGestureRecognizer();
+        removeTap.Tapped += OnRemoveBox;
+        removeFrame.GestureRecognizers.Add(removeTap);
+        GateListLayout.Children.Add(removeFrame);
 
         for (int i = count; i >= 1; i--)
         {

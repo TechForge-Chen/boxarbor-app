@@ -137,7 +137,7 @@
                             </Border.StrokeShape>
                             <Entry x:Name="DBTNum"
                                    MinimumHeightRequest="0"
-                                   Text="10"
+                                   Text="0"
                                    FontSize="14"
                                    FontFamily="PJSM"
                                    BackgroundColor="Transparent"
