@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 覆盖 MAUI SDK 的 Maui.SplashTheme（同名样式应用级优先）：
+         关掉系统预览窗，窗口底色纯绿。此前系统会画一枚居中放大的 logo，
+         与 SplashPage 设计位（128x138 @ y267）尺寸/位置都不同，交接处抖一下。
+         logo 只由 SplashPage 展示一次，之后静止。MauiSplashScreen 条目保留
+         （生成 maui_splash 资源被 SDK 引用，删了会缺资源）。 -->
+    <style name="Maui.SplashTheme" parent="Maui.MainTheme.NoActionBar">
+        <item name="maui_splash">true</item>
+        <item name="android:windowBackground">@color/launch_green</item>
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+</resources>

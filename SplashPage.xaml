@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- 开屏页 · Figma 246:362 "开屏页面"（375x812）
      底色 #16c95c + 白色 logo-faithful（246:356 导出 128x138 @123,267），无 slogan。
-     系统启动屏（MauiSplashScreen）同款底色 + 同一 logo。 -->
+     系统预览窗已在 styles.xml 关闭（windowDisablePreview），logo 只在此页展示一次。 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="BluetoothMauiApp.SplashPage"
