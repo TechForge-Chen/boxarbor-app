@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<!-- 设计稿 Figma 67:1214 "HOME"（375x812）
-     仅亮色。扫描/连接 UI 已按设计稿移到 DataPage（Devices），
+<!-- 设计稿 Figma 67:1214 "HOME"（375x812）。
+     扫描/连接 UI 已按设计稿移到 DataPage（Devices），
      本页只保留 HOME 的只读状态与场景选择。
      字重按 Figma 实测映射：PJS=400 / PJSM=500 / PJSSB=600 / PJSB=700（字体 Plus Jakarta Sans）。 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -29,7 +29,7 @@
                                TextColor="{DynamicResource DgTitle}" />
                     </VerticalStackLayout>
 
-                    <!-- View guide · 引导入口，本轮只做占位 -->
+                    <!-- View guide · 新手引导入口 -->
                     <Border Grid.Column="1"
                             x:Name="BtnViewGuide"
                             BackgroundColor="{DynamicResource DgGuideChip}"
@@ -103,7 +103,7 @@
                                                 IsOn="True"
                                                 OnColor="White"
                                                 OffColor="White"
-                                                KnobColor="{DynamicResource DgGreen}"
+                                                KnobColor="{DynamicResource DgGreenAccent}"
                                                 VerticalOptions="Center"
                                                 HorizontalOptions="End" />
                         </Grid>
@@ -123,8 +123,8 @@
                 </Border>
 
                 <!-- ===== 网关连接状态（只读） ===== -->
-                <Border BackgroundColor="{DynamicResource DgCard}"
-                        Stroke="White"
+                <Border BackgroundColor="{DynamicResource DgStatusCard}"
+                        Stroke="{DynamicResource DgEdge}"
                         StrokeThickness="1"
                         HeightRequest="56"
                         Margin="0,12,0,0"
@@ -195,14 +195,14 @@
                         </Border.GestureRecognizers>
                         <Grid ColumnDefinitions="52,16,*,22" ColumnSpacing="0">
                             <Border Grid.Column="0" x:Name="iconBg1"
-                                    BackgroundColor="White"
+                                    BackgroundColor="{DynamicResource DgIconBg}"
                                     StrokeThickness="0"
                                     WidthRequest="52" HeightRequest="52"
                                     VerticalOptions="Center">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="18" />
                                 </Border.StrokeShape>
-                                <Image Source="ic_scene1.png" WidthRequest="22" HeightRequest="20"
+                                <Image x:Name="imgScene1" Source="ic_scene1.png" WidthRequest="22" HeightRequest="20"
                                        HorizontalOptions="Center" VerticalOptions="Center" />
                             </Border>
                             <VerticalStackLayout Grid.Column="2" Spacing="0"
@@ -230,11 +230,11 @@
                                   VerticalOptions="Center">
                                 <Ellipse x:Name="ring1"
                                          Fill="White"
-                                         Stroke="{DynamicResource DgGreen}"
+                                         Stroke="{DynamicResource DgGreenAccent}"
                                          StrokeThickness="2" />
                                 <Ellipse x:Name="ringCore1"
                                          WidthRequest="12" HeightRequest="12"
-                                         Fill="{DynamicResource DgGreen}"
+                                         Fill="{DynamicResource DgGreenAccent}"
                                          HorizontalOptions="Center" VerticalOptions="Center" />
                             </Grid>
                         </Grid>
@@ -242,8 +242,8 @@
 
                     <!-- Scene 2 · 未选中 -->
                     <Border x:Name="frameScene2"
-                            BackgroundColor="{DynamicResource DgCard}"
-                            Stroke="White"
+                            BackgroundColor="{DynamicResource DgSceneCard}"
+                            Stroke="{DynamicResource DgEdge}"
                             StrokeThickness="1"
                             HeightRequest="82"
                             Padding="16,15,22,15">
@@ -262,7 +262,7 @@
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="18" />
                                 </Border.StrokeShape>
-                                <Image Source="ic_scene2.png" WidthRequest="22" HeightRequest="23"
+                                <Image x:Name="imgScene2" Source="ic_scene2.png" WidthRequest="22" HeightRequest="23"
                                        HorizontalOptions="Center" VerticalOptions="Center" />
                             </Border>
                             <VerticalStackLayout Grid.Column="2" Spacing="0"
@@ -294,7 +294,7 @@
                                          StrokeThickness="2" />
                                 <Ellipse x:Name="ringCore2"
                                          WidthRequest="12" HeightRequest="12"
-                                         Fill="{DynamicResource DgGreen}"
+                                         Fill="{DynamicResource DgGreenAccent}"
                                          HorizontalOptions="Center" VerticalOptions="Center"
                                          IsVisible="False" />
                             </Grid>
@@ -303,8 +303,8 @@
 
                     <!-- Scene 3 · 未选中 -->
                     <Border x:Name="frameScene3"
-                            BackgroundColor="{DynamicResource DgCard}"
-                            Stroke="White"
+                            BackgroundColor="{DynamicResource DgSceneCard}"
+                            Stroke="{DynamicResource DgEdge}"
                             StrokeThickness="1"
                             HeightRequest="82"
                             Padding="16,15,22,15">
@@ -323,7 +323,7 @@
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="18" />
                                 </Border.StrokeShape>
-                                <Image Source="ic_scene3.png" WidthRequest="21" HeightRequest="21"
+                                <Image x:Name="imgScene3" Source="ic_scene3.png" WidthRequest="21" HeightRequest="21"
                                        HorizontalOptions="Center" VerticalOptions="Center" />
                             </Border>
                             <VerticalStackLayout Grid.Column="2" Spacing="0"
@@ -355,7 +355,7 @@
                                          StrokeThickness="2" />
                                 <Ellipse x:Name="ringCore3"
                                          WidthRequest="12" HeightRequest="12"
-                                         Fill="{DynamicResource DgGreen}"
+                                         Fill="{DynamicResource DgGreenAccent}"
                                          HorizontalOptions="Center" VerticalOptions="Center"
                                          IsVisible="False" />
                             </Grid>

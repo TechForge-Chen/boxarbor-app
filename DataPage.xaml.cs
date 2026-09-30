@@ -67,6 +67,9 @@ public partial class DataPage : ContentPage
         StartPage.EnsureEngine();
         DeviceList.ItemsSource = StartPage.Devices;
 
+        // 空态插画：暗色下卡片变深，换暗稿导出的插画
+        ThemeManager.BindIcon(imgEmpty, "empty_gateway.png", "empty_gateway_dark.png");
+
         StartPage.OnDataReceivedAction = OnDataReceived;
 
         ThemeManager.Changed -= OnThemeChanged;

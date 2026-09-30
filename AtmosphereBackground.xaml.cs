@@ -9,12 +9,13 @@ public partial class AtmosphereBackground : ContentView
         Unloaded += (_, _) => ThemeManager.Changed -= OnTheme;
     }
 
-    /// <summary>暗色页面是纯色（Figma 暗稿无光晕），隐藏三团光晕图。</summary>
+    /// <summary>暗稿仍有三团低饱和色晕（同节点改色后重导出），明暗各用一套 PNG。</summary>
     private void OnTheme()
     {
-        bool show = !ThemeManager.IsDark;
-        if (GlowTop is not null) GlowTop.IsVisible = show;
-        if (GlowRight is not null) GlowRight.IsVisible = show;
-        if (GlowBottom is not null) GlowBottom.IsVisible = show;
+        if (GlowTop is null) return;
+        bool dark = ThemeManager.IsDark;
+        GlowTop.Source = dark ? "atmos_topleft_dark.png" : "atmos_topleft.png";
+        GlowRight.Source = dark ? "atmos_right_dark.png" : "atmos_right.png";
+        GlowBottom.Source = dark ? "atmos_bottom_dark.png" : "atmos_bottom.png";
     }
 }

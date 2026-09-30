@@ -10,18 +10,16 @@
              HorizontalOptions="Fill"
              VerticalOptions="Fill">
     <Grid>
-        <!-- Modal backdrop · #0d241b -->
-        <BoxView x:Name="Backdrop"
-                 Color="{DynamicResource DgBackdrop}"
-                 Opacity="0.72">
-            <BoxView.GestureRecognizers>
+        <!-- Modal backdrop · #0d241b（72%）：BoxView 在本机整屏渲染异常，改用 Grid 背景色 + Opacity -->
+        <Grid BackgroundColor="{DynamicResource DgBackdrop}" Opacity="0.72">
+            <Grid.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnBackdropTapped" />
-            </BoxView.GestureRecognizers>
-        </BoxView>
+            </Grid.GestureRecognizers>
+        </Grid>
 
         <!-- Rename · shared dialog -->
         <Border BackgroundColor="{DynamicResource DgDialogBg}"
-                Stroke="White"
+                Stroke="{DynamicResource DgEdge}"
                 StrokeThickness="1"
                 HorizontalOptions="Fill"
                 VerticalOptions="Center"
@@ -46,8 +44,8 @@
                        Margin="0,9,0,0" />
 
                 <!-- Name input · 291x49 · r18 -->
-                <Border BackgroundColor="White"
-                        Stroke="White"
+                <Border BackgroundColor="{DynamicResource DgField}"
+                        Stroke="{DynamicResource DgField}"
                         StrokeThickness="1"
                         HeightRequest="49"
                         Margin="0,15,0,0"
@@ -69,8 +67,8 @@
                 <Grid ColumnDefinitions="139,13,139" ColumnSpacing="0" Margin="0,28,0,0">
 
                     <Border Grid.Column="0"
-                            BackgroundColor="White"
-                            Stroke="White"
+                            BackgroundColor="{DynamicResource DgField}"
+                            Stroke="{DynamicResource DgField}"
                             StrokeThickness="1"
                             HeightRequest="45">
                         <Border.StrokeShape>
@@ -89,7 +87,7 @@
 
                     <Border Grid.Column="2"
                             BackgroundColor="{DynamicResource DgGreenBtn}"
-                            Stroke="White"
+                            Stroke="{DynamicResource DgGreenBtnEdge}"
                             StrokeThickness="1"
                             HeightRequest="45">
                         <Border.StrokeShape>

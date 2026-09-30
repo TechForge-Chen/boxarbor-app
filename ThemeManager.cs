@@ -6,8 +6,8 @@ using Microsoft.Maui.Storage;
 namespace BluetoothMauiApp;
 
 /// <summary>
-/// 明暗主题切换。暗色值来自 Figma Value.tokens.json 成对 token 与
-/// "Theme preview · Dark"(256:988) 按图层名配对提取的结果；
+/// 明暗主题切换。暗色值来自 Value.tokens.json 成对 token 与
+/// 2026-09-30 改暗后的 0922主流程画板（0D1713 页底 / 21372B 卡 / 43DC89 亮绿等）；
 /// 通过把 Dg* 资源换成 DynamicResource 引用的同名键实现整页换色。
 /// </summary>
 public static class ThemeManager
@@ -30,7 +30,11 @@ public static class ThemeManager
         ["DgCardSelected"] = "#21372B",
         ["DgSceneCard"] = "#C221372B",   // 未选中场景卡 76%（暗稿）
         ["DgSceneCardStroke"] = "#29A2D4B8",
-        // 图标圆底 DgIconBg/DgIconBgAlt 保持浅色：图标 PNG 为深色，浅底才可读
+        ["DgIconBg"] = "#21372B",
+        ["DgIconBgAlt"] = "#21372B",
+        ["DgStatusCard"] = "#9921372B",  // 网关状态卡 60%（暗稿）
+        ["DgGridCard"] = "#B821372B",    // 网关网格卡 72%（暗稿）
+        ["DgIllustrationCard"] = "#1D3228",
 
         // 绿色族（暗稿：面→#087D40，亮强调→#43DC89，文字→#62EBA0）
         ["DgGreen"] = "#087D40",
@@ -42,6 +46,8 @@ public static class ThemeManager
         ["DgGreenText2"] = "#62EBA0",
         ["DgGreenText3"] = "#62EBA0",
         ["DgGreenFaint"] = "#D921372B",
+        ["DgGreenBright"] = "#43DC89",
+        ["DgGreenAccent"] = "#43DC89",
 
         // 文字（暗稿：标题族→#F1F7F3，次级→浅灰绿）
         ["DgTitle"] = "#F1F7F3",
@@ -67,6 +73,18 @@ public static class ThemeManager
         ["DgDivider2"] = "#B33B5245",
         ["DgSwitchOff"] = "#3B5245",
 
+        // 描边/字段
+        ["DgEdge"] = "#29A2D4B8",
+        ["DgGreenBtnEdge"] = "#087D40",
+        ["DgField"] = "#21372B",
+        ["DgSaveOpt"] = "#D921372B",
+        ["DgSaveDotRing"] = "#547363",
+
+        // 灯控页左轨（暗稿：列底≈页色，芯片 #304439、描边 #1C3025）
+        ["DgRailColumn"] = "#0E1D17",
+        ["DgRailChip"] = "#304439",
+        ["DgRailChipEdge"] = "#1C3025",
+
         // 弹窗（token519/520、524/525、675/676、678/679 成对）
         ["DgDialogBg"] = "#1B2C23",
         ["DgDialogBg2"] = "#F51B2C23",
@@ -77,10 +95,10 @@ public static class ThemeManager
         ["DgPickerSub"] = "#B2C1B8",
         ["DgPickerCancelBg"] = "#21372B",
         ["DgPickerCancelText"] = "#A9C7B5",
-        ["DgBackdrop"] = "#80020906",
+        ["DgBackdrop"] = "#020906",      // 半透明由父 Grid.Opacity 提供
         ["DgGuideChip"] = "#B821372B",
 
-        // 氛围底（暗稿页面即纯色，光晕在暗色下隐藏）
+        // 氛围底（暗稿有三团低饱和色晕，PNG 见 atmos_*_dark）
         ["DgAtmosGreen"] = "#2916482F",
         ["DgAtmosBlue"] = "#6B203348",
         ["DgAtmosGreen2"] = "#6B16482F",

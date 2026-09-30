@@ -246,6 +246,10 @@ public partial class StartPage : ContentPage
         ThemeManager.BindIcon(imgSceneEdit1, "ic_edit_sm.png", "ic_edit_sm_w.png");
         ThemeManager.BindIcon(imgSceneEdit2, "ic_edit_sm.png", "ic_edit_sm_w.png");
         ThemeManager.BindIcon(imgSceneEdit3, "ic_edit_sm.png", "ic_edit_sm_w.png");
+        // 场景圆底暗色化后，图标也要换浅色版（设计稿 #A9C7B5）
+        ThemeManager.BindIcon(imgScene1, "ic_scene1.png", "ic_scene1_w.png");
+        ThemeManager.BindIcon(imgScene2, "ic_scene2.png", "ic_scene2_w.png");
+        ThemeManager.BindIcon(imgScene3, "ic_scene3.png", "ic_scene3_w.png");
 
         // 新手引导：View guide 入口 + 四步演示（背景为渲染图，不切真实页面）
         foreach (var g in new[] { Guide1, Guide2, Guide3, Guide4 })
@@ -591,7 +595,8 @@ public partial class StartPage : ContentPage
     {
         Color cardBg = ThemeManager.Color(selected ? "DgCardSelected" : "DgSceneCard");
         Color cardStroke = selected ? ThemeManager.Color("DgGreen") : ThemeManager.Color("DgSceneCardStroke");
-        Color iconBg = selected ? Colors.White : ThemeManager.Color("DgIconBg");
+        // 亮态选中芯片为白底突出选中；暗稿明暗两态芯片同为 #21372B（浅色图标靠 _w 图区分）
+        Color iconBg = selected && !ThemeManager.IsDark ? Colors.White : ThemeManager.Color("DgIconBg");
         Color ringStroke = selected ? ThemeManager.Color("DgGreenRing") : ThemeManager.Color("DgTrackRing");
         string sub = selected ? "Active scene" : "Standby";
 

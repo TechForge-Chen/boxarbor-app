@@ -37,7 +37,7 @@
                        Margin="3,39,0,0" />
 
                 <Border BackgroundColor="{DynamicResource DgCard}"
-                        Stroke="White"
+                        Stroke="{DynamicResource DgEdge}"
                         StrokeThickness="1"
                         Margin="0,12,0,0"
                         Padding="14,10,14,11">
@@ -57,7 +57,7 @@
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="21" />
                                 </Border.StrokeShape>
-                                <Image Source="ic_bell.png" WidthRequest="18" HeightRequest="21"
+                                <Image x:Name="imgBell" Source="ic_bell.png" WidthRequest="18" HeightRequest="21"
                                        HorizontalOptions="Center" VerticalOptions="Center" />
                             </Border>
                             <VerticalStackLayout Grid.Column="2" Spacing="3" VerticalOptions="Center">
@@ -95,7 +95,7 @@
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="21" />
                                 </Border.StrokeShape>
-                                <Image Source="ic_clock.png" WidthRequest="20" HeightRequest="20"
+                                <Image x:Name="imgClock" Source="ic_clock.png" WidthRequest="20" HeightRequest="20"
                                        HorizontalOptions="Center" VerticalOptions="Center" />
                             </Border>
                             <VerticalStackLayout Grid.Column="2" Spacing="3" VerticalOptions="Center">
@@ -129,7 +129,7 @@
                        Margin="3,29,0,0" />
 
                 <Border BackgroundColor="{DynamicResource DgCard}"
-                        Stroke="White"
+                        Stroke="{DynamicResource DgEdge}"
                         StrokeThickness="1"
                         Margin="0,12,0,0"
                         Padding="14,10,14,11">
@@ -149,7 +149,7 @@
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="21" />
                                 </Border.StrokeShape>
-                                <Image Source="ic_haptic.png" WidthRequest="22" HeightRequest="20"
+                                <Image x:Name="imgHaptic" Source="ic_haptic.png" WidthRequest="22" HeightRequest="20"
                                        HorizontalOptions="Center" VerticalOptions="Center" />
                             </Border>
                             <VerticalStackLayout Grid.Column="2" Spacing="3" VerticalOptions="Center">
@@ -187,7 +187,7 @@
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="21" />
                                 </Border.StrokeShape>
-                                <Image Source="ic_moon.png" WidthRequest="21" HeightRequest="21"
+                                <Image x:Name="imgMoon" Source="ic_moon.png" WidthRequest="21" HeightRequest="21"
                                        HorizontalOptions="Center" VerticalOptions="Center" />
                             </Border>
                             <VerticalStackLayout Grid.Column="2" Spacing="3" VerticalOptions="Center">
@@ -201,7 +201,7 @@
                                        FontFamily="PJS"
                                        TextColor="{DynamicResource DgSub2}" />
                             </VerticalStackLayout>
-                            <!-- 设计稿此开关为关闭态；本轮只做亮色，开关不切主题（深色画板未交付，仅记住偏好） -->
+                            <!-- 设计稿此开关为关闭态；Toggled 里走 ThemeManager.Apply 整套换色 -->
                             <local:ToggleSwitch x:Name="swDarkMode"
                                                 Grid.Column="3"
                                                 WidthRequest="47"
@@ -216,7 +216,7 @@
 
                 <!-- ===== App version ===== -->
                 <Border BackgroundColor="{DynamicResource DgCard}"
-                        Stroke="White"
+                        Stroke="{DynamicResource DgEdge}"
                         StrokeThickness="1"
                         Margin="0,27,0,0"
                         Padding="18,14,17,14"

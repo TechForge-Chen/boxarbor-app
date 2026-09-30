@@ -19,9 +19,9 @@
         <Setter Property="StrokeThickness" Value="1"/>
     </Style>
 
-    <Style TargetType="BoxView">
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
-    </Style>
+    <!-- 不要加隐式 BoxView 样式：曾给 BoxView 强塞 BackgroundColor(#141414)，
+         把全屏蒙层整块盖死（Color 的透明度叠在它上面也透不出页面内容）。
+         现有 BoxView 用法（1px 分割线）都自带 BackgroundColor。 -->
 
     <Style TargetType="Button">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource PrimaryDarkText}}" />

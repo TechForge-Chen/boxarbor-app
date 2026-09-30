@@ -83,9 +83,9 @@
 
     <!-- ============================================================
          智能控制APP (Figma MhfMUp4iE1xpXK6pDrXBZn) 设计令牌
-         明/暗值来源：Value.tokens.json（成对 token）+ Figma "Theme preview · Dark"
-         (256:988) 按图层名配对提取；切换入口 ThemeManager.Apply。
-         DgIconBg/DgIconBgAlt 故意不做暗值：图标为深色 PNG，浅色圆底保证可读。
+         明/暗值来源：Value.tokens.json（成对 token）+ 暗稿画板按图层提取；
+         切换入口 ThemeManager.Apply。暗色值以 2026-09-30 改暗后的
+         0922主流程画板为准。
          ============================================================ -->
     <Color x:Key="DgPageBg">#f6f7f7</Color>
     <Color x:Key="DgCard">#ffffff</Color>
@@ -146,5 +146,26 @@
     <Color x:Key="DgSceneCardStroke">#ffffff</Color>
     <Color x:Key="DgIllustrationCard">#ffffff</Color>
     <Color x:Key="DgGuideChip">#ffffff</Color>
+
+    <!-- 描边：卡片白描边亮态保留，暗态换低透明浅绿（设计稿 #A2D4B8@16%） -->
+    <Color x:Key="DgEdge">#FFFFFF</Color>
+    <!-- 绿色按钮描边：亮态白、暗态与按钮同绿（暗稿无白描边） -->
+    <Color x:Key="DgGreenBtnEdge">#FFFFFF</Color>
+    <!-- 表单字段（重命名输入框/取消钮、Board Count 等） -->
+    <Color x:Key="DgField">#FFFFFF</Color>
+    <!-- 保存至 Scene 弹窗未选项底色 -->
+    <Color x:Key="DgSaveOpt">#FFFFFF</Color>
+    <Color x:Key="DgSaveDotRing">#8cb09c</Color>
+    <!-- 亮绿强调（滑块圆点/选中单选/开关滑块）：暗稿 #43DC89 -->
+    <Color x:Key="DgGreenBright">#12bd63</Color>
+    <Color x:Key="DgGreenAccent">#16c95c</Color>
+    <!-- 网关状态卡（暗态 60% 半透明 #21372B） -->
+    <Color x:Key="DgStatusCard">#ffffff</Color>
+    <!-- 网关网格卡（暗态 72% 半透明 #21372B） -->
+    <Color x:Key="DgGridCard">#ffffff</Color>
+    <!-- 灯控页左侧 Box 轨 -->
+    <Color x:Key="DgRailColumn">#ffffff</Color>
+    <Color x:Key="DgRailChip">#ffffff</Color>
+    <Color x:Key="DgRailChipEdge">#ffffff</Color>
 
 </ResourceDictionary>

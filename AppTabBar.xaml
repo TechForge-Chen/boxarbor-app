@@ -19,8 +19,8 @@
                HorizontalOptions="Fill" VerticalOptions="Fill"
                InputTransparent="true" />
 
-        <!-- 中央凸起 FAB · 58x58 · 设计稿 (159,15) -->
-        <Image Source="tab_home_fab.png"
+        <!-- 中央凸起 FAB · 58x58 · 设计稿 (159,15)；暗色换深绿版 -->
+        <Image x:Name="FabImg" Source="tab_home_fab.png"
                WidthRequest="58" HeightRequest="58"
                HorizontalOptions="Center" VerticalOptions="Start"
                Margin="0,15,0,0"

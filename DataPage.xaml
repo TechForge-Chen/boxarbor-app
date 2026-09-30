@@ -30,7 +30,7 @@
 
                 <!-- Scan with Bluetooth · 335x40 · r24 -->
                 <Border BackgroundColor="{DynamicResource DgGreenScan}"
-                        Stroke="White"
+                        Stroke="{DynamicResource DgGreenBtnEdge}"
                         StrokeThickness="1"
                         HeightRequest="40"
                         Margin="3,3,4,0"
@@ -68,8 +68,8 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <!-- Gateway card · 105x115 · r18 -->
-                        <Border BackgroundColor="{DynamicResource DgCard}"
-                                Stroke="White"
+                        <Border BackgroundColor="{DynamicResource DgGridCard}"
+                                Stroke="{DynamicResource DgEdge}"
                                 StrokeThickness="1"
                                 HeightRequest="115"
                                 Padding="10,10,10,9"
@@ -141,9 +141,9 @@
                        TextColor="{DynamicResource DgSub2}"
                        Margin="10,5,0,0" />
 
-                <!-- 插画卡片 · 339x338 · r20（插画为深色线稿，明暗两态都保持白底） -->
+                <!-- 插画卡片 · 339x338 · r20（暗态换 empty_gateway_dark.png，卡片色走 DgIllustrationCard） -->
                 <Border BackgroundColor="{DynamicResource DgIllustrationCard}"
-                        Stroke="White"
+                        Stroke="{DynamicResource DgEdge}"
                         StrokeThickness="1"
                         HeightRequest="338"
                         Margin="1,33,0,0"
@@ -156,7 +156,7 @@
                     </Border.Shadow>
 
                     <VerticalStackLayout Spacing="0">
-                        <Image Source="empty_gateway.png"
+                        <Image x:Name="imgEmpty" Source="empty_gateway.png"
                                HeightRequest="205"
                                Aspect="AspectFit"
                                HorizontalOptions="Fill" />
@@ -179,7 +179,7 @@
                 <!-- Scan with Bluetooth · 285x48 · r24 -->
                 <Border BackgroundColor="{DynamicResource DgGreenScan}"
                         x:Name="ScanBtnEmpty"
-                        Stroke="White"
+                        Stroke="{DynamicResource DgGreenBtnEdge}"
                         StrokeThickness="1"
                         WidthRequest="285"
                         HeightRequest="48"
@@ -213,15 +213,16 @@
 
         <!-- ========== 蓝牙设备选择弹窗 · Figma 191:240 ========== -->
         <Grid x:Name="PickerOverlay" IsVisible="False">
-            <!-- 透明度走颜色 alpha（#80=0.50，Figma Modal backdrop）：BoxView 的 Opacity 属性在本机不生效 -->
-            <BoxView Color="#800d241b">
-                <BoxView.GestureRecognizers>
+
+            <!-- 蒙层 50%：BoxView 在本机渲染异常（整屏被纯色盖住），改用 Grid 自身背景 + Opacity -->
+            <Grid BackgroundColor="{DynamicResource DgBackdrop}" Opacity="0.5">
+                <Grid.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnPickerBackdrop" />
-                </BoxView.GestureRecognizers>
-            </BoxView>
+                </Grid.GestureRecognizers>
+            </Grid>
 
             <Border BackgroundColor="{DynamicResource DgPickerBg}"
-                    Stroke="White"
+                    Stroke="{DynamicResource DgEdge}"
                     StrokeThickness="1"
                     HeightRequest="478"
                     HorizontalOptions="Fill"

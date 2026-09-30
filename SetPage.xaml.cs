@@ -23,5 +23,10 @@ public partial class SetPage : ContentPage
         // 深色版图标（图标 PNG 为深色，深色卡片上换白版）
         ThemeManager.BindIcon(imgInfo, "ic_info.png", "ic_info_w.png");
         ThemeManager.BindIcon(imgChevron, "ic_chevron.png", "ic_chevron_w.png");
+        // 行图标：暗色下圆底变深，图标换浅色版（设计稿 #A9C7B5）
+        ThemeManager.BindIcon(imgBell, "ic_bell.png", "ic_bell_w.png");
+        ThemeManager.BindIcon(imgClock, "ic_clock.png", "ic_clock_w.png");
+        ThemeManager.BindIcon(imgHaptic, "ic_haptic.png", "ic_haptic_w.png");
+        ThemeManager.BindIcon(imgMoon, "ic_moon.png", "ic_moon_w.png");
     }
 }

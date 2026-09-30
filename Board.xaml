@@ -59,7 +59,7 @@
             <!-- ===== Save to scene · 339x45 · r18 ===== -->
             <Border Grid.Row="2"
                     BackgroundColor="{DynamicResource DgGreenBtn}"
-                    Stroke="White"
+                    Stroke="{DynamicResource DgGreenBtnEdge}"
                     StrokeThickness="1"
                     HeightRequest="45"
                     Margin="18,24,18,0">
@@ -80,7 +80,7 @@
             <!-- ===== 协议必需控件（设计稿未画，按同一卡片风格补） ===== -->
             <Border Grid.Row="3"
                     BackgroundColor="{DynamicResource DgCard}"
-                    Stroke="White"
+                    Stroke="{DynamicResource DgEdge}"
                     StrokeThickness="1"
                     Margin="18,12,18,0"
                     Padding="14,10,14,10">
@@ -156,7 +156,7 @@
 
                 <ScrollView Grid.Column="0" VerticalScrollBarVisibility="Default">
                     <VerticalStackLayout Spacing="8"
-                                         BackgroundColor="{DynamicResource DgCard}"
+                                         BackgroundColor="{DynamicResource DgRailColumn}"
                                          x:Name="GateListLayout"
                                          VerticalOptions="Start" />
                 </ScrollView>
@@ -166,7 +166,7 @@
 
                         <!-- Monochrome light 1 -->
                         <Border BackgroundColor="{DynamicResource DgCard}"
-                                Stroke="White"
+                                Stroke="{DynamicResource DgEdge}"
                                 StrokeThickness="1"
                                 Padding="14,13,14,21">
                             <Border.StrokeShape>
@@ -197,7 +197,7 @@
                                 <Slider x:Name="DSHzSet1" Minimum="0" Maximum="100"
                                         MinimumTrackColor="{DynamicResource DgGreenBtn}"
                                         MaximumTrackColor="{DynamicResource DgTrack}"
-                                        ThumbColor="{DynamicResource DgGreenBtn}"
+                                        ThumbColor="{DynamicResource DgGreenBright}"
                                         HeightRequest="30"
                                         ValueChanged="OnSliderValueChanged"
                                         DragCompleted="MySlider_DragCompleted" />
@@ -212,7 +212,7 @@
                                 <Slider x:Name="DSBrightSet1" Minimum="0" Maximum="100"
                                         MinimumTrackColor="{DynamicResource DgGreenBtn}"
                                         MaximumTrackColor="{DynamicResource DgTrack}"
-                                        ThumbColor="{DynamicResource DgGreenBtn}"
+                                        ThumbColor="{DynamicResource DgGreenBright}"
                                         HeightRequest="30"
                                         ValueChanged="OnSliderValueChanged"
                                         DragCompleted="MySlider_DragCompleted" />
@@ -221,7 +221,7 @@
 
                         <!-- Monochrome light 2 -->
                         <Border BackgroundColor="{DynamicResource DgCard}"
-                                Stroke="White"
+                                Stroke="{DynamicResource DgEdge}"
                                 StrokeThickness="1"
                                 Padding="14,13,14,21">
                             <Border.StrokeShape>
@@ -250,7 +250,7 @@
                                 <Slider x:Name="DSHzSet2" Minimum="0" Maximum="100"
                                         MinimumTrackColor="{DynamicResource DgGreenBtn}"
                                         MaximumTrackColor="{DynamicResource DgTrack}"
-                                        ThumbColor="{DynamicResource DgGreenBtn}"
+                                        ThumbColor="{DynamicResource DgGreenBright}"
                                         HeightRequest="30"
                                         ValueChanged="OnSliderValueChanged"
                                         DragCompleted="MySlider_DragCompleted" />
@@ -264,7 +264,7 @@
                                 <Slider x:Name="DSBrightSet2" Minimum="0" Maximum="100"
                                         MinimumTrackColor="{DynamicResource DgGreenBtn}"
                                         MaximumTrackColor="{DynamicResource DgTrack}"
-                                        ThumbColor="{DynamicResource DgGreenBtn}"
+                                        ThumbColor="{DynamicResource DgGreenBright}"
                                         HeightRequest="30"
                                         ValueChanged="OnSliderValueChanged"
                                         DragCompleted="MySlider_DragCompleted" />
@@ -273,7 +273,7 @@
 
                         <!-- Monochrome light 3 -->
                         <Border BackgroundColor="{DynamicResource DgCard}"
-                                Stroke="White"
+                                Stroke="{DynamicResource DgEdge}"
                                 StrokeThickness="1"
                                 Padding="14,13,14,21">
                             <Border.StrokeShape>
@@ -302,7 +302,7 @@
                                 <Slider x:Name="DSHzSet3" Minimum="0" Maximum="100"
                                         MinimumTrackColor="{DynamicResource DgGreenBtn}"
                                         MaximumTrackColor="{DynamicResource DgTrack}"
-                                        ThumbColor="{DynamicResource DgGreenBtn}"
+                                        ThumbColor="{DynamicResource DgGreenBright}"
                                         HeightRequest="30"
                                         ValueChanged="OnSliderValueChanged"
                                         DragCompleted="MySlider_DragCompleted" />
@@ -316,7 +316,7 @@
                                 <Slider x:Name="DSBrightSet3" Minimum="0" Maximum="100"
                                         MinimumTrackColor="{DynamicResource DgGreenBtn}"
                                         MaximumTrackColor="{DynamicResource DgTrack}"
-                                        ThumbColor="{DynamicResource DgGreenBtn}"
+                                        ThumbColor="{DynamicResource DgGreenBright}"
                                         HeightRequest="30"
                                         ValueChanged="OnSliderValueChanged"
                                         DragCompleted="MySlider_DragCompleted" />
@@ -325,7 +325,7 @@
 
                         <!-- Strip 1 · 设计稿未画，协议需要 LED 数量/颜色，按同一卡片样式补 -->
                         <Border BackgroundColor="{DynamicResource DgCard}"
-                                Stroke="White"
+                                Stroke="{DynamicResource DgEdge}"
                                 StrokeThickness="1"
                                 Padding="14,13,14,21">
                             <Border.StrokeShape>
@@ -362,7 +362,7 @@
                                 <Slider x:Name="DDHzSet1" Minimum="0" Maximum="100"
                                         MinimumTrackColor="{DynamicResource DgGreenBtn}"
                                         MaximumTrackColor="{DynamicResource DgTrack}"
-                                        ThumbColor="{DynamicResource DgGreenBtn}"
+                                        ThumbColor="{DynamicResource DgGreenBright}"
                                         HeightRequest="30"
                                         ValueChanged="OnSliderValueChanged"
                                         DragCompleted="MySlider_DragCompleted" />
@@ -377,7 +377,7 @@
                                 <Slider x:Name="DDBrightSet1" Minimum="0" Maximum="100"
                                         MinimumTrackColor="{DynamicResource DgGreenBtn}"
                                         MaximumTrackColor="{DynamicResource DgTrack}"
-                                        ThumbColor="{DynamicResource DgGreenBtn}"
+                                        ThumbColor="{DynamicResource DgGreenBright}"
                                         HeightRequest="30"
                                         ValueChanged="OnSliderValueChanged"
                                         DragCompleted="MySlider_DragCompleted" />
@@ -398,7 +398,7 @@
 
                         <!-- Strip 2 -->
                         <Border BackgroundColor="{DynamicResource DgCard}"
-                                Stroke="White"
+                                Stroke="{DynamicResource DgEdge}"
                                 StrokeThickness="1"
                                 Padding="14,13,14,21">
                             <Border.StrokeShape>
@@ -433,7 +433,7 @@
                                 <Slider x:Name="DDHzSet2" Minimum="0" Maximum="100"
                                         MinimumTrackColor="{DynamicResource DgGreenBtn}"
                                         MaximumTrackColor="{DynamicResource DgTrack}"
-                                        ThumbColor="{DynamicResource DgGreenBtn}"
+                                        ThumbColor="{DynamicResource DgGreenBright}"
                                         HeightRequest="30"
                                         ValueChanged="OnSliderValueChanged"
                                         DragCompleted="MySlider_DragCompleted" />
@@ -447,7 +447,7 @@
                                 <Slider x:Name="DDBrightSet2" Minimum="0" Maximum="100"
                                         MinimumTrackColor="{DynamicResource DgGreenBtn}"
                                         MaximumTrackColor="{DynamicResource DgTrack}"
-                                        ThumbColor="{DynamicResource DgGreenBtn}"
+                                        ThumbColor="{DynamicResource DgGreenBright}"
                                         HeightRequest="30"
                                         ValueChanged="OnSliderValueChanged"
                                         DragCompleted="MySlider_DragCompleted" />
@@ -467,7 +467,7 @@
 
                         <!-- Strip 3 -->
                         <Border BackgroundColor="{DynamicResource DgCard}"
-                                Stroke="White"
+                                Stroke="{DynamicResource DgEdge}"
                                 StrokeThickness="1"
                                 Padding="14,13,14,21">
                             <Border.StrokeShape>
@@ -502,7 +502,7 @@
                                 <Slider x:Name="DDHzSet3" Minimum="0" Maximum="100"
                                         MinimumTrackColor="{DynamicResource DgGreenBtn}"
                                         MaximumTrackColor="{DynamicResource DgTrack}"
-                                        ThumbColor="{DynamicResource DgGreenBtn}"
+                                        ThumbColor="{DynamicResource DgGreenBright}"
                                         HeightRequest="30"
                                         ValueChanged="OnSliderValueChanged"
                                         DragCompleted="MySlider_DragCompleted" />
@@ -516,7 +516,7 @@
                                 <Slider x:Name="DDBrightSet3" Minimum="0" Maximum="100"
                                         MinimumTrackColor="{DynamicResource DgGreenBtn}"
                                         MaximumTrackColor="{DynamicResource DgTrack}"
-                                        ThumbColor="{DynamicResource DgGreenBtn}"
+                                        ThumbColor="{DynamicResource DgGreenBright}"
                                         HeightRequest="30"
                                         ValueChanged="OnSliderValueChanged"
                                         DragCompleted="MySlider_DragCompleted" />
@@ -546,15 +546,15 @@
 
         <!-- ===== Save to scene 弹窗 · Figma 84:452 ===== -->
         <Grid x:Name="SaveOverlay" IsVisible="False">
-            <!-- 透明度走颜色 alpha（#80=0.50，Figma Modal backdrop）：BoxView 的 Opacity 属性在本机不生效 -->
-            <BoxView Color="#800d241b">
-                <BoxView.GestureRecognizers>
+            <!-- 蒙层 50%：BoxView 在本机整屏渲染异常，改用 Grid 背景色 + Opacity（Figma Modal backdrop 50%） -->
+            <Grid BackgroundColor="{DynamicResource DgBackdrop}" Opacity="0.5">
+                <Grid.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnSaveBackdrop" />
-                </BoxView.GestureRecognizers>
-            </BoxView>
+                </Grid.GestureRecognizers>
+            </Grid>
 
             <Border BackgroundColor="{DynamicResource DgDialogBg2}"
-                    Stroke="White"
+                    Stroke="{DynamicResource DgEdge}"
                     StrokeThickness="1"
                     HorizontalOptions="Fill"
                     VerticalOptions="Center"
@@ -595,14 +595,14 @@
                                        VerticalOptions="Center" />
                                 <Ellipse Grid.Column="1" x:Name="SaveDot1"
                                          WidthRequest="18" HeightRequest="18"
-                                         Fill="{DynamicResource DgGreenBtn}"
-                                         Stroke="#8cb09c" StrokeThickness="1"
+                                         Fill="{DynamicResource DgGreenBright}"
+                                         Stroke="{DynamicResource DgSaveDotRing}" StrokeThickness="1"
                                          VerticalOptions="Center" />
                             </Grid>
                         </Border>
 
                         <Border x:Name="SaveOpt2"
-                                BackgroundColor="White"
+                                BackgroundColor="{DynamicResource DgSaveOpt}"
                                 Stroke="{DynamicResource DgDialogBorder}"
                                 StrokeThickness="1"
                                 HeightRequest="54"
@@ -621,13 +621,13 @@
                                 <Ellipse Grid.Column="1" x:Name="SaveDot2"
                                          WidthRequest="18" HeightRequest="18"
                                          Fill="White"
-                                         Stroke="#8cb09c" StrokeThickness="1"
+                                         Stroke="{DynamicResource DgSaveDotRing}" StrokeThickness="1"
                                          VerticalOptions="Center" />
                             </Grid>
                         </Border>
 
                         <Border x:Name="SaveOpt3"
-                                BackgroundColor="White"
+                                BackgroundColor="{DynamicResource DgSaveOpt}"
                                 Stroke="{DynamicResource DgDialogBorder}"
                                 StrokeThickness="1"
                                 HeightRequest="54"
@@ -646,7 +646,7 @@
                                 <Ellipse Grid.Column="1" x:Name="SaveDot3"
                                          WidthRequest="18" HeightRequest="18"
                                          Fill="White"
-                                         Stroke="#8cb09c" StrokeThickness="1"
+                                         Stroke="{DynamicResource DgSaveDotRing}" StrokeThickness="1"
                                          VerticalOptions="Center" />
                             </Grid>
                         </Border>

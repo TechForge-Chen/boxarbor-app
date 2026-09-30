@@ -118,6 +118,8 @@ public partial class Board : ContentPage
 
     private void OnThemeChanged()
     {
+        // 轨道按钮颜色在建轨时写死，主题切换必须整轨重建（否则 +/- 边框留旧色）
+        _displayedGateCount = -1;
         RebuildGateList(GetBoardCount());
         RefreshGateStyle();
         if (SaveOverlay is { IsVisible: true })
@@ -182,7 +184,8 @@ public partial class Board : ContentPage
                 continue;
 
             bool isCurrent = gateNum == _currentGate;
-            frame.BackgroundColor = isCurrent ? ThemeManager.Color("DgGreenBtn") : ThemeManager.Color("DgCard");
+            frame.BackgroundColor = isCurrent ? ThemeManager.Color("DgGreenBtn") : ThemeManager.Color("DgRailChip");
+            frame.BorderColor = ThemeManager.Color("DgRailChipEdge");
             label.TextColor = isCurrent ? Colors.White : ThemeManager.Color("DgNum");
         }
     }
@@ -240,7 +243,7 @@ public partial class Board : ContentPage
         var addFrame = new Frame
         {
             BackgroundColor = ThemeManager.Color("DgGreenBtn"),
-            BorderColor = ThemeManager.Color("DgCard"),
+            BorderColor = ThemeManager.Color("DgRailChipEdge"),
             HasShadow = false,
             CornerRadius = 18,
             Padding = 0,
@@ -264,7 +267,7 @@ public partial class Board : ContentPage
         var removeFrame = new Frame
         {
             BackgroundColor = ThemeManager.Color("DgGreenBtn"),
-            BorderColor = ThemeManager.Color("DgCard"),
+            BorderColor = ThemeManager.Color("DgRailChipEdge"),
             HasShadow = false,
             CornerRadius = 18,
             Padding = 0,
@@ -291,8 +294,8 @@ public partial class Board : ContentPage
 
             var frame = new Frame
             {
-                BackgroundColor = isCurrent ? ThemeManager.Color("DgGreenBtn") : ThemeManager.Color("DgCard"),
-                BorderColor = ThemeManager.Color("DgCard"),
+                BackgroundColor = isCurrent ? ThemeManager.Color("DgGreenBtn") : ThemeManager.Color("DgRailChip"),
+                BorderColor = ThemeManager.Color("DgRailChipEdge"),
                 HasShadow = false,
                 CornerRadius = 18,
                 Padding = 0,
@@ -629,21 +632,23 @@ public partial class Board : ContentPage
     private void HighlightSaveScene(int scene)
     {
         Color green = ThemeManager.Color("DgGreenBtn");
+        Color dotGreen = ThemeManager.Color("DgGreenBright");
         Color greenFaint = ThemeManager.Color("DgGreenFaint");
         Color border = ThemeManager.Color("DgDialogBorder");
-        Color plain = ThemeManager.Color("DgCard");
+        Color plain = ThemeManager.Color("DgSaveOpt");
 
         SaveOpt1.BackgroundColor = scene == 1 ? greenFaint : plain;
         SaveOpt1.Stroke = new SolidColorBrush(scene == 1 ? green : border);
-        SaveDot1.Fill = new SolidColorBrush(scene == 1 ? green : plain);
+        // 选中点：亮稿绿、暗稿 #43DC89；未选中点：两态都白（暗稿设计如此）
+        SaveDot1.Fill = new SolidColorBrush(scene == 1 ? dotGreen : Colors.White);
 
         SaveOpt2.BackgroundColor = scene == 2 ? greenFaint : plain;
         SaveOpt2.Stroke = new SolidColorBrush(scene == 2 ? green : border);
-        SaveDot2.Fill = new SolidColorBrush(scene == 2 ? green : plain);
+        SaveDot2.Fill = new SolidColorBrush(scene == 2 ? dotGreen : Colors.White);
 
         SaveOpt3.BackgroundColor = scene == 3 ? greenFaint : plain;
         SaveOpt3.Stroke = new SolidColorBrush(scene == 3 ? green : border);
-        SaveDot3.Fill = new SolidColorBrush(scene == 3 ? green : plain);
+        SaveDot3.Fill = new SolidColorBrush(scene == 3 ? dotGreen : Colors.White);
     }
 
 
