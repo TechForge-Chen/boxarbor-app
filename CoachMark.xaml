@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- 新手引导 · Figma Onboarding 1~4（95:5498 / 95:5595 / 95:5698 / 95:5826）
+<!-- 新手引导 · Figma Onboarding 1~4（97:565 / 97:643 / 97:727 / 97:836 主流程活版；
+     95:5498 系在废纸篓页，勿用）
      整页画板渲染图直接作演示页（背景/蒙层/聚光灯/引导卡全部烘焙，与画板一模一样）；
      已裁状态栏条带，引导期间隐藏系统栏。全屏点按 = Next，Skip 区域点按结束。 -->
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"

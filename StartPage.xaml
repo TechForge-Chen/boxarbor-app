@@ -370,23 +370,24 @@
         <!-- 自绘底部导航（设计稿 Frame 52） -->
         <local:AppTabBar x:Name="TabBar" />
 
-        <!-- 新手引导 四步 · Figma Onboarding 1~4（95:5498/5595/5698/5826，整页画板渲染演示图） -->
+        <!-- 新手引导 四步 · Figma Onboarding 1~4（97:565/643/727/836 主流程活版，整页画板渲染演示图；
+             95:5498 系在废纸篓页，勿用） -->
         <local:CoachMark x:Name="Guide1"
                          Step="1"
                          DemoImage="guidebg1.png"
-                         SkipX="302" SkipY="378" />
+                         SkipX="310" SkipY="366" />
         <local:CoachMark x:Name="Guide2"
                          Step="2"
                          DemoImage="guidebg2.png"
-                         SkipX="302" SkipY="448" />
+                         SkipX="310" SkipY="194" />
         <local:CoachMark x:Name="Guide3"
                          Step="3"
                          DemoImage="guidebg3.png"
-                         SkipX="302" SkipY="350" />
+                         SkipX="310" SkipY="366" />
         <local:CoachMark x:Name="Guide4"
                          Step="4"
                          DemoImage="guidebg4.png"
-                         SkipX="302" SkipY="324" />
+                         SkipX="310" SkipY="332" />
 
         <!-- Rename 弹窗（场景改名） -->
         <local:RenameDialog x:Name="RenameDlg" />
