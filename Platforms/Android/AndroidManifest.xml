@@ -10,10 +10,9 @@
 	<uses-permission android:name="android.permission.BLUETOOTH" />
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 	
-	<!-- Android 12+ (API level 31+) 蓝牙权限 -->
+	<!-- Android 12+ (API level 31+) 蓝牙权限（本应用只做 central 扫描连接，不做外设广播，故不声明 BLUETOOTH_ADVERTISE） -->
 	<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 	<uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-	<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
 	
 	
 	

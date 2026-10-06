@@ -30,10 +30,10 @@
 	  <AotAssemblies>false</AotAssemblies>
 	  <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
 	  <AndroidKeyStore>true</AndroidKeyStore>
-	  <AndroidSigningKeyStore>release.keystore</AndroidSigningKeyStore>
-	  <AndroidSigningKeyAlias>release</AndroidSigningKeyAlias>
-	  <AndroidSigningKeyPass>password</AndroidSigningKeyPass>
-	  <AndroidSigningStorePass>password</AndroidSigningStorePass>
+	  <AndroidSigningKeyStore>upload-keystore.keystore</AndroidSigningKeyStore>
+	  <AndroidSigningKeyAlias>upload</AndroidSigningKeyAlias>
+	  <AndroidSigningKeyPass>REMOVED</AndroidSigningKeyPass>
+	  <AndroidSigningStorePass>REMOVED</AndroidSigningStorePass>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios'">
