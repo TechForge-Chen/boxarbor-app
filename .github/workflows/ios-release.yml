@@ -85,24 +85,30 @@ jobs:
         run: |
           BUILD_NUMBER="${BUILD_NUMBER:-${GITHUB_RUN_NUMBER}}"
 
-          SIGN_ARGS=""
           if [ "$SIGNED" = "true" ]; then
-            SIGN_ARGS="-p:CodesignKey=$IOS_SIGNING_IDENTITY -p:CodesignProvision=$IOS_PROVISIONING_PROFILE_NAME"
+            dotnet publish "$PROJECT" \
+              -f "$TFM" -c "$CONFIG" \
+              -p:RuntimeIdentifier="$RID" \
+              -p:BuildIpa=true \
+              -p:ArchiveOnBuild=true \
+              -p:ApplicationVersion="$BUILD_NUMBER" \
+              -p:CodesignKey="$IOS_SIGNING_IDENTITY" \
+              -p:CodesignProvision="$IOS_PROVISIONING_PROFILE_NAME"
+
+            IPA=$(find . -name "*.ipa" -not -path "*/obj/*" | head -1)
+            echo "IPA: $IPA"
+            echo "IPA_PATH=$IPA" >> "$GITHUB_ENV"
+          else
+            # 没有签名材料时不做设备包（无法签名），改为在 macOS 上做 iOS 编译校验
+            echo "::warning::未配置 Apple 签名证书，改为 iOS 编译校验（不产出 IPA）"
+            dotnet build "$PROJECT" \
+              -f "$TFM" -c "$CONFIG" \
+              -p:RuntimeIdentifier=iossimulator-arm64
+            echo "IPA_PATH=" >> "$GITHUB_ENV"
           fi
 
-          dotnet publish "$PROJECT" \
-            -f "$TFM" -c "$CONFIG" \
-            -p:RuntimeIdentifier="$RID" \
-            -p:BuildIpa=true \
-            -p:ArchiveOnBuild=true \
-            -p:ApplicationVersion="$BUILD_NUMBER" \
-            $SIGN_ARGS
-
-          IPA=$(find . -name "*.ipa" -not -path "*/obj/*" | head -1)
-          echo "IPA: $IPA"
-          echo "IPA_PATH=$IPA" >> "$GITHUB_ENV"
-
       - name: Upload IPA artifact
+        if: env.IPA_PATH != ''
         uses: actions/upload-artifact@v4
         with:
           name: ios-ipa
@@ -114,7 +120,7 @@ jobs:
       #   APPSTORE_API_KEY_ID / APPSTORE_API_ISSUER_ID / APPSTORE_API_KEY_P8
       #   （App Store Connect → 用户和访问 → 密钥 → App Store Connect API）
       - name: Upload to TestFlight
-        if: ${{ inputs.upload_to_testflight }}
+        if: ${{ inputs.upload_to_testflight && env.IPA_PATH != '' }}
         env:
           API_KEY_ID: ${{ secrets.APPSTORE_API_KEY_ID }}
           API_ISSUER_ID: ${{ secrets.APPSTORE_API_ISSUER_ID }}
