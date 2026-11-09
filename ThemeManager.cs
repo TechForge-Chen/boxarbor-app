@@ -106,8 +106,10 @@ public static class ThemeManager
 
     private static readonly List<(Image img, string light, string dark)> Icons = new();
 
+#if ANDROID
     private static Android.Graphics.Color? _origStatus;
     private static Android.Graphics.Color? _origNav;
+#endif
 
     /// <summary>启动时调用：套用已保存的偏好。</summary>
     public static void Initialize()
@@ -186,6 +188,7 @@ public static class ThemeManager
 
     private static void ApplySystemBars(bool dark)
     {
+#if ANDROID
         try
         {
             var window = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity?.Window;
@@ -218,5 +221,6 @@ public static class ThemeManager
         {
             // 系统栏着色失败不影响主题
         }
+#endif
     }
 }

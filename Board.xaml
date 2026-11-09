@@ -1,8 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <!-- 设计稿 Figma 76:321 "Gateway 1 · Lighting settings"（375x812）
      左侧 Box 选择轨 45 宽 / 右侧灯卡 283 宽，与设计稿一致。
-     设计稿未画出 Scene、Status、Board Count、Strip 这些协议必需控件，
-     本轮按设计稿的卡片样式补在 Save to scene 下方，功能保持不变。
+     Scene / Status / Board Count 面板与各 Strip 卡的 LED Count 一栏已按要求移除
+     （场景状态收进代码字段，板卡数量由左侧 +/- 轨维护，LED 数量由设备回填维护，
+     状态回查走自动轮询）。
      仅亮色。 -->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -15,7 +16,7 @@
     <Grid>
         <local:AtmosphereBackground />
 
-        <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
+        <Grid RowDefinitions="Auto,Auto,Auto,*">
 
             <!-- ===== 页头：返回 / 标题 / 重命名 ===== -->
             <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Padding="20,26,20,0">
@@ -77,88 +78,22 @@
                        VerticalOptions="Center" />
             </Border>
 
-            <!-- ===== 协议必需控件（设计稿未画，按同一卡片风格补） ===== -->
-            <Border Grid.Row="3"
-                    BackgroundColor="{DynamicResource DgCard}"
-                    Stroke="{DynamicResource DgEdge}"
-                    StrokeThickness="1"
-                    Margin="18,12,18,0"
-                    Padding="14,10,14,10">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="18" />
-                </Border.StrokeShape>
-
-                <VerticalStackLayout Spacing="8">
-                    <Grid ColumnDefinitions="76,*,84" ColumnSpacing="8">
-                        <Label Grid.Column="0" Text="Scene"
-                               FontSize="12"
-                               FontFamily="PJSSB"
-                               TextColor="{DynamicResource DgLabel}"
-                               VerticalOptions="Center" />
-                        <Picker Grid.Column="1"
-                                x:Name="ModePicker"
-                                Title="Scene"
-                                FontSize="14"
-                                BackgroundColor="Transparent"
-                                TextColor="{DynamicResource DgTitleAlt}"
-                                SelectedIndexChanged="ModePicker_SelectedIndexChanged" />
-                        <!-- Status = 主动回查设备当前参数 -->
-                        <Border Grid.Column="2"
-                                BackgroundColor="{DynamicResource DgGreenBtn}"
-                                StrokeThickness="0"
-                                HeightRequest="36">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="12" />
-                            </Border.StrokeShape>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnButtonSearch_Clicked" />
-                            </Border.GestureRecognizers>
-                            <Label Text="Status"
-                                   FontSize="12"
-                                   FontFamily="PJSSB"
-                                   TextColor="White"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center" />
-                        </Border>
-                    </Grid>
-
-                    <Grid ColumnDefinitions="76,*" ColumnSpacing="8">
-                        <Label Grid.Column="0" Text="Board Count"
-                               FontSize="12"
-                               FontFamily="PJSSB"
-                               TextColor="{DynamicResource DgLabel}"
-                               VerticalOptions="Center" />
-                        <Border Grid.Column="1"
-                                BackgroundColor="{DynamicResource DgIconBg}"
-                                StrokeThickness="0"
-                                HeightRequest="36">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="12" />
-                            </Border.StrokeShape>
-                            <Entry x:Name="DBTNum"
-                                   MinimumHeightRequest="0"
-                                   Text="0"
-                                   FontSize="14"
-                                   FontFamily="PJSM"
-                                   BackgroundColor="Transparent"
-                                   TextColor="{DynamicResource DgTitleAlt}"
-                                   Placeholder="Enter quantity"
-                                   Keyboard="Numeric"
-                                   Unfocused="DBTNum_Unfocused"
-                                   Completed="DBTNum_Completed" />
-                        </Border>
-                    </Grid>
-                </VerticalStackLayout>
-            </Border>
-
             <!-- ===== 左：Box 选择轨 · 右：灯控卡 ===== -->
-            <Grid Grid.Row="4" ColumnDefinitions="45,11,*" Margin="18,16,18,16">
+            <Grid Grid.Row="3" ColumnDefinitions="45,11,*" Margin="18,16,18,16">
 
                 <ScrollView Grid.Column="0" VerticalScrollBarVisibility="Default">
-                    <VerticalStackLayout Spacing="8"
-                                         BackgroundColor="{DynamicResource DgRailColumn}"
-                                         x:Name="GateListLayout"
-                                         VerticalOptions="Start" />
+                    <!-- 左轨背景柱：直角太尖，圆角与芯片同为 18 -->
+                    <Border BackgroundColor="{DynamicResource DgRailColumn}"
+                            StrokeThickness="0"
+                            Padding="0"
+                            VerticalOptions="Start">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="18" />
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8"
+                                             x:Name="GateListLayout"
+                                             VerticalOptions="Start" />
+                    </Border>
                 </ScrollView>
 
                 <ScrollView Grid.Column="2">
@@ -335,23 +270,6 @@
                                 <Label Text="Strip 1" FontSize="13" FontFamily="PJSSB"
                                        TextColor="{DynamicResource DgTitleAlt}" HeightRequest="18" />
 
-                                <Grid ColumnDefinitions="*,120" ColumnSpacing="8" Margin="0,14,0,0">
-                                    <Label Text="LED Count" FontSize="11" FontFamily="PJSSB"
-                                           TextColor="{DynamicResource DgLabel}" VerticalOptions="Center" />
-                                    <Border Grid.Column="1" BackgroundColor="{DynamicResource DgIconBg}"
-                                            StrokeThickness="0" HeightRequest="32">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="10" />
-                                        </Border.StrokeShape>
-                                        <Entry x:Name="DDNum1" MinimumHeightRequest="0" Text="10" FontSize="14"
-                                               Keyboard="Numeric"
-                                               BackgroundColor="Transparent"
-                                               TextColor="{DynamicResource DgTitleAlt}"
-                                               Placeholder="Enter quantity"
-                                               Unfocused="MyEntry_Unfocused" />
-                                    </Border>
-                                </Grid>
-
                                 <Grid ColumnDefinitions="*,Auto" Margin="0,14,0,0">
                                     <Label Text="Frequency" FontSize="11" FontFamily="PJSM"
                                            TextColor="{DynamicResource DgLabel}" />
@@ -407,22 +325,6 @@
                             <VerticalStackLayout Spacing="0">
                                 <Label Text="Strip 2" FontSize="13" FontFamily="PJSSB"
                                        TextColor="{DynamicResource DgTitleAlt}" HeightRequest="18" />
-                                <Grid ColumnDefinitions="*,120" ColumnSpacing="8" Margin="0,14,0,0">
-                                    <Label Text="LED Count" FontSize="11" FontFamily="PJSSB"
-                                           TextColor="{DynamicResource DgLabel}" VerticalOptions="Center" />
-                                    <Border Grid.Column="1" BackgroundColor="{DynamicResource DgIconBg}"
-                                            StrokeThickness="0" HeightRequest="32">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="10" />
-                                        </Border.StrokeShape>
-                                        <Entry x:Name="DDNum2" MinimumHeightRequest="0" Text="10" FontSize="14"
-                                               Keyboard="Numeric"
-                                               BackgroundColor="Transparent"
-                                               TextColor="{DynamicResource DgTitleAlt}"
-                                               Placeholder="Enter quantity"
-                                               Unfocused="MyEntry_Unfocused" />
-                                    </Border>
-                                </Grid>
                                 <Grid ColumnDefinitions="*,Auto" Margin="0,14,0,0">
                                     <Label Text="Frequency" FontSize="11" FontFamily="PJSM"
                                            TextColor="{DynamicResource DgLabel}" />
@@ -476,22 +378,6 @@
                             <VerticalStackLayout Spacing="0">
                                 <Label Text="Strip 3" FontSize="13" FontFamily="PJSSB"
                                        TextColor="{DynamicResource DgTitleAlt}" HeightRequest="18" />
-                                <Grid ColumnDefinitions="*,120" ColumnSpacing="8" Margin="0,14,0,0">
-                                    <Label Text="LED Count" FontSize="11" FontFamily="PJSSB"
-                                           TextColor="{DynamicResource DgLabel}" VerticalOptions="Center" />
-                                    <Border Grid.Column="1" BackgroundColor="{DynamicResource DgIconBg}"
-                                            StrokeThickness="0" HeightRequest="32">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="10" />
-                                        </Border.StrokeShape>
-                                        <Entry x:Name="DDNum3" MinimumHeightRequest="0" Text="10" FontSize="14"
-                                               Keyboard="Numeric"
-                                               BackgroundColor="Transparent"
-                                               TextColor="{DynamicResource DgTitleAlt}"
-                                               Placeholder="Enter quantity"
-                                               Unfocused="MyEntry_Unfocused" />
-                                    </Border>
-                                </Grid>
                                 <Grid ColumnDefinitions="*,Auto" Margin="0,14,0,0">
                                     <Label Text="Frequency" FontSize="11" FontFamily="PJSM"
                                            TextColor="{DynamicResource DgLabel}" />

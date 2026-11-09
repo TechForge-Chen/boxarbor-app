@@ -13,11 +13,10 @@
 	<array>
 		<string>arm64</string>
 	</array>
+	<!-- iPhone 界面按竖屏设计，仅允许竖屏；iPad 保持全方向 -->
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -28,26 +27,19 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
-	<!-- 蓝牙权限声明 - iOS 13+ 必需 -->
+	<!-- Bluetooth: iOS 13+ uses NSBluetoothAlwaysUsageDescription;
+	     the legacy key is kept for iOS 12.2 devices (deployment target 12.2) -->
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>此应用需要使用蓝牙连接设备并进行数据通信</string>
-	<!-- 蓝牙外围设备权限 -->
+	<string>BoxArbor uses Bluetooth to discover, connect to and control your BoxArbor lighting gateway.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>此应用需要连接蓝牙设备以传输数据</string>
-	<!-- 后台蓝牙模式 - 如需后台扫描和连接 -->
+	<string>BoxArbor uses Bluetooth to connect to your BoxArbor lighting gateway.</string>
+	<!-- Only the connection needs to stay alive in background; no fetch/processing tasks are implemented -->
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>bluetooth-central</string>
-		<string>fetch</string>
-		<string>processing</string>
 	</array>
-	<!-- WiFi 局域网网络权限 - iOS 14+ 必需 -->
+	<!-- Local network: Wi-Fi connected devices use TCP on the local network (iOS 14+) -->
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>此应用需要访问局域网以连接WiFi设备进行TCP通信</string>
-	<!-- Bonjour 服务发现权限 -->
-	<key>NSBonjourServices</key>
-	<array>
-		<string>_tcp._local</string>
-	</array>
+	<string>BoxArbor uses the local network to communicate with your Wi-Fi connected devices.</string>
 </dict>
 </plist>

@@ -83,20 +83,11 @@
 
                             <Grid RowDefinitions="18,*,16" RowSpacing="0">
 
-                                <Grid Grid.Row="0" ColumnDefinitions="*,30" ColumnSpacing="0">
-                                    <Label Grid.Column="0" Text="SUB"
-                                           FontSize="9"
-                                           FontFamily="PJSB"
-                                           TextColor="{DynamicResource DgGreenText3}"
-                                           VerticalOptions="Center" />
-                                    <!-- SUB 开关：本轮只做视觉，不接协议 -->
-                                    <local:ToggleSwitch Grid.Column="1"
-                                                        WidthRequest="30"
-                                                        HeightRequest="18"
-                                                        IsOn="True"
-                                                        HorizontalOptions="End"
-                                                        VerticalOptions="Center" />
-                                </Grid>
+                                <Label Grid.Row="0" Text="SUB"
+                                       FontSize="9"
+                                       FontFamily="PJSB"
+                                       TextColor="{DynamicResource DgGreenText3}"
+                                       VerticalOptions="Center" />
 
                                 <Label Grid.Row="1"
                                        Text="{Binding Name}"

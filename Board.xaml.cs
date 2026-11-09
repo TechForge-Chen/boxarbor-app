@@ -29,10 +29,19 @@ public partial class Board : ContentPage
     private const int MaxGates = 18;
     private int _displayedGateCount = -1;   // 首次必须构建（0 也要画出 +/- 按钮）
 
+    /// <summary>当前场景 0..2（Scene 选择器已按要求移除，状态收进字段；保存弹窗与设备回填仍写这里）。</summary>
+    private int _sceneIndex = 0;
+
+    /// <summary>板卡数量 0..18（Board Count 输入框已按要求移除，由左侧 +/- 轨与设备回填维护）。</summary>
+    private int _boardCount = 0;
+
+    /// <summary>三条灯带的 LED 数量（LED Count 输入框已按要求移除，默认 10，由设备回填维护）。</summary>
+    private readonly int[] _stripCounts = { 10, 10, 10 };
+
     public Board()
     {
         InitializeComponent();
-        // 构造期间 ModePicker/ColorPicker.SelectedIndex 赋值会触发 SelectedIndexChanged，
+        // 构造期间 ColorPicker.SelectedIndex 赋值会触发 SelectedIndexChanged，
         // 未连接时会直接弹 "Bluetooth not connected" 把页面盖住。
         // _initFlag 表示“初始化已完成”，构造结束前置 false，由下面的守卫拦掉这些回填。
         _initFlag = false;
@@ -43,12 +52,6 @@ public partial class Board : ContentPage
         MapSliderLabels();
 
         RefreshNetLabel();
-
-        string[] modeList = { "Scene1", "Scene2", "Scene3" };
-        foreach (var m in modeList)
-            ModePicker.Items.Add(m);
-
-        ModePicker.SelectedIndex = 0;
 
         string[] colorList = { "Red", "Orange", "Yellow", "Green", "Cyan", "Blue", "Purple", "Black" };
         foreach (var c in colorList)
@@ -106,13 +109,18 @@ public partial class Board : ContentPage
     {
         base.OnAppearing();
         _isConnect = MauiProgram.蓝牙连接;
+
+        // 每次进入都重新挂接接收回调，避免上次退出解绑后收不到回包
+        StartPage.OnDataReceivedAction -= OnDataReceived;
+        StartPage.OnDataReceivedAction += OnDataReceived;
+
         RebuildGateList(GetBoardCount());
         RefreshNetLabel();
         ThemeManager.Changed -= OnThemeChanged;
         ThemeManager.Changed += OnThemeChanged;
         ThemeManager.BindIcon(imgGatewayEdit, "ic_edit.png", "ic_edit_w.png");
         OnThemeChanged();   // 后台期间主题可能已切换，回前台重刷
-        // 打开界面自动查询当前状态（不弹未连接提示）
+        // 进入界面自动读取一次当前参数（不弹未连接提示）
         GetNetPara(false);
     }
 
@@ -123,7 +131,7 @@ public partial class Board : ContentPage
         RebuildGateList(GetBoardCount());
         RefreshGateStyle();
         if (SaveOverlay is { IsVisible: true })
-            HighlightSaveScene(ModePicker.SelectedIndex >= 0 ? ModePicker.SelectedIndex + 1 : 1);
+            HighlightSaveScene(_sceneIndex + 1);
     }
 
     protected override void OnDisappearing()
@@ -190,12 +198,7 @@ public partial class Board : ContentPage
         }
     }
 
-    private int GetBoardCount()
-    {
-        if (int.TryParse(DBTNum.Text, out int c) && c >= 0)
-            return Math.Min(c, MaxGates);
-        return 0;
-    }
+    private int GetBoardCount() => Math.Clamp(_boardCount, 0, MaxGates);
 
     /// <summary>＋ 加一个 Box（0→1→…→18）。</summary>
     private void OnAddBox(object sender, TappedEventArgs e)
@@ -203,7 +206,7 @@ public partial class Board : ContentPage
         int cur = GetBoardCount();
         int next = Math.Min(cur + 1, MaxGates);
         if (next == cur) return;
-        DBTNum.Text = next.ToString();
+        _boardCount = next;
         ApplyBoardCountChange();
         StartPage.TapHaptic();
     }
@@ -214,12 +217,12 @@ public partial class Board : ContentPage
         int cur = GetBoardCount();
         int next = Math.Max(cur - 1, 0);
         if (next == cur) return;
-        DBTNum.Text = next.ToString();
+        _boardCount = next;
         ApplyBoardCountChange();
         StartPage.TapHaptic();
     }
 
-    // 根据Board Count动态生成左侧 Box 选择轨（＋ 在最上、− 紧随，其下按 43x39 / r18 递减排列）
+    // 根据板卡数量动态生成左侧 Box 选择轨（＋ 在最上、− 紧随，其下按 43x39 / r18 递减排列）
     private void RebuildGateList(int count)
     {
         if (count > MaxGates) count = MaxGates;
@@ -239,7 +242,7 @@ public partial class Board : ContentPage
         GateListLayout.Children.Clear();
 
         // 最上方 ＋（加 Box）与紧随其下的 −（减 Box）：数量 0..18，
-        // 改动走与直接编辑 Board Count 相同的 ApplyBoardCountChange（含协议下发）
+        // 改动走 ApplyBoardCountChange（含协议下发）
         var addFrame = new Frame
         {
             BackgroundColor = ThemeManager.Color("DgGreenBtn"),
@@ -326,16 +329,6 @@ public partial class Board : ContentPage
         _displayedGateCount = count;
         CollectGateFrames();
         RefreshGateStyle();
-    }
-
-    private void DBTNum_Unfocused(object sender, EventArgs e)
-    {
-        ApplyBoardCountChange();
-    }
-
-    private void DBTNum_Completed(object sender, EventArgs e)
-    {
-        ApplyBoardCountChange();
     }
 
     private async void ApplyBoardCountChange()
@@ -447,8 +440,8 @@ public partial class Board : ContentPage
             int k = 0;
             int offset = (gate - 1) * SINGLE_GATE_DATA_LEN;
 
-            if (Para[1] < 3) ModePicker.SelectedIndex = Para[1];
-            if (Para[2] < 18) DBTNum.Text = Para[3].ToString();
+            if (Para[1] < 3) _sceneIndex = Para[1];
+            if (Para[2] < 18) _boardCount = Para[3];
             RebuildGateList(GetBoardCount());
 
             k = 7;
@@ -458,15 +451,15 @@ public partial class Board : ContentPage
             DSBrightSet2.Value = Para[offset + k++];
             DSHzSet3.Value = Para[offset + k++];
             DSBrightSet3.Value = Para[offset + k++];
-            DDNum1.Text = Para[offset + k++].ToString();
+            _stripCounts[0] = Para[offset + k++];
             DDColorPicker1.SelectedIndex = Para[offset + k++];
             DDHzSet1.Value = Para[offset + k++];
             DDBrightSet1.Value = Para[offset + k++];
-            DDNum2.Text = Para[offset + k++].ToString();
+            _stripCounts[1] = Para[offset + k++];
             DDColorPicker2.SelectedIndex = Para[offset + k++];
             DDHzSet2.Value = Para[offset + k++];
             DDBrightSet2.Value = Para[offset + k++];
-            DDNum3.Text = Para[offset + k++].ToString();
+            _stripCounts[2] = Para[offset + k++];
             DDColorPicker3.SelectedIndex = Para[offset + k++];
             DDHzSet3.Value = Para[offset + k++];
             DDBrightSet3.Value = Para[offset + k++];
@@ -493,14 +486,8 @@ public partial class Board : ContentPage
         {
             int gateOffset = (_currentGate - 1) * SINGLE_GATE_DATA_LEN;
             Para[0] = 0;
-            Para[1] = ModePicker.SelectedIndex;
-
-            if (!int.TryParse(DBTNum.Text, out int dbNum))
-            {
-                DisplayAlert("Input Error", "Board count must be a number", "OK");
-                return;
-            }
-            Para[3] = dbNum;
+            Para[1] = _sceneIndex;
+            Para[3] = Math.Clamp(_boardCount, 0, MaxGates);
             int k = 7;
 
             Para[gateOffset + k++] = (int)DSHzSet1.Value;
@@ -510,32 +497,17 @@ public partial class Board : ContentPage
             Para[gateOffset + k++] = (int)DSHzSet3.Value;
             Para[gateOffset + k++] = (int)DSBrightSet3.Value;
 
-            if (!int.TryParse(DDNum1.Text, out int d1))
-            {
-                DisplayAlert("Input Error", "Strip 1 count invalid", "OK");
-                return;
-            }
-            Para[gateOffset + k++] = d1;
+            Para[gateOffset + k++] = Math.Clamp(_stripCounts[0], 0, 65535);
             Para[gateOffset + k++] = DDColorPicker1.SelectedIndex;
             Para[gateOffset + k++] = (int)DDHzSet1.Value;
             Para[gateOffset + k++] = (int)DDBrightSet1.Value;
 
-            if (!int.TryParse(DDNum2.Text, out int d2))
-            {
-                DisplayAlert("Input Error", "Strip 2 count invalid", "OK");
-                return;
-            }
-            Para[gateOffset + k++] = d2;
+            Para[gateOffset + k++] = Math.Clamp(_stripCounts[1], 0, 65535);
             Para[gateOffset + k++] = DDColorPicker2.SelectedIndex;
             Para[gateOffset + k++] = (int)DDHzSet2.Value;
             Para[gateOffset + k++] = (int)DDBrightSet2.Value;
 
-            if (!int.TryParse(DDNum3.Text, out int d3))
-            {
-                DisplayAlert("Input Error", "Strip 3 count invalid", "OK");
-                return;
-            }
-            Para[gateOffset + k++] = d3;
+            Para[gateOffset + k++] = Math.Clamp(_stripCounts[2], 0, 65535);
             Para[gateOffset + k++] = DDColorPicker3.SelectedIndex;
             Para[gateOffset + k++] = (int)DDHzSet3.Value;
             Para[gateOffset + k++] = (int)DDBrightSet3.Value;
@@ -560,8 +532,6 @@ public partial class Board : ContentPage
             DisplayAlert("Parameter Send Error", e.Message, "OK");
         }
     }
-
-    private void OnButtonSearch_Clicked(object sender, EventArgs e) => GetNetPara();
 
     // ============================== 设计稿新增的 UI 交互 ==============================
 
@@ -595,7 +565,7 @@ public partial class Board : ContentPage
     /// <summary>Save to scene：打开场景选择弹窗（Figma 84:452）。</summary>
     private void OnSaveToScene(object sender, TappedEventArgs e)
     {
-        int current = ModePicker.SelectedIndex >= 0 ? ModePicker.SelectedIndex + 1 : 1;
+        int current = _sceneIndex + 1;
         HighlightSaveScene(current);
         SaveOverlay.IsVisible = true;
     }
@@ -612,10 +582,10 @@ public partial class Board : ContentPage
         HighlightSaveScene(scene);
 
         int index = scene - 1;
-        if (ModePicker.Items.Count > index)
+        if (index >= 0 && index <= 2)
         {
-            if (ModePicker.SelectedIndex != index)
-                ModePicker.SelectedIndex = index;   // 变更时由 SelectedIndexChanged 下发
+            if (_sceneIndex != index)
+                ChangeScene(index);   // 场景变更：等价于原 Scene Picker 的 SelectedIndexChanged 下发
             else
             {
                 // 选中当前场景同样要保存，不能静默跳过
@@ -659,13 +629,6 @@ public partial class Board : ContentPage
         SendParaToDevice();
     }
 
-    private void MyEntry_Unfocused(object sender, EventArgs e)
-    {
-        if (_queryFlag > 0)
-            return;
-        SendParaToDevice();
-    }
-
     private void ColorPicker_SelectedIndexChanged(object sender, EventArgs e)
     {
         if (!_initFlag || _queryFlag > 0)
@@ -673,13 +636,16 @@ public partial class Board : ContentPage
         SendParaToDevice();
     }
 
-    private void ModePicker_SelectedIndexChanged(object sender, EventArgs e)
+    /// <summary>切换场景：原 Scene Picker 的 SelectedIndexChanged 逻辑，
+    /// 面板移除后由 Save to scene 弹窗调用（设备回填直接写 _sceneIndex，不触发下发）。</summary>
+    private void ChangeScene(int index)
     {
         _sceneSwitchFlag = true;
+        _sceneIndex = index;
         if (!_initFlag || _queryFlag > 0 || _isAutoRefreshingUI)
             return;
 
-        Para[1] = ModePicker.SelectedIndex;
+        Para[1] = index;
         SendParaToDevice();
         UpdateUi(_currentGate);
     }

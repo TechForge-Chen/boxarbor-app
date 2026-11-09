@@ -47,11 +47,14 @@ public partial class DataPage : ContentPage
 
     private enum PickerState { Scanning, List, Empty, Connecting, Failure, Connected }
 
-    /// <summary>连接超时；超时按失败处理。</summary>
-    private const int ConnectTimeoutMs = 10000;
+    /// <summary>连接超时。与原版一致，给设备足够时间完成连接；仅在完全无响应时兜底。</summary>
+    private const int ConnectTimeoutMs = 30000;
 
     private PickerState _pickerState = PickerState.Scanning;
     private StartPage.DeviceItem? _pendingItem;
+
+    /// <summary>连接进行中（不再占用 Connecting 状态页，列表行内展示连接中）。</summary>
+    private bool _isConnecting;
 
     public DataPage()
     {
@@ -230,8 +233,8 @@ public partial class DataPage : ContentPage
     /// <summary>Scan again / Try again / View devices：按当前状态路由（Figma 六态）。</summary>
     private async void OnScanAgainTapped(object sender, TappedEventArgs e)
     {
-        if (_pickerState == PickerState.Scanning || _pickerState == PickerState.Connecting)
-            return;                                   // 进行中按钮禁用
+        if (_pickerState == PickerState.Scanning || _isConnecting)
+            return;                                   // 扫描中/连接中按钮不响应
 
         if (_pickerState == PickerState.Failure)
         {
@@ -256,7 +259,10 @@ public partial class DataPage : ContentPage
     private async void WatchScanTimeout(int generation)
     {
         await Task.Delay(StartPage.ScanTimeoutMs);
-        if (generation != _scanGeneration || !PickerOverlay.IsVisible)
+        // 只有仍停留在扫描态时才允许切列表：
+        // 防止扫描超时定时器把 连接中/已连接/失败 页面抢回设备列表
+        if (generation != _scanGeneration || !PickerOverlay.IsVisible
+            || _pickerState != PickerState.Scanning)
             return;
         MainThread.BeginInvokeOnMainThread(() =>
             SetPickerState(StartPage.Devices.Count > 0 ? PickerState.List : PickerState.Empty));
@@ -278,7 +284,7 @@ public partial class DataPage : ContentPage
     {
         if (e.Parameter is not StartPage.DeviceItem item)
             return;
-        if (_pickerState == PickerState.Connecting)
+        if (_isConnecting)
             return;                                    // 连接中禁用重复连接
 
         // 已连接的是这一台 → 再次点击断开
@@ -293,22 +299,26 @@ public partial class DataPage : ContentPage
         await ConnectToPendingAsync();
     }
 
-    /// <summary>连接选中设备：先停扫描 → 连接中 → 超时/失败/成功。</summary>
+    /// <summary>
+    /// 连接选中设备：不切 Connecting 状态页，停在设备列表里（该行显示 Connecting…）；
+    /// 连接的瞬间直接跳到 Connected 并自动收起。
+    /// </summary>
     private async Task ConnectToPendingAsync()
     {
-        if (_pendingItem == null || _pickerState == PickerState.Connecting)
+        if (_pendingItem == null || _isConnecting)
             return;
 
         var item = _pendingItem;
-        await StartPage.StopScanAsync();               // 先停扫描再连接
+        _isConnecting = true;
         int gen = ++_scanGeneration;                   // 作废旧扫描超时与在途回调
 
-        item.ConnectButtonText = "Connecting...";
-        SetPickerState(PickerState.Connecting);
+        item.ConnectButtonText = "Connecting...";      // 列表行内展示连接中
 
         var connectTask = StartPage.ConnectAsync(item.NativeDevice);
         var finished = await Task.WhenAny(connectTask, Task.Delay(ConnectTimeoutMs));
+        await StartPage.StopScanAsync();               // 连接结果出来后再停扫描
         bool cancelled = gen != _scanGeneration || !PickerOverlay.IsVisible;
+        _isConnecting = false;
 
         if (finished != connectTask)
         {
@@ -343,6 +353,18 @@ public partial class DataPage : ContentPage
 
         item.ConnectButtonText = "Connected";
         SetPickerState(PickerState.Connected);
+        // 连上即完成本次操作：短暂展示 Connected 后自动收起弹窗，无需再点 View devices / Done
+        _ = AutoCloseAfterConnectedAsync();
+    }
+
+    /// <summary>连接成功后短暂展示 Connected 状态，再自动收起弹窗回到 Devices。</summary>
+    private async Task AutoCloseAfterConnectedAsync()
+    {
+        int gen = _scanGeneration;
+        await Task.Delay(1200);
+        if (gen != _scanGeneration || !PickerOverlay.IsVisible || _pickerState != PickerState.Connected)
+            return;
+        ClosePicker();
     }
 
     /// <summary>扫描结果/连接状态变化时刷新弹窗与列表（仅扫描中才自动切到列表，避免打断连接流程）。</summary>

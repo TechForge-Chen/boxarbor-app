@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BluetoothMauiApp;
@@ -76,6 +77,7 @@ public partial class StartPage : ContentPage
             _adapter = CrossBluetoothLE.Current.Adapter;
             _adapter.ScanTimeout = ScanTimeoutMs;
             _adapter.DeviceDiscovered += OnDeviceDiscovered;
+            _adapter.DeviceAdvertised += OnDeviceAdvertised;
             _adapter.DeviceConnected += OnDeviceConnected;
             _adapter.DeviceDisconnected += OnDeviceDisconnected;
             _engineReady = true;
@@ -296,20 +298,71 @@ public partial class StartPage : ContentPage
 
     private static void OnDeviceDiscovered(object? sender, DeviceEventArgs e)
     {
-        if (e.Device == null || (string.IsNullOrEmpty(e.Device.Name) && e.Device.Rssi == 0))
+        HandleAdvertisement(e.Device);
+    }
+
+    // 每收到一包广播都会触发（DeviceDiscovered 每轮扫描只触发一次），用于补上后到的设备名
+    private static void OnDeviceAdvertised(object? sender, DeviceEventArgs e)
+    {
+        HandleAdvertisement(e.Device);
+    }
+
+    /// <summary>
+    /// 取设备当前真实的名字：优先取广播包里的名字，取不到再退回系统缓存名。
+    /// Android 上 IDevice.Name 取的是 BluetoothDevice.Name，即系统按 MAC 缓存的设备名，
+    /// 设备改名后这份缓存不会立即刷新，会出现"手机蓝牙设置里是新名字、App 里还是旧名字"；
+    /// 而广播包里的 Complete/Short Local Name 才是设备当前实际广播的名字。
+    /// </summary>
+    private static string GetDeviceDisplayName(IDevice device)
+    {
+        var records = device.AdvertisementRecords;
+        if (records != null)
+        {
+            foreach (var type in new[] { AdvertisementRecordType.CompleteLocalName, AdvertisementRecordType.ShortLocalName, AdvertisementRecordType.BroadcastName })
+            {
+                var record = records.FirstOrDefault(r => r.Type == type && r.Data != null && r.Data.Length > 0);
+                if (record == null)
+                    continue;
+
+                string advName = Encoding.UTF8.GetString(record.Data).Trim('\0', ' ');
+                if (!string.IsNullOrEmpty(advName))
+                    return advName;
+            }
+        }
+        return device.Name ?? string.Empty;
+    }
+
+    // 只显示自己的设备：名字里含 BoxArbor 即可（大小写不敏感），
+    // 这样“=BoxArborIG”和改好后的“BoxArborIG”都能匹配上
+    private static bool IsTargetDeviceName(string deviceName)
+    {
+        return !string.IsNullOrEmpty(deviceName)
+            && (deviceName.Contains("BoxArbor", StringComparison.OrdinalIgnoreCase)
+                || deviceName.Contains("JDY", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static void HandleAdvertisement(IDevice? device)
+    {
+        if (device == null)
             return;
 
-        string deviceName = e.Device.Name;
-        if (string.IsNullOrEmpty(deviceName) || !deviceName.StartsWith("BoxArborMG", StringComparison.Ordinal))
+        string deviceName = GetDeviceDisplayName(device);
+        if (!IsTargetDeviceName(deviceName))
             return;
 
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            var existing = Devices.FirstOrDefault(d => d.Id == e.Device.Id);
+            var existing = Devices.FirstOrDefault(d => d.Id == device.Id);
             if (existing == null)
-                Devices.Add(new DeviceItem(e.Device));
+            {
+                Devices.Add(new DeviceItem(device, deviceName));
+            }
             else
-                existing.Rssi = e.Device.Rssi;
+            {
+                existing.Rssi = device.Rssi;
+                // 名字后到时刷新显示（例如旧名字是系统缓存名，新名字在后面的广播包里才拿到）
+                existing.Name = deviceName;
+            }
             DevicesChanged?.Invoke();
         });
     }
@@ -327,8 +380,9 @@ public partial class StartPage : ContentPage
 
             try
             {
-                // MTU协商容错处理，硬件上限251，无法直接500，依靠软件拼接实现500字节接收
-                if (_connectedDevice != null)
+                // MTU协商容错处理，硬件上限251，无法直接500，依靠软件拼接实现500字节接收。
+                // iOS 不支持主动协商 MTU（Plugin.BLE 会抛 NotImplemented），由系统自动协商，跳过即可。
+                if (_connectedDevice != null && OperatingSystem.IsAndroid())
                 {
                     try
                     {
@@ -741,19 +795,32 @@ public partial class StartPage : ContentPage
     public class DeviceItem : INotifyPropertyChanged
     {
         private string _connectButtonText;
+        private string _name;
         private int _rssi;
 
-        public DeviceItem(IDevice device)
+        public DeviceItem(IDevice device, string? displayName = null)
         {
             NativeDevice = device;
             Id = device.Id;
-            Name = string.IsNullOrEmpty(device.Name) ? "Unknown Device" : device.Name;
+            _name = !string.IsNullOrEmpty(displayName)
+                ? displayName
+                : (string.IsNullOrEmpty(device.Name) ? "Unknown Device" : device.Name);
             Rssi = device.Rssi;
             ConnectButtonText = "Connect";
         }
 
         public Guid Id { get; }
-        public string Name { get; set; }
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (_name == value)
+                    return;
+                _name = value;
+                OnPropertyChanged(nameof(Name));
+            }
+        }
         public IDevice NativeDevice { get; }
 
         public int Rssi
