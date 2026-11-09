@@ -15,7 +15,7 @@ on:
 
 jobs:
   build-ios:
-    runs-on: macos-15
+    runs-on: macos-latest
     timeout-minutes: 60
     env:
       PROJECT: Net.csproj
@@ -26,6 +26,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Toolchain info
+        run: |
+          xcodebuild -version
+          dotnet --version
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
