@@ -35,10 +35,12 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "10.0.x"
+          dotnet-version: "10.0.301"
 
       - name: Install MAUI iOS workload
-        run: dotnet workload install maui-ios
+        # 固定 workload set：runner 上的 Xcode 为 26.6，需要 iOS SDK 26.x；
+        # 最新 workload（iOS SDK 27.1）会要求 Xcode 27.1 导致构建失败。
+        run: dotnet workload install maui-ios --version 10.0.301.1
 
       # ---------- 签名：导入分发证书 + 描述文件 ----------
       # 仓库 Settings → Secrets 里配置：
