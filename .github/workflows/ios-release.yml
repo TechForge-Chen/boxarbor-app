@@ -119,21 +119,33 @@ jobs:
             echo "IPA: $IPA"
             echo "IPA_PATH=$IPA" >> "$GITHUB_ENV"
           else
-            # 没有签名材料时不做设备包（无法签名），改为在 macOS 上做 iOS 编译校验
-            echo "::warning::未配置 Apple 签名证书，改为 iOS 编译校验（不产出 IPA）"
-            dotnet build "$PROJECT" \
+            # 未配置签名：产出未签名 IPA（安装前需用 Sideloadly/AltStore 或 Mac 自行签名）
+            echo "::warning::未配置 Apple 签名证书，产出未签名 IPA（安装前需自行签名）"
+            dotnet publish "$PROJECT" \
               -f "$TFM" -c "$CONFIG" \
               -p:TargetFrameworks="$TFM" \
-              -p:RuntimeIdentifier=iossimulator-arm64
-            echo "IPA_PATH=" >> "$GITHUB_ENV"
+              -p:RuntimeIdentifier="$RID" \
+              -p:EnableCodeSigning=false \
+              -p:ApplicationVersion="$BUILD_NUMBER"
+
+            APP="bin/$CONFIG/$TFM/$RID/publish/Net.app"
+            if [ ! -d "$APP" ]; then
+              APP=$(find . -type d -name "*.app" -not -path "*/obj/*" | head -1)
+            fi
+            echo "APP: $APP"
+            rm -rf "$RUNNER_TEMP/ipa_payload"
+            mkdir -p "$RUNNER_TEMP/ipa_payload/Payload"
+            cp -R "$APP" "$RUNNER_TEMP/ipa_payload/Payload/"
+            (cd "$RUNNER_TEMP/ipa_payload" && zip -qry "$GITHUB_WORKSPACE/BoxArbor-unsigned.ipa" Payload)
+            echo "UNSIGNED_IPA=$GITHUB_WORKSPACE/BoxArbor-unsigned.ipa" >> "$GITHUB_ENV"
           fi
 
       - name: Upload IPA artifact
-        if: env.IPA_PATH != ''
+        if: env.IPA_PATH != '' || env.UNSIGNED_IPA != ''
         uses: actions/upload-artifact@v4
         with:
-          name: ios-ipa
-          path: ${{ env.IPA_PATH }}
+          name: ios-package
+          path: ${{ env.IPA_PATH != '' && env.IPA_PATH || env.UNSIGNED_IPA }}
           if-no-files-found: error
 
       # ---------- 上传 TestFlight ----------
