@@ -370,3 +370,6 @@ publish_output/
 *.keystore
 *.jks
 *.zip
+
+# 本地签名口令（不要提交）
+Net.secrets.props

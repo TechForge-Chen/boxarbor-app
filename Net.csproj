@@ -32,9 +32,10 @@
 	  <AndroidKeyStore>true</AndroidKeyStore>
 	  <AndroidSigningKeyStore>upload-keystore.keystore</AndroidSigningKeyStore>
 	  <AndroidSigningKeyAlias>upload</AndroidSigningKeyAlias>
-	  <AndroidSigningKeyPass>REMOVED</AndroidSigningKeyPass>
-	  <AndroidSigningStorePass>REMOVED</AndroidSigningStorePass>
 	</PropertyGroup>
+
+	<!-- 签名口令放在本地 Net.secrets.props（已 gitignore），避免进入仓库/历史 -->
+	<Import Project="Net.secrets.props" Condition="Exists('Net.secrets.props')" />
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios'">
 	  <!-- 签名由发布流程提供：本地/CI 通过 -p:CodesignKey 与 -p:CodesignProvision 指定
