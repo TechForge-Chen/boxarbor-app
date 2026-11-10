@@ -12,7 +12,7 @@ namespace BluetoothMauiApp;
 /// </summary>
 internal static class SafeArea
 {
-    public static Thickness Insets(Page page)
+    public static Thickness Insets(Microsoft.Maui.Controls.Page page)
     {
 #if IOS
         try
