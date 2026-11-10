@@ -6,8 +6,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:BluetoothMauiApp"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="BluetoothMauiApp.SetPage"
              Title="Settings"
+             ios:Page.UseSafeArea="False"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False">
 
@@ -15,7 +17,7 @@
         <local:AtmosphereBackground />
 
         <ScrollView>
-            <VerticalStackLayout Padding="17,28,16,137" Spacing="0">
+            <VerticalStackLayout x:Name="PageStack" Padding="17,28,16,137" Spacing="0">
 
                 <!-- 标题 -->
                 <Label Text="Settings"
@@ -244,6 +246,6 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <local:AppTabBar />
+        <local:AppTabBar x:Name="TabBar" />
     </Grid>
 </ContentPage>

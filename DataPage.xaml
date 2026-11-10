@@ -5,8 +5,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:BluetoothMauiApp"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="BluetoothMauiApp.DataPage"
              Title="Devices"
+             ios:Page.UseSafeArea="False"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False">
 
@@ -16,7 +18,7 @@
         <!-- ========== 网格态：有在线网关 ========== -->
         <Grid x:Name="GridView" IsVisible="False" RowDefinitions="Auto,*">
 
-            <VerticalStackLayout Grid.Row="0" Padding="17,27,16,0" Spacing="0">
+            <VerticalStackLayout Grid.Row="0" x:Name="GridHeader" Padding="17,27,16,0" Spacing="0">
                 <Label Text="Devices"
                        FontSize="30"
                        FontFamily="PJSB"
@@ -119,7 +121,7 @@
 
         <!-- ========== 空态：没有在线网关 ========== -->
         <ScrollView x:Name="EmptyView" IsVisible="True">
-            <VerticalStackLayout Padding="17,27,16,137" Spacing="0">
+            <VerticalStackLayout x:Name="EmptyStack" Padding="17,27,16,137" Spacing="0">
 
                 <Label Text="Devices"
                        FontSize="30"

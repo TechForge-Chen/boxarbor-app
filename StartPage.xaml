@@ -6,7 +6,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:BluetoothMauiApp"
+             xmlns:ios="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="BluetoothMauiApp.StartPage"
+             ios:Page.UseSafeArea="False"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False">
 
@@ -14,7 +16,7 @@
         <local:AtmosphereBackground />
 
         <ScrollView>
-            <VerticalStackLayout Padding="20,16,20,133" Spacing="0">
+            <VerticalStackLayout x:Name="PageStack" Padding="20,16,20,133" Spacing="0">
 
                 <!-- ===== 问候 + View guide ===== -->
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">

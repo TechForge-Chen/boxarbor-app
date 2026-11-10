@@ -119,9 +119,18 @@ public partial class Board : ContentPage
         ThemeManager.Changed -= OnThemeChanged;
         ThemeManager.Changed += OnThemeChanged;
         ThemeManager.BindIcon(imgGatewayEdit, "ic_edit.png", "ic_edit_w.png");
+        ApplySafeArea();
         OnThemeChanged();   // 后台期间主题可能已切换，回前台重刷
         // 进入界面自动读取一次当前参数（不弹未连接提示）
         GetNetPara(false);
+    }
+
+    /// <summary>iOS 全屏布局：把安全区高度补回页头与内容区（Android 为 0）。</summary>
+    private void ApplySafeArea()
+    {
+        var insets = SafeArea.Insets(this);
+        HeaderRow.Padding = new Thickness(20, 26 + insets.Top, 20, 0);
+        ContentGrid.Margin = new Thickness(18, 16, 18, 16 + insets.Bottom);
     }
 
     private void OnThemeChanged()

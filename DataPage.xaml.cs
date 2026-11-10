@@ -200,8 +200,19 @@ public partial class DataPage : ContentPage
         // Board 构造时会把 OnDataReceivedAction 指向自己，退出时 -= 置空。
         // 不在这里重新接管，从 Board 返回后网关网格就再也收不到状态回包。
         StartPage.OnDataReceivedAction = OnDataReceived;
+        ApplySafeArea();
         StartStatusTimer();
         RefreshViewState();
+    }
+
+    /// <summary>iOS 全屏布局：把安全区高度补回内容与底部导航（Android 为 0）。</summary>
+    private void ApplySafeArea()
+    {
+        var insets = SafeArea.Insets(this);
+        GridHeader.Padding = new Thickness(17, 27 + insets.Top, 16, 0);
+        EmptyStack.Padding = new Thickness(17, 27 + insets.Top, 16, 137 + insets.Bottom);
+        GatewayCV.Margin = new Thickness(18, 13, 18, 105 + insets.Bottom);
+        TabBar.ApplySafeAreaInsets(insets);
     }
 
     protected override void OnDisappearing()

@@ -272,7 +272,16 @@ public partial class StartPage : ContentPage
         DevicesChanged += OnDevicesChanged;
         ThemeManager.Changed -= OnThemeChanged;
         ThemeManager.Changed += OnThemeChanged;
+        ApplySafeArea();
         OnThemeChanged();   // 后台期间主题可能已切换，回前台重刷
+    }
+
+    /// <summary>iOS 全屏布局：把安全区高度补回内容与底部导航（Android 为 0）。</summary>
+    private void ApplySafeArea()
+    {
+        var insets = SafeArea.Insets(this);
+        PageStack.Padding = new Thickness(20, 16 + insets.Top, 20, 133 + insets.Bottom);
+        TabBar.ApplySafeAreaInsets(insets);
     }
 
     private void OnThemeChanged()
