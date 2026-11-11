@@ -219,34 +219,17 @@ public static class ThemeManager
         }
     }
 
-    /// <summary>弹窗遮罩开关时把页面底色一起刷暗/恢复。
-    /// 遮罩层在页面内容区之内，最上面约 24pt 露的是页面底色，够不到；
-    /// 这里直接用与遮罩叠加后完全一致的颜色，接缝才看不出来。</summary>
-    public static void SetPageDim(Microsoft.Maui.Controls.Page? page, bool dim, double opacity = 0.5)
-    {
-        if (page is null)
-            return;
-        try
-        {
-            if (!dim)
-            {
-                page.BackgroundColor = Color("DgAtmosBase");
-                return;
-            }
-            // 实测校准值（iOS 有 P3 色域偏移，需比目标色再压一档才能渲染成遮罩色）
-            page.BackgroundColor = ParseHex(IsDark ? "#050E0A" : "#778480");
-        }
-        catch
-        {
-        }
-    }
-
-    public static void SetOverlayDim(bool dim)
+    /// <summary>弹窗打开/关闭时同步系统区。
+    /// iOS：给状态栏那一条单独盖一层与弹窗遮罩**完全相同**的半透明视图
+    /// （同一蒙层色、同一 50% 透明），走同一套混合，颜色天然一致，不受色域换算影响。
+    /// Android：直接用系统栏着色。</summary>
+    public static void SetOverlayDim(bool dim, double stripHeight = 0)
     {
         try
         {
             var color = dim ? ParseHex("#0D1713") : Color("DgAtmosBase");
 #if IOS
+            SetStatusStripDim(dim, stripHeight);
             var dimUi = new UIKit.UIColor((float)color.Red, (float)color.Green, (float)color.Blue, (float)color.Alpha);
             foreach (var w in GetKeyWindows())
                 w.BackgroundColor = dimUi;
@@ -268,6 +251,45 @@ public static class ThemeManager
     }
 
 #if IOS
+    private static UIKit.UIView? _statusStrip;
+
+    /// <summary>状态栏那一条用与弹窗遮罩同款的半透明视图盖住（0..stripHeight），
+    /// 与页面内遮罩走同一套混合，颜色天然一致。</summary>
+    private static void SetStatusStripDim(bool dim, double stripHeight)
+    {
+        try
+        {
+            if (!dim)
+            {
+                _statusStrip?.RemoveFromSuperview();
+                _statusStrip?.Dispose();
+                _statusStrip = null;
+                return;
+            }
+            if (stripHeight <= 0)
+                return;
+            var win = GetKeyWindows().FirstOrDefault();
+            if (win is null)
+                return;
+
+            var backdrop = Color("DgBackdrop");
+            var ui = new UIKit.UIColor((float)backdrop.Red, (float)backdrop.Green, (float)backdrop.Blue, 0.5f);
+            if (_statusStrip is null)
+            {
+                _statusStrip = new UIKit.UIView { BackgroundColor = ui, UserInteractionEnabled = false };
+                win.AddSubview(_statusStrip);
+            }
+            else
+            {
+                _statusStrip.BackgroundColor = ui;
+            }
+            _statusStrip.Frame = new CoreGraphics.CGRect(0, 0, win.Bounds.Width, stripHeight);
+        }
+        catch
+        {
+        }
+    }
+
     /// <summary>状态栏那一条露的是根控制器视图，窗口底色换完还要把它也刷上，
     /// 否则弹窗遮罩盖不住最顶上一条浅色带。</summary>
     private static void PaintRootView(UIKit.UIColor color)

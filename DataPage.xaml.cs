@@ -226,7 +226,6 @@ public partial class DataPage : ContentPage
         {
             PickerOverlay.IsVisible = false;
         ThemeManager.SetOverlayDim(false);
-        ThemeManager.SetPageDim(this, false);
             _scanGeneration++;
         }
         _ = StartPage.StopScanAsync();
@@ -240,14 +239,12 @@ public partial class DataPage : ContentPage
     public void OpenPickerForShot()
     {
         PickerOverlay.IsVisible = true;
-        ThemeManager.SetOverlayDim(true);
-        ThemeManager.SetPageDim(this, true);
+        ThemeManager.SetOverlayDim(true, SafeArea.Insets(this).Top);
         SetPickerState(PickerState.Scanning);
 
         // 一次性探针：页面底色染黄、内容区染洋红、遮罩染红，截图即可看出三层真实边界
         if (Environment.GetEnvironmentVariable("BOXARBOR_PROBE") == "1")
         {
-            ThemeManager.SetPageDim(this, false);
             BackgroundColor = Colors.Yellow;
             if (Content is Grid probeRoot)
                 probeRoot.BackgroundColor = Colors.Magenta;
@@ -263,8 +260,7 @@ public partial class DataPage : ContentPage
     private async void OnScanTapped(object sender, TappedEventArgs e)
     {
         PickerOverlay.IsVisible = true;
-        ThemeManager.SetOverlayDim(true);
-        ThemeManager.SetPageDim(this, true);
+        ThemeManager.SetOverlayDim(true, SafeArea.Insets(this).Top);
         SetPickerState(PickerState.Scanning);
         await StartPage.StartScanAsync();
         WatchScanTimeout(++_scanGeneration);
@@ -317,7 +313,6 @@ public partial class DataPage : ContentPage
         _scanGeneration++;                              // 作废在途扫描/连接回调
         PickerOverlay.IsVisible = false;
         ThemeManager.SetOverlayDim(false);
-        ThemeManager.SetPageDim(this, false);
         await StartPage.StopScanAsync();
         RefreshViewState();
     }

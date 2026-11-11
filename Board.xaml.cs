@@ -153,7 +153,6 @@ public partial class Board : ContentPage
         ThemeManager.Changed -= OnThemeChanged;
         StartPage.OnDataReceivedAction -= OnDataReceived;
         ThemeManager.SetOverlayDim(false);
-        ThemeManager.SetPageDim(this, false);
         // 页面退出强制清零，防止常驻锁死
         _queryFlag = 0;
     }
@@ -584,8 +583,7 @@ public partial class Board : ContentPage
         int current = _sceneIndex + 1;
         HighlightSaveScene(current);
         SaveOverlay.IsVisible = true;
-        ThemeManager.SetOverlayDim(true);
-        ThemeManager.SetPageDim(this, true);
+        ThemeManager.SetOverlayDim(true, SafeArea.Insets(this).Top);
     }
 
     private void OnSaveBackdrop(object sender, TappedEventArgs e) => SaveOverlay.IsVisible = false;
@@ -615,7 +613,6 @@ public partial class Board : ContentPage
 
         SaveOverlay.IsVisible = false;
         ThemeManager.SetOverlayDim(false);
-        ThemeManager.SetPageDim(this, false);
         StartPage.TapHaptic();
     }
 
