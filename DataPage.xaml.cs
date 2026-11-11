@@ -211,11 +211,7 @@ public partial class DataPage : ContentPage
     /// <summary>iOS：去掉底部安全区让底栏坐到底边；遮罩向外扩铺满状态栏（Android 全为 0）。</summary>
     private void ApplySafeArea()
     {
-        var insets = SafeArea.Insets(this);
-        SafeArea.ClearRootPadding(this);
-        GridHeader.Padding = new Thickness(17, 27 + insets.Top, 16, 0);
-        EmptyStack.Padding = new Thickness(17, 27 + insets.Top, 16, 137);
-        PickerOverlay.Margin = Thickness.Zero;
+        PickerOverlay.Margin = new Thickness(0, -100, 0, -100);
         TabBar.ApplyBottomInset(new Thickness(0, 0, 0, SafeArea.TabBarBottomInset(this)));
     }
 
@@ -230,6 +226,7 @@ public partial class DataPage : ContentPage
         {
             PickerOverlay.IsVisible = false;
         ThemeManager.SetOverlayDim(false);
+        ThemeManager.SetPageDim(this, false);
             _scanGeneration++;
         }
         _ = StartPage.StopScanAsync();
@@ -244,11 +241,13 @@ public partial class DataPage : ContentPage
     {
         PickerOverlay.IsVisible = true;
         ThemeManager.SetOverlayDim(true);
+        ThemeManager.SetPageDim(this, true);
         SetPickerState(PickerState.Scanning);
 
         // 一次性探针：页面底色染黄、内容区染洋红、遮罩染红，截图即可看出三层真实边界
         if (Environment.GetEnvironmentVariable("BOXARBOR_PROBE") == "1")
         {
+            ThemeManager.SetPageDim(this, false);
             BackgroundColor = Colors.Yellow;
             if (Content is Grid probeRoot)
                 probeRoot.BackgroundColor = Colors.Magenta;
@@ -265,6 +264,7 @@ public partial class DataPage : ContentPage
     {
         PickerOverlay.IsVisible = true;
         ThemeManager.SetOverlayDim(true);
+        ThemeManager.SetPageDim(this, true);
         SetPickerState(PickerState.Scanning);
         await StartPage.StartScanAsync();
         WatchScanTimeout(++_scanGeneration);
@@ -317,6 +317,7 @@ public partial class DataPage : ContentPage
         _scanGeneration++;                              // 作废在途扫描/连接回调
         PickerOverlay.IsVisible = false;
         ThemeManager.SetOverlayDim(false);
+        ThemeManager.SetPageDim(this, false);
         await StartPage.StopScanAsync();
         RefreshViewState();
     }

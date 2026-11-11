@@ -306,10 +306,7 @@ public partial class StartPage : ContentPage
     /// <summary>iOS：去掉底部安全区让底栏坐到底边；遮罩向外扩铺满状态栏（Android 全为 0）。</summary>
     private void ApplySafeArea()
     {
-        var insets = SafeArea.Insets(this);
-        SafeArea.ClearRootPadding(this);
-        PageStack.Padding = new Thickness(20, 16 + insets.Top, 20, 133);
-        RenameDlg.Margin = Thickness.Zero;
+        RenameDlg.Margin = new Thickness(0, -100, 0, -100);
         TabBar.ApplyBottomInset(new Thickness(0, 0, 0, SafeArea.TabBarBottomInset(this)));
     }
 

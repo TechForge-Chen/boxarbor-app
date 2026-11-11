@@ -24,6 +24,7 @@ public partial class RenameDialog : ContentView
             SubtitleLabel.Text = subtitle;
         IsVisible = true;
         ThemeManager.SetOverlayDim(true);
+        ThemeManager.SetPageDim(Shell.Current?.CurrentPage, true, 0.72);
         NameEntry.Focus();
     }
 
@@ -31,6 +32,7 @@ public partial class RenameDialog : ContentView
     {
         IsVisible = false;
         ThemeManager.SetOverlayDim(false);
+        ThemeManager.SetPageDim(Shell.Current?.CurrentPage, false, 0.72);
         NameEntry.Unfocus();
     }
 

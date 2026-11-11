@@ -233,8 +233,8 @@ public static class ThemeManager
                 page.BackgroundColor = Color("DgAtmosBase");
                 return;
             }
-            // 实测值：亮色 #7B8E86、暗色 #07100C（蒙层色叠在页面底色上的结果）
-            page.BackgroundColor = ParseHex(IsDark ? "#07100C" : "#7B8E86");
+            // 实测校准值（iOS 有 P3 色域偏移，需比目标色再压一档才能渲染成遮罩色）
+            page.BackgroundColor = ParseHex(IsDark ? "#000805" : "#778480");
         }
         catch
         {

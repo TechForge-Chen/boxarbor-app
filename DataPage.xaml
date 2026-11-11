@@ -11,7 +11,7 @@
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False">
 
-    <Grid SafeAreaEdges="None">
+    <Grid>
         <local:AtmosphereBackground />
 
         <!-- ========== 网格态：有在线网关 ========== -->

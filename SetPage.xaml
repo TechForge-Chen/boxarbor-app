@@ -12,7 +12,7 @@
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False">
 
-    <Grid SafeAreaEdges="None">
+    <Grid>
         <local:AtmosphereBackground />
 
         <ScrollView>

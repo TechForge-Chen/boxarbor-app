@@ -14,7 +14,7 @@
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False">
 
-    <Grid SafeAreaEdges="None">
+    <Grid>
         <local:AtmosphereBackground />
 
         <Grid RowDefinitions="Auto,Auto,Auto,*">
