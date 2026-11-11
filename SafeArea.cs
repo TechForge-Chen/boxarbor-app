@@ -36,7 +36,7 @@ internal static class SafeArea
     {
         try
         {
-            if (page.Content is Microsoft.Maui.Controls.Layout layout)
+            if (page is Microsoft.Maui.Controls.ContentPage { Content: Microsoft.Maui.Controls.Layout layout })
                 layout.Padding = Microsoft.Maui.Thickness.Zero;
         }
         catch
