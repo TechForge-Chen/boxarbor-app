@@ -131,9 +131,11 @@ public partial class Board : ContentPage
     /// <summary>iOS：弹窗遮罩向外扩以铺满状态栏与 Home 区（Android 全为 0）。</summary>
     private void ApplySafeArea()
     {
-        var margin = new Thickness(0, -100, 0, -100);
-        SaveOverlay.Margin = margin;
-        RenameDlg.Margin = margin;
+        var insets = SafeArea.Insets(this);
+        HeaderRow.Padding = new Thickness(20, 26 + insets.Top, 20, 0);
+        ContentGrid.Margin = new Thickness(18, 16, 18, 16 + insets.Bottom);
+        SaveOverlay.Margin = Thickness.Zero;
+        RenameDlg.Margin = Thickness.Zero;
     }
 
     private void OnSizeChangedBleed(object? sender, EventArgs e) => ApplySafeArea();
@@ -153,7 +155,6 @@ public partial class Board : ContentPage
         ThemeManager.Changed -= OnThemeChanged;
         StartPage.OnDataReceivedAction -= OnDataReceived;
         ThemeManager.SetOverlayDim(false);
-        ThemeManager.SetPageDim(this, false);
         // 页面退出强制清零，防止常驻锁死
         _queryFlag = 0;
     }
@@ -585,7 +586,6 @@ public partial class Board : ContentPage
         HighlightSaveScene(current);
         SaveOverlay.IsVisible = true;
         ThemeManager.SetOverlayDim(true);
-        ThemeManager.SetPageDim(this, true);
     }
 
     private void OnSaveBackdrop(object sender, TappedEventArgs e) => SaveOverlay.IsVisible = false;
@@ -615,7 +615,6 @@ public partial class Board : ContentPage
 
         SaveOverlay.IsVisible = false;
         ThemeManager.SetOverlayDim(false);
-        ThemeManager.SetPageDim(this, false);
         StartPage.TapHaptic();
     }
 
