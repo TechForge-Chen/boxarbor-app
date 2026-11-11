@@ -87,10 +87,10 @@ public static class ThemeManager
 
         // 弹窗（token519/520、524/525、675/676、678/679 成对）
         ["DgDialogBg"] = "#1B2C23",
-        ["DgDialogBg2"] = "#F51B2C23",
+        ["DgDialogBg2"] = "#1B2C23",
         ["DgDialogBorder"] = "#3B5245",
         ["DgDialogText"] = "#F1F7F3",
-        ["DgPickerBg"] = "#E81D3026",
+        ["DgPickerBg"] = "#1D3026",
         ["DgPickerTitle"] = "#F1F7F3",
         ["DgPickerSub"] = "#B2C1B8",
         ["DgPickerCancelBg"] = "#21372B",
