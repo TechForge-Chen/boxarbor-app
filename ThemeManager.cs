@@ -205,6 +205,7 @@ public static class ThemeManager
             var uiColor = new UIKit.UIColor((float)bg.Red, (float)bg.Green, (float)bg.Blue, (float)bg.Alpha);
             foreach (var w in GetKeyWindows())
                 w.BackgroundColor = uiColor;
+            PaintRootView(uiColor);
 #elif ANDROID
             var agColor = Android.Graphics.Color.Argb(
                 (int)(bg.Alpha * 255), (int)(bg.Red * 255), (int)(bg.Green * 255), (int)(bg.Blue * 255));
@@ -227,6 +228,7 @@ public static class ThemeManager
             var dimUi = new UIKit.UIColor((float)color.Red, (float)color.Green, (float)color.Blue, (float)color.Alpha);
             foreach (var w in GetKeyWindows())
                 w.BackgroundColor = dimUi;
+            PaintRootView(dimUi);
 #elif ANDROID
             var dimAg = Android.Graphics.Color.Argb(
                 (int)(color.Alpha * 255), (int)(color.Red * 255), (int)(color.Green * 255), (int)(color.Blue * 255));
@@ -244,6 +246,21 @@ public static class ThemeManager
     }
 
 #if IOS
+    /// <summary>状态栏那一条露的是根控制器视图，窗口底色换完还要把它也刷上，
+    /// 否则弹窗遮罩盖不住最顶上一条浅色带。</summary>
+    private static void PaintRootView(UIKit.UIColor color)
+    {
+        try
+        {
+            foreach (var w in GetKeyWindows())
+                if (w.RootViewController?.View is { } root)
+                    root.BackgroundColor = color;
+        }
+        catch
+        {
+        }
+    }
+
     private static System.Collections.Generic.List<UIKit.UIWindow> GetKeyWindows()
     {
         var list = new System.Collections.Generic.List<UIKit.UIWindow>();
@@ -252,16 +269,15 @@ public static class ThemeManager
             var app = UIKit.UIApplication.SharedApplication;
             if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion(13, 0))
             {
+                // 取场景里的全部窗口（不只 keyWindow）：刷底色时 keyWindow 判定有时拿不到
                 foreach (var scene in app.ConnectedScenes)
                     if (scene is UIKit.UIWindowScene ws)
                         foreach (var w in ws.Windows)
-                            if (w.IsKeyWindow)
+                            if (!list.Contains(w))
                                 list.Add(w);
             }
-            else if (app.KeyWindow != null)
-            {
-                list.Add(app.KeyWindow);
-            }
+            if (list.Count == 0 && app.KeyWindow is { } kw)
+                list.Add(kw);
         }
         catch
         {
