@@ -60,13 +60,13 @@ jobs:
           mkdir -p "$GITHUB_WORKSPACE/simshots"
 
           # 1) 首页（看底部栏是否坐到底边、顶部是否融合）
-          xcrun simctl launch "$UDID" "$BUNDLE_ID"
+          SIMCTL_CHILD_BOXARBOR_LIGHT=1 xcrun simctl launch "$UDID" "$BUNDLE_ID"
           sleep 12
           xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/1-home.png"
 
           # 2) Devices + 扫描弹窗（看遮罩是否盖住状态栏/底部）
           xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
-          SIMCTL_CHILD_BOXARBOR_SHOT=picker xcrun simctl launch "$UDID" "$BUNDLE_ID"
+          SIMCTL_CHILD_BOXARBOR_LIGHT=1 SIMCTL_CHILD_BOXARBOR_SHOT=picker xcrun simctl launch "$UDID" "$BUNDLE_ID"
           sleep 14
           xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/2-picker.png"
 
@@ -78,7 +78,7 @@ jobs:
 
           # 5) 新手引导（看引导蒙层是否盖住状态栏）
           xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
-          SIMCTL_CHILD_BOXARBOR_SHOT=guide xcrun simctl launch "$UDID" "$BUNDLE_ID"
+          SIMCTL_CHILD_BOXARBOR_SHOT=guide SIMCTL_CHILD_BOXARBOR_LIGHT=1 xcrun simctl launch "$UDID" "$BUNDLE_ID"
           sleep 12
           xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/5-guide.png"
 
@@ -91,7 +91,7 @@ jobs:
           # 6) Devices / Settings（亮+暗）
           for T in devices settings; do
             xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
-            SIMCTL_CHILD_BOXARBOR_SHOT=$T xcrun simctl launch "$UDID" "$BUNDLE_ID"
+            SIMCTL_CHILD_BOXARBOR_LIGHT=1 SIMCTL_CHILD_BOXARBOR_SHOT=$T xcrun simctl launch "$UDID" "$BUNDLE_ID"
             sleep 12
             xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/6-$T.png"
 

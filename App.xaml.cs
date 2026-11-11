@@ -16,9 +16,11 @@ namespace BluetoothMauiApp
             UserAppTheme = AppTheme.Light;
             ThemeManager.Initialize();     // 按保存的偏好套用明/暗
 
-            // CI 截图专用：强制暗色（生产没有该变量）
+            // CI 截图专用：强制亮/暗色（生产没有这些变量）
             if (Environment.GetEnvironmentVariable("BOXARBOR_DARK") == "1")
                 ThemeManager.Apply(true);
+            else if (Environment.GetEnvironmentVariable("BOXARBOR_LIGHT") == "1")
+                ThemeManager.Apply(false);
 
             MainPage = new AppShell();   // 只留平台启动屏，无应用内开屏页
             ThemeManager.ApplyWindowBackground();  // 窗口底色跟主题走，系统留白区不再是白色
