@@ -244,10 +244,13 @@ public partial class DataPage : ContentPage
         ThemeManager.SetPageDim(this, true);
         SetPickerState(PickerState.Scanning);
 
-        // 一次性探针：把页面染洋红、遮罩染纯红，截图即可看出两者真实边界
+        // 一次性探针：页面底色染黄、内容区染洋红、遮罩染红，截图即可看出三层真实边界
         if (Environment.GetEnvironmentVariable("BOXARBOR_PROBE") == "1")
         {
-            BackgroundColor = Colors.Magenta;
+            ThemeManager.SetPageDim(this, false);
+            BackgroundColor = Colors.Yellow;
+            if (Content is Grid probeRoot)
+                probeRoot.BackgroundColor = Colors.Magenta;
             if (PickerOverlay.Children.FirstOrDefault() is Grid backdrop)
             {
                 backdrop.BackgroundColor = Colors.Red;
