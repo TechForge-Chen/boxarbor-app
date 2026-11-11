@@ -11,12 +11,7 @@
              HorizontalOptions="Fill"
              HeightRequest="105">
 
-    <Grid RowDefinitions="Auto,*">
-
-        <!-- 底部安全区填充：页面全屏布局时，把导航条底色延伸至屏幕底边，消除断层 -->
-        <BoxView x:Name="SafeAreaFill" Grid.Row="1" Color="White" IsVisible="False" />
-
-        <Grid x:Name="BarContent" Grid.Row="0" HeightRequest="105">
+    <Grid x:Name="BarContent" HeightRequest="105">
 
         <!-- 挖孔条（含中央凸起）；暗色换 tabbar_bg_dark.png -->
         <Image x:Name="BarBg" Source="tabbar_bg.png"
@@ -101,7 +96,6 @@
                 </StackLayout>
             </Border>
 
-        </Grid>
         </Grid>
     </Grid>
 </ContentView>

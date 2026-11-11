@@ -69,20 +69,5 @@ public partial class AppTabBar : ContentView
 
         IconSettings.Source = set ? grnSet : graySet;
         LabelSettings.TextColor = set ? SelectedColor : ThemeManager.Color("DgMuted");
-
-        // 底部安全区填充色与导航条底色一致（亮 #FFFFFF / 暗 #21372B）
-        SafeAreaFill.Color = dark ? Color.FromHex("#21372B") : Colors.White;
-    }
-
-    /// <summary>
-    /// 页面使用全屏布局后调用：导航条主体保持 105 高，底部安全区（Home Indicator）
-    /// 由填充色延伸铺满，避免底部出现断层。
-    /// </summary>
-    public void ApplySafeAreaInsets(Thickness insets)
-    {
-        double bottom = Math.Max(0, insets.Bottom);
-        HeightRequest = 105 + bottom;
-        SafeAreaFill.IsVisible = bottom > 0;
-        SafeAreaFill.Color = ThemeManager.IsDark ? Color.FromHex("#21372B") : Colors.White;
     }
 }

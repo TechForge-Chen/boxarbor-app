@@ -10,7 +10,7 @@
              xmlns:local="clr-namespace:BluetoothMauiApp"
              x:Class="BluetoothMauiApp.Board"
              Title="Gateway"
-             SafeAreaEdges="None"
+             BackgroundColor="{DynamicResource DgAtmosBase}"
              Shell.NavBarIsVisible="False"
              Shell.TabBarIsVisible="False">
 

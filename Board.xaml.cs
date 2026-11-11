@@ -125,12 +125,14 @@ public partial class Board : ContentPage
         GetNetPara(false);
     }
 
-    /// <summary>iOS 全屏布局：把安全区高度补回页头与内容区（Android 为 0）。</summary>
+    /// <summary>iOS 安全区由系统处理（页面底色与氛围底同色，安全区无断层）；
+    /// 这里只把弹窗遮罩向安全区外扩保证蒙层铺满状态栏与 Home 区（Android 为 0 无影响）。</summary>
     private void ApplySafeArea()
     {
         var insets = SafeArea.Insets(this);
-        HeaderRow.Padding = new Thickness(20, 26 + insets.Top, 20, 0);
-        ContentGrid.Margin = new Thickness(18, 16, 18, 16 + insets.Bottom);
+        var bleed = new Thickness(0, -insets.Top, 0, -insets.Bottom);
+        SaveOverlay.Margin = bleed;
+        RenameDlg.Margin = bleed;
     }
 
     private void OnThemeChanged()

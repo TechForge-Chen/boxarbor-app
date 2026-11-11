@@ -150,6 +150,17 @@ public static class ThemeManager
             res[kv.Key] = dark ? ParseHex(kv.Value) : light;
         }
 
+        // 同步系统外观：iOS 状态栏文字颜色跟随系统明暗（暗态白字/亮态黑字），
+        // 页面安全区已铺底色，状态栏文字必须可读；Android 系统栏由 ApplySystemBars 处理。
+        try
+        {
+            Application.Current.UserAppTheme = dark ? AppTheme.Dark : AppTheme.Light;
+        }
+        catch
+        {
+            // 系统外观同步失败不影响主题
+        }
+
         foreach (var (img, light, dark2) in Icons)
             img.Source = dark ? dark2 : light;
 

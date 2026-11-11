@@ -205,14 +205,12 @@ public partial class DataPage : ContentPage
         RefreshViewState();
     }
 
-    /// <summary>iOS 全屏布局：把安全区高度补回内容与底部导航（Android 为 0）。</summary>
+    /// <summary>iOS 安全区由系统处理（页面底色与氛围底同色，安全区无断层）；
+    /// 这里只把蓝牙弹窗遮罩向安全区外扩保证蒙层铺满状态栏与 Home 区（Android 为 0 无影响）。</summary>
     private void ApplySafeArea()
     {
         var insets = SafeArea.Insets(this);
-        GridHeader.Padding = new Thickness(17, 27 + insets.Top, 16, 0);
-        EmptyStack.Padding = new Thickness(17, 27 + insets.Top, 16, 137 + insets.Bottom);
-        GatewayCV.Margin = new Thickness(18, 13, 18, 105 + insets.Bottom);
-        TabBar.ApplySafeAreaInsets(insets);
+        PickerOverlay.Margin = new Thickness(0, -insets.Top, 0, -insets.Bottom);
     }
 
     protected override void OnDisappearing()

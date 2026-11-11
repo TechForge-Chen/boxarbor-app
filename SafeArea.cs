@@ -6,8 +6,8 @@ using Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;
 namespace BluetoothMauiApp;
 
 /// <summary>
-/// iOS 全屏布局辅助：页面使用 <c>ios:Page.UseSafeArea="False"</c> 让背景/遮罩铺满全屏后，
-/// 由各页面把安全区高度补回内容容器，避免标题顶到状态栏、内容压到 Home Indicator。
+/// iOS 安全区高度读取：页面使用系统安全区（内容自动内缩，页面底色与氛围底同色保证无断层），
+/// 全屏遮罩（蓝牙弹窗/引导/Rename）用负 Margin 向安全区外扩以铺满状态栏与 Home 区。
 /// 其他平台返回 0，不影响 Android。
 /// </summary>
 internal static class SafeArea

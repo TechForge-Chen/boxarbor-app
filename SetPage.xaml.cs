@@ -33,14 +33,5 @@ public partial class SetPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        ApplySafeArea();
-    }
-
-    /// <summary>iOS 全屏布局：把安全区高度补回内容与底部导航（Android 为 0）。</summary>
-    private void ApplySafeArea()
-    {
-        var insets = SafeArea.Insets(this);
-        PageStack.Padding = new Thickness(17, 28 + insets.Top, 16, 137 + insets.Bottom);
-        TabBar.ApplySafeAreaInsets(insets);
     }
 }
