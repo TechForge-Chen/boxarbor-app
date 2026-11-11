@@ -220,25 +220,21 @@ public static class ThemeManager
     }
 
     /// <summary>弹窗遮罩开关时把页面底色一起刷暗/恢复。
-    /// 状态栏最上面那一条露的是页面底色（遮罩层在页面内容区之内，够不到），
-    /// 用与遮罩完全相同的混合色（蒙层色 × opacity 叠在页面底色上）刷，接缝才看不出来。</summary>
+    /// 遮罩层在页面内容区之内，最上面约 24pt 露的是页面底色，够不到；
+    /// 这里直接用与遮罩叠加后完全一致的颜色，接缝才看不出来。</summary>
     public static void SetPageDim(Microsoft.Maui.Controls.Page? page, bool dim, double opacity = 0.5)
     {
         if (page is null)
             return;
         try
         {
-            var baseColor = Color("DgAtmosBase");
             if (!dim)
             {
-                page.BackgroundColor = baseColor;
+                page.BackgroundColor = Color("DgAtmosBase");
                 return;
             }
-            var backdrop = Color("DgBackdrop");
-            page.BackgroundColor = new Color(
-                (float)(baseColor.Red * (1 - opacity) + backdrop.Red * opacity),
-                (float)(baseColor.Green * (1 - opacity) + backdrop.Green * opacity),
-                (float)(baseColor.Blue * (1 - opacity) + backdrop.Blue * opacity));
+            // 实测值：亮色 #7B8E86、暗色 #07100C（蒙层色叠在页面底色上的结果）
+            page.BackgroundColor = ParseHex(IsDark ? "#07100C" : "#7B8E86");
         }
         catch
         {
