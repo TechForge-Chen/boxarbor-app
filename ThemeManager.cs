@@ -106,11 +106,6 @@ public static class ThemeManager
 
     private static readonly List<(Image img, string light, string dark)> Icons = new();
 
-#if ANDROID
-    private static Android.Graphics.Color? _origStatus;
-    private static Android.Graphics.Color? _origNav;
-#endif
-
     /// <summary>启动时调用：套用已保存的偏好。</summary>
     public static void Initialize()
     {
@@ -165,6 +160,7 @@ public static class ThemeManager
             img.Source = dark ? dark2 : light;
 
         ApplySystemBars(dark);
+        ApplyWindowBackground();
         Preferences.Set(PrefKey, dark);
         Changed?.Invoke();
     }
@@ -197,6 +193,25 @@ public static class ThemeManager
     /// <summary>冷启动时 CurrentActivity 可能尚未就绪，首个页面出现后补调。</summary>
     public static void RefreshSystemBars() => ApplySystemBars(IsDark);
 
+    /// <summary>窗口底色跟主题走：安全区/手势区/导航栏之外的系统留白不再是白色，
+    /// 与页面底色一致，断层消失。启动时窗口尚不存在，由 App 补调。</summary>
+    public static void ApplyWindowBackground()
+    {
+        try
+        {
+            var app = Application.Current;
+            if (app is null)
+                return;
+            var bg = Color("DgAtmosBase");
+            foreach (var w in app.Windows)
+                w.BackgroundColor = bg;
+        }
+        catch
+        {
+            // 窗口底色同步失败不影响主题
+        }
+    }
+
     private static void ApplySystemBars(bool dark)
     {
 #if ANDROID
@@ -205,12 +220,6 @@ public static class ThemeManager
             var window = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity?.Window;
             if (window is null)
                 return;
-
-            if (_origStatus is null)
-            {
-                _origStatus = new Android.Graphics.Color(window.StatusBarColor);
-                _origNav = new Android.Graphics.Color(window.NavigationBarColor);
-            }
 
             int lightMask = (int)(Android.Views.WindowInsetsControllerAppearance.LightStatusBars |
                                   Android.Views.WindowInsetsControllerAppearance.LightNavigationBars);
@@ -223,8 +232,10 @@ public static class ThemeManager
             }
             else
             {
-                if (_origStatus is { } s) window.SetStatusBarColor(s);
-                if (_origNav is { } n) window.SetNavigationBarColor(n);
+                // 状态栏透明：露出窗口底色（与页面同色），遮罩外扩后可一起变暗；
+                // 导航栏不透明直接漆成页面底色，无缝衔接。
+                window.SetStatusBarColor(Android.Graphics.Color.Transparent);
+                window.SetNavigationBarColor(Android.Graphics.Color.ParseColor("#F6F7F7"));
                 window.InsetsController?.SetSystemBarsAppearance(lightMask, lightMask);
             }
         }

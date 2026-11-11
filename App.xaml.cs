@@ -17,6 +17,7 @@ namespace BluetoothMauiApp
             ThemeManager.Initialize();     // 按保存的偏好套用明/暗
 
             MainPage = new AppShell();   // 只留平台启动屏，无应用内开屏页
+            ThemeManager.ApplyWindowBackground();  // 窗口底色跟主题走，系统留白区不再是白色
         }
     }
 }

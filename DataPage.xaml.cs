@@ -200,18 +200,24 @@ public partial class DataPage : ContentPage
         // Board 构造时会把 OnDataReceivedAction 指向自己，退出时 -= 置空。
         // 不在这里重新接管，从 Board 返回后网关网格就再也收不到状态回包。
         StartPage.OnDataReceivedAction = OnDataReceived;
+        SizeChanged -= OnSizeChangedBleed;
+        SizeChanged += OnSizeChangedBleed;
         ApplySafeArea();
         StartStatusTimer();
         RefreshViewState();
     }
 
-    /// <summary>iOS 安全区由系统处理（页面底色与氛围底同色，安全区无断层）；
-    /// 这里只把蓝牙弹窗遮罩向安全区外扩保证蒙层铺满状态栏与 Home 区（Android 为 0 无影响）。</summary>
+    /// <summary>安全区由系统处理（窗口/页面底色跟主题走，安全区无断层）；
+    /// 这里只把蓝牙弹窗遮罩向外扩保证蒙层铺满状态栏与 Home/导航区。
+    /// 固定外扩 100：覆盖刘海/状态栏/Home/导航栏一切高度，超出屏幕由系统裁掉；
+    /// 在 SizeChanged 里再调一次，保证排版完成后生效。</summary>
     private void ApplySafeArea()
     {
-        var insets = SafeArea.Insets(this);
-        PickerOverlay.Margin = new Thickness(0, -insets.Top, 0, -insets.Bottom);
+        const double bleed = 100;
+        PickerOverlay.Margin = new Thickness(0, -bleed, 0, -bleed);
     }
+
+    private void OnSizeChangedBleed(object? sender, EventArgs e) => ApplySafeArea();
 
     protected override void OnDisappearing()
     {

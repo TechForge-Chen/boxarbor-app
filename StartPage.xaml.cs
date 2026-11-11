@@ -272,22 +272,23 @@ public partial class StartPage : ContentPage
         DevicesChanged += OnDevicesChanged;
         ThemeManager.Changed -= OnThemeChanged;
         ThemeManager.Changed += OnThemeChanged;
+        SizeChanged -= OnSizeChangedBleed;
+        SizeChanged += OnSizeChangedBleed;
         ApplySafeArea();
         OnThemeChanged();   // 后台期间主题可能已切换，回前台重刷
     }
 
-    /// <summary>iOS 安全区由系统处理（页面底色与氛围底同色，安全区无断层）；
-    /// 这里只把全屏遮罩（新手引导/Rename）向安全区外扩，保证蒙层铺满状态栏与 Home 区（Android 为 0 无影响）。</summary>
+    /// <summary>安全区由系统处理（窗口/页面底色跟主题走，安全区无断层）；
+    /// 这里只把 Rename 弹窗遮罩向外扩保证蒙层铺满状态栏与 Home/导航区。
+    /// 固定外扩 100：超出屏幕由系统裁掉；在 SizeChanged 里再调一次保证排版完成后生效。
+    /// 新手引导是整页渲染图不做外扩，避免聚光灯错位。</summary>
     private void ApplySafeArea()
     {
-        var insets = SafeArea.Insets(this);
-        var bleed = new Thickness(0, -insets.Top, 0, -insets.Bottom);
-        Guide1.Margin = bleed;
-        Guide2.Margin = bleed;
-        Guide3.Margin = bleed;
-        Guide4.Margin = bleed;
-        RenameDlg.Margin = bleed;
+        const double bleed = 100;
+        RenameDlg.Margin = new Thickness(0, -bleed, 0, -bleed);
     }
+
+    private void OnSizeChangedBleed(object? sender, EventArgs e) => ApplySafeArea();
 
     private void OnThemeChanged()
     {
