@@ -234,7 +234,7 @@ public static class ThemeManager
                 return;
             }
             // 实测校准值（iOS 有 P3 色域偏移，需比目标色再压一档才能渲染成遮罩色）
-            page.BackgroundColor = ParseHex(IsDark ? "#000805" : "#778480");
+            page.BackgroundColor = ParseHex(IsDark ? "#050E0A" : "#778480");
         }
         catch
         {
