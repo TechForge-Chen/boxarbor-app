@@ -128,15 +128,12 @@ public partial class Board : ContentPage
         GetNetPara(false);
     }
 
-    /// <summary>iOS 页面全屏：原始安全区补回页头与内容区，弹窗遮罩本来就铺满全屏。
-    /// Android 全为 0。</summary>
+    /// <summary>iOS：弹窗遮罩向外扩以铺满状态栏与 Home 区（Android 全为 0）。</summary>
     private void ApplySafeArea()
     {
-        var safe = SafeArea.EnsureFullScreen(this);
-        HeaderRow.Padding = new Thickness(20, 26 + safe.Top, 20, 0);
-        ContentGrid.Margin = new Thickness(18, 16, 18, 16 + safe.Bottom);
-        SaveOverlay.Margin = Thickness.Zero;
-        RenameDlg.Margin = Thickness.Zero;
+        var margin = new Thickness(0, -100, 0, -100);
+        SaveOverlay.Margin = margin;
+        RenameDlg.Margin = margin;
     }
 
     private void OnSizeChangedBleed(object? sender, EventArgs e) => ApplySafeArea();

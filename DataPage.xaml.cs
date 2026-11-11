@@ -208,15 +208,11 @@ public partial class DataPage : ContentPage
         RefreshViewState();
     }
 
-    /// <summary>iOS 页面全屏：原始安全区补回内容顶部，底栏直接坐到底边，
-    /// 蓝牙弹窗遮罩本来就铺满全屏不再外扩。Android 全为 0。</summary>
+    /// <summary>iOS：去掉底部安全区让底栏坐到底边；遮罩向外扩铺满状态栏（Android 全为 0）。</summary>
     private void ApplySafeArea()
     {
-        var safe = SafeArea.EnsureFullScreen(this);
-        GridHeader.Padding = new Thickness(17, 27 + safe.Top, 16, 0);
-        EmptyStack.Padding = new Thickness(17, 27 + safe.Top, 16, 137);
-        PickerOverlay.Margin = Thickness.Zero;
-        TabBar.ApplyBottomInset(Thickness.Zero);
+        PickerOverlay.Margin = new Thickness(0, -100, 0, -100);
+        TabBar.ApplyBottomInset(new Thickness(0, 0, 0, SafeArea.TabBarBottomInset(this)));
     }
 
     private void OnSizeChangedBleed(object? sender, EventArgs e) => ApplySafeArea();
@@ -245,6 +241,17 @@ public partial class DataPage : ContentPage
         PickerOverlay.IsVisible = true;
         ThemeManager.SetOverlayDim(true);
         SetPickerState(PickerState.Scanning);
+
+        // 一次性探针：把页面染洋红、遮罩染纯红，截图即可看出两者真实边界
+        if (Environment.GetEnvironmentVariable("BOXARBOR_PROBE") == "1")
+        {
+            BackgroundColor = Colors.Magenta;
+            if (PickerOverlay.Children.FirstOrDefault() is Grid backdrop)
+            {
+                backdrop.BackgroundColor = Colors.Red;
+                backdrop.Opacity = 1;
+            }
+        }
     }
 
     /// <summary>点击 Scan with Bluetooth：打开弹窗并开始扫描。</summary>

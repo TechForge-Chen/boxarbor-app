@@ -66,7 +66,7 @@ jobs:
 
           # 2) Devices + 扫描弹窗（看遮罩是否盖住状态栏/底部）
           xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
-          SIMCTL_CHILD_BOXARBOR_SHOT=picker xcrun simctl launch "$UDID" "$BUNDLE_ID"
+          SIMCTL_CHILD_BOXARBOR_SHOT=picker SIMCTL_CHILD_BOXARBOR_PROBE=1 xcrun simctl launch "$UDID" "$BUNDLE_ID"
           sleep 14
           xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/2-picker.png"
 

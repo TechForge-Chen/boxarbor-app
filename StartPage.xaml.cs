@@ -303,21 +303,11 @@ public partial class StartPage : ContentPage
         });
     }
 
-    /// <summary>iOS 页面全屏：原始安全区补回内容顶部，底栏直接坐到底边，
-    /// 遮罩（Rename/引导）本来就铺满全屏不再外扩。Android 全为 0。</summary>
+    /// <summary>iOS：去掉底部安全区让底栏坐到底边；遮罩向外扩铺满状态栏（Android 全为 0）。</summary>
     private void ApplySafeArea()
     {
-        var safe = SafeArea.EnsureFullScreen(this);
-        PageStack.Padding = new Thickness(20, 16 + safe.Top, 20, 133);
-        RenameDlg.Margin = Thickness.Zero;
-        TabBar.ApplyBottomInset(Thickness.Zero);
-
-        // 引导图是整页渲染板（已裁状态栏），全屏后下移一个状态栏高度保持原比例
-        var guideMargin = new Thickness(0, safe.Top, 0, 0);
-        Guide1.Margin = guideMargin;
-        Guide2.Margin = guideMargin;
-        Guide3.Margin = guideMargin;
-        Guide4.Margin = guideMargin;
+        RenameDlg.Margin = new Thickness(0, -100, 0, -100);
+        TabBar.ApplyBottomInset(new Thickness(0, 0, 0, SafeArea.TabBarBottomInset(this)));
     }
 
     private void OnSizeChangedBleed(object? sender, EventArgs e) => ApplySafeArea();

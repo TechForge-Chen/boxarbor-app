@@ -6,10 +6,10 @@ using Microsoft.Maui.Controls.PlatformConfiguration.iOSSpecific;
 namespace BluetoothMauiApp;
 
 /// <summary>
-/// iOS 全屏布局：把根视图控制器的上下安全区去掉（AdditionalSafeAreaInsets 取负值），
-/// 页面就能铺满整屏——底栏 105 直接坐到底边、弹窗遮罩天然盖住状态栏与 Home 区。
-/// 去掉后由各页面把原始安全区高度补回内容内边距，内容视觉位置不变。
-/// Android 无需处理（状态栏透明 + 导航栏同色），全部返回 0。
+/// 安全区处理：iOS 取系统安全区；Android 返回 0（状态栏透明 + 导航栏同色已处理）。
+/// iOS 只移除底部安全区（AdditionalSafeAreaInsets 负值）——上下同时取负 UIKit 会整块忽略，
+/// 单取底部实测有效：页面铺到屏幕底边，105 高的自绘底栏直接坐到底。
+/// 顶部保持系统安全区，状态栏区域由页面自身背景填充，视觉无断层。
 /// </summary>
 internal static class SafeArea
 {
@@ -29,43 +29,35 @@ internal static class SafeArea
 #endif
     }
 
-    /// <summary>
-    /// 让当前页面全屏：第一次调用时读原始安全区并从根控制器移除，
-    /// 返回原始安全区高度供页面把内容内缩补回来（之后每次返回同一值）。
-    /// 移除失败时返回原值且页面保持系统安全区，外观不会变差。
-    /// </summary>
-    public static Thickness EnsureFullScreen(Microsoft.Maui.Controls.Page page)
+    /// <summary>自绘底栏要占的底部边距：移除底部安全区后返回 0，
+    /// 移除失败则退回原始高度（外观不比现在差）。</summary>
+    public static double TabBarBottomInset(Microsoft.Maui.Controls.Page page)
     {
+        double bottom = System.Math.Max(0, Insets(page).Bottom);
 #if IOS
-        if (!_removed)
+        if (bottom <= 0)
+            return 0;
+        if (_removed)
+            return 0;
+        try
         {
-            var insets = Insets(page);
-            _top = System.Math.Max(0, insets.Top);
-            _bottom = System.Math.Max(0, insets.Bottom);
-            try
+            var root = UIKit.UIApplication.SharedApplication.KeyWindow?.RootViewController;
+            if (root is not null)
             {
-                var root = UIKit.UIApplication.SharedApplication.KeyWindow?.RootViewController;
-                if (root is not null)
-                {
-                    root.AdditionalSafeAreaInsets = new UIKit.UIEdgeInsets(
-                        (nfloat)(-_top), 0, (nfloat)(-_bottom), 0);
-                    _removed = true;
-                }
-            }
-            catch
-            {
-                // 拿不到根控制器就保持系统安全区
+                root.AdditionalSafeAreaInsets = new UIKit.UIEdgeInsets(0, 0, (nfloat)(-bottom), 0);
+                _removed = true;
+                return 0;
             }
         }
-        return _removed ? new Thickness(0, _top, 0, _bottom) : Thickness.Zero;
-#else
-        return Thickness.Zero;
+        catch
+        {
+            // 拿不到根控制器就退回原值
+        }
 #endif
+        return bottom;
     }
 
 #if IOS
     private static bool _removed;
-    private static double _top;
-    private static double _bottom;
 #endif
 }
