@@ -221,14 +221,24 @@ public static class ThemeManager
 
     /// <summary>弹窗遮罩开关时把页面底色一起刷暗/恢复。
     /// 状态栏最上面那一条露的是页面底色（遮罩层在页面内容区之内，够不到），
-    /// 不刷这一层弹窗顶上就会留一条浅色。</summary>
-    public static void SetPageDim(Microsoft.Maui.Controls.Page? page, bool dim)
+    /// 用与遮罩完全相同的混合色（蒙层色 × opacity 叠在页面底色上）刷，接缝才看不出来。</summary>
+    public static void SetPageDim(Microsoft.Maui.Controls.Page? page, bool dim, double opacity = 0.5)
     {
         if (page is null)
             return;
         try
         {
-            page.BackgroundColor = dim ? ParseHex("#0D1713") : Color("DgAtmosBase");
+            var baseColor = Color("DgAtmosBase");
+            if (!dim)
+            {
+                page.BackgroundColor = baseColor;
+                return;
+            }
+            var backdrop = Color("DgBackdrop");
+            page.BackgroundColor = new Color(
+                (float)(baseColor.Red * (1 - opacity) + backdrop.Red * opacity),
+                (float)(baseColor.Green * (1 - opacity) + backdrop.Green * opacity),
+                (float)(baseColor.Blue * (1 - opacity) + backdrop.Blue * opacity));
         }
         catch
         {
