@@ -1,0 +1,70 @@
+name: iOS Simulator Screenshot
+
+# 手动触发：Actions 页面点 "Run workflow"
+# 在 macOS runner 上启动 iPhone 模拟器，安装模拟器版 App 并截图（验证安全区/底栏）。
+# 不需要签名；模拟器里点不了，只能看启动页（StartPage）。
+on:
+  workflow_dispatch:
+
+jobs:
+  sim-shot:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    env:
+      PROJECT: Net.csproj
+      TFM: net10.0-ios
+      CONFIG: Release
+      SIM_RID: iossimulator-arm64
+      BUNDLE_ID: com.boxarbor.app
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          if [ -d "/Applications/Xcode_26.5.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_26.5.app
+          elif [ -d "/Applications/Xcode_26.5.0.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_26.5.0.app
+          fi
+          xcodebuild -version
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.301"
+
+      - name: Install MAUI iOS workload
+        run: dotnet workload install maui-ios --version 10.0.301.1
+
+      - name: Build simulator app
+        run: |
+          dotnet build "$PROJECT" \
+            -f "$TFM" -c "$CONFIG" \
+            -p:TargetFrameworks="$TFM" \
+            -p:RuntimeIdentifier="$SIM_RID"
+          APP=$(find . -type d -name "Net.app" -not -path "*/obj/*" | head -1)
+          echo "APP: $APP"
+          echo "SIM_APP=$APP" >> "$GITHUB_ENV"
+
+      - name: Boot iPhone simulator and screenshot
+        run: |
+          UDID=$(xcrun simctl list devices available -j \
+            | python3 -c "import json,sys; d=json.load(sys.stdin); ds=[x for vs in d['devices'].values() for x in vs if 'iPhone' in x.get('name','')]; print(ds[0]['udid'])")
+          echo "Using simulator: $UDID"
+          xcrun simctl boot "$UDID" || true
+          sleep 20
+          xcrun simctl install "$UDID" "$SIM_APP"
+          xcrun simctl launch "$UDID" "$BUNDLE_ID"
+          sleep 12
+          mkdir -p "$GITHUB_WORKSPACE/simshots"
+          xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/startpage.png"
+          ls -la "$GITHUB_WORKSPACE/simshots"
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-simshots
+          path: simshots/
+          if-no-files-found: error
