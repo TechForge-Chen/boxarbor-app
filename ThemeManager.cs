@@ -97,6 +97,7 @@ public static class ThemeManager
         ["DgPickerCancelText"] = "#A9C7B5",
         ["DgBackdrop"] = "#020906",      // 半透明由父 Grid.Opacity 提供
         ["DgGuideChip"] = "#B821372B",
+        ["DgTabBarFill"] = "#21372B",
 
         // 氛围底（暗稿有三团低饱和色晕，PNG 见 atmos_*_dark）
         ["DgAtmosGreen"] = "#2916482F",

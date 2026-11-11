@@ -7,7 +7,7 @@ public partial class SetPage : ContentPage
     public SetPage()
     {
         InitializeComponent();
-        lblVersion.Text = $"App version {AppInfo.VersionString}";
+        lblVersion.Text = $"App version {AppInfo.VersionString} ({AppInfo.BuildString})";
 
         // 默认值与设计稿一致：三个开、Dark mode 关
         swOfflineAlerts.IsOn = Preferences.Get("offline_alerts", true);
@@ -33,5 +33,6 @@ public partial class SetPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        TabBar.ApplyBottomFill(SafeArea.Insets(this));
     }
 }

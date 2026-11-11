@@ -216,6 +216,7 @@ public partial class DataPage : ContentPage
     {
         const double bleed = 100;
         PickerOverlay.Margin = new Thickness(0, -bleed, 0, -bleed);
+        TabBar.ApplyBottomFill(SafeArea.Insets(this));
     }
 
     private void OnSizeChangedBleed(object? sender, EventArgs e) => ApplySafeArea();

@@ -137,6 +137,7 @@
 
     <!-- 页面氛围底：#f6f7f7 上叠三团柔和色晕 -->
     <Color x:Key="DgAtmosBase">#f6f7f7</Color>
+    <Color x:Key="DgTabBarFill">White</Color>
     <Color x:Key="DgAtmosGreen">#b1ffd4</Color>
     <Color x:Key="DgAtmosBlue">#cce0f5</Color>
     <Color x:Key="DgAtmosGreen2">#cfe8db</Color>

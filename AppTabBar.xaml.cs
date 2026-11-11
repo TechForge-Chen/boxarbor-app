@@ -69,5 +69,18 @@ public partial class AppTabBar : ContentView
 
         IconSettings.Source = set ? grnSet : graySet;
         LabelSettings.TextColor = set ? SelectedColor : ThemeManager.Color("DgMuted");
+        BottomFill.Color = ThemeManager.Color("DgTabBarFill");
+    }
+
+    /// <summary>底部延伸到屏幕底边：BottomFill 漆成底图底边色、整体下沉安全区高度。
+    /// 若父级裁剪则填充不可见、无副作用；Android 安全区为 0 不变。</summary>
+    public void ApplyBottomFill(Thickness insets)
+    {
+        double bottom = System.Math.Max(0, insets.Bottom);
+        BottomFill.HeightRequest = bottom;
+        BottomFill.IsVisible = bottom > 0;
+        BottomFill.Color = ThemeManager.Color("DgTabBarFill");
+        HeightRequest = 105 + bottom;
+        Margin = new Thickness(0, 0, 0, -bottom);
     }
 }

@@ -287,6 +287,7 @@ public partial class StartPage : ContentPage
     {
         const double bleed = 100;
         RenameDlg.Margin = new Thickness(0, -bleed, 0, -bleed);
+        TabBar.ApplyBottomFill(SafeArea.Insets(this));
     }
 
     private void OnSizeChangedBleed(object? sender, EventArgs e) => ApplySafeArea();
