@@ -88,6 +88,19 @@ jobs:
           sleep 14
           xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/4-picker-dark.png"
 
+          # 6) Devices / Settings（亮+暗）
+          for T in devices settings; do
+            xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
+            SIMCTL_CHILD_BOXARBOR_SHOT=$T xcrun simctl launch "$UDID" "$BUNDLE_ID"
+            sleep 12
+            xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/6-$T.png"
+
+            xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
+            SIMCTL_CHILD_BOXARBOR_DARK=1 SIMCTL_CHILD_BOXARBOR_SHOT=$T xcrun simctl launch "$UDID" "$BUNDLE_ID"
+            sleep 12
+            xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/6-$T-dark.png"
+          done
+
           ls -la "$GITHUB_WORKSPACE/simshots"
 
       - name: Upload screenshots

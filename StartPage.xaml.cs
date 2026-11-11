@@ -294,6 +294,20 @@ public partial class StartPage : ContentPage
             });
             return;
         }
+        if (shot == "devices" || shot == "settings")
+        {
+            string route = shot == "devices" ? AppTabBar.DevicesRoute : AppTabBar.SettingsRoute;
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(2000);
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    if (Shell.Current is AppShell sh)
+                        sh.SelectTab(route);
+                });
+            });
+            return;
+        }
         if (shot != "picker")
             return;
         _ = Task.Run(async () =>
