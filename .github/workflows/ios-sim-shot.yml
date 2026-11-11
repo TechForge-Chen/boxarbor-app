@@ -76,6 +76,12 @@ jobs:
           sleep 12
           xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/3-dark.png"
 
+          # 5) 新手引导（看引导蒙层是否盖住状态栏）
+          xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
+          SIMCTL_CHILD_BOXARBOR_SHOT=guide xcrun simctl launch "$UDID" "$BUNDLE_ID"
+          sleep 12
+          xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/5-guide.png"
+
           # 4) 暗色 + 扫描弹窗（看暗色下遮罩顶部是否同色）
           xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
           SIMCTL_CHILD_BOXARBOR_DARK=1 SIMCTL_CHILD_BOXARBOR_SHOT=picker xcrun simctl launch "$UDID" "$BUNDLE_ID"

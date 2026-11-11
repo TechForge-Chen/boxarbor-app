@@ -257,37 +257,65 @@ public static class ThemeManager
     /// 与页面内遮罩走同一套混合，颜色天然一致。</summary>
     private static void SetStatusStripDim(bool dim, double stripHeight)
     {
+        if (!dim)
+        {
+            RemoveStatusStrip();
+            return;
+        }
+        var backdrop = Color("DgBackdrop");
+        var ui = new UIKit.UIColor((float)backdrop.Red, (float)backdrop.Green, (float)backdrop.Blue, 0.5f);
+        SetStatusStripColor(ui, stripHeight);
+    }
+
+    /// <summary>新手引导：用引导图顶部的实色把状态栏那一条补齐（引导图是整页渲染板，够不到系统栏）。</summary>
+    public static void SetGuideStrip(bool on)
+    {
+        if (!on)
+        {
+            RemoveStatusStrip();
+            return;
+        }
+        // 四下引导图顶部均为 #475850 的实色蒙层
+        var c = ParseHex("#475850");
+        SetStatusStripColor(new UIKit.UIColor((float)c.Red, (float)c.Green, (float)c.Blue, 1f), 0);
+    }
+
+    private static void SetStatusStripColor(UIKit.UIColor color, double height)
+    {
         try
         {
-            if (!dim)
-            {
-                _statusStrip?.RemoveFromSuperview();
-                _statusStrip?.Dispose();
-                _statusStrip = null;
-                return;
-            }
-            if (stripHeight <= 0)
-                return;
             var win = GetKeyWindows().FirstOrDefault();
             if (win is null)
                 return;
+            if (height <= 0)
+                height = win.SafeAreaInsets.Top;
+            if (height <= 0)
+                return;
 
-            var backdrop = Color("DgBackdrop");
-            var ui = new UIKit.UIColor((float)backdrop.Red, (float)backdrop.Green, (float)backdrop.Blue, 0.5f);
             if (_statusStrip is null)
             {
-                _statusStrip = new UIKit.UIView { BackgroundColor = ui, UserInteractionEnabled = false };
+                _statusStrip = new UIKit.UIView { UserInteractionEnabled = false };
                 win.AddSubview(_statusStrip);
             }
-            else
-            {
-                _statusStrip.BackgroundColor = ui;
-            }
-            _statusStrip.Frame = new CoreGraphics.CGRect(0, 0, win.Bounds.Width, stripHeight);
+            _statusStrip.BackgroundColor = color;
+            _statusStrip.Frame = new CoreGraphics.CGRect(0, 0, win.Bounds.Width, height);
         }
         catch
         {
         }
+    }
+
+    private static void RemoveStatusStrip()
+    {
+        try
+        {
+            _statusStrip?.RemoveFromSuperview();
+            _statusStrip?.Dispose();
+        }
+        catch
+        {
+        }
+        _statusStrip = null;
     }
 
     /// <summary>状态栏那一条露的是根控制器视图，窗口底色换完还要把它也刷上，

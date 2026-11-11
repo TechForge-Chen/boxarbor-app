@@ -74,6 +74,9 @@ public static class Onboarding
         {
         }
     }
+#elif IOS
+    /// <summary>iOS 不能隐藏状态栏：把状态栏那一条刷成引导图顶部的实色，视觉上连成一片。</summary>
+    private static void SetGuideBars(bool dim) => ThemeManager.SetGuideStrip(dim);
 #else
     private static void SetGuideBars(bool dim) { }
 #endif

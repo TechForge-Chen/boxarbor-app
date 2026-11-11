@@ -284,7 +284,17 @@ public partial class StartPage : ContentPage
     /// 生产环境没有该变量，不会触发。</summary>
     private static void MaybeAutoShot()
     {
-        if (Environment.GetEnvironmentVariable("BOXARBOR_SHOT") != "picker")
+        string shot = Environment.GetEnvironmentVariable("BOXARBOR_SHOT") ?? "";
+        if (shot == "guide")
+        {
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(2000);
+                await MainThread.InvokeOnMainThreadAsync(Onboarding.Start);
+            });
+            return;
+        }
+        if (shot != "picker")
             return;
         _ = Task.Run(async () =>
         {
