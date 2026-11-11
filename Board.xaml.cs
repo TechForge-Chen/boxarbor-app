@@ -131,9 +131,8 @@ public partial class Board : ContentPage
     /// <summary>iOS：弹窗遮罩向外扩以铺满状态栏与 Home 区（Android 全为 0）。</summary>
     private void ApplySafeArea()
     {
-        var margin = new Thickness(0, -100, 0, -100);
-        SaveOverlay.Margin = margin;
-        RenameDlg.Margin = margin;
+        SaveOverlay.Margin = Thickness.Zero;
+        RenameDlg.Margin = Thickness.Zero;
     }
 
     private void OnSizeChangedBleed(object? sender, EventArgs e) => ApplySafeArea();

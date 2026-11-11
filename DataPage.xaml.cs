@@ -211,7 +211,7 @@ public partial class DataPage : ContentPage
     /// <summary>iOS：去掉底部安全区让底栏坐到底边；遮罩向外扩铺满状态栏（Android 全为 0）。</summary>
     private void ApplySafeArea()
     {
-        PickerOverlay.Margin = new Thickness(0, -100, 0, -100);
+        PickerOverlay.Margin = Thickness.Zero;
         TabBar.ApplyBottomInset(new Thickness(0, 0, 0, SafeArea.TabBarBottomInset(this)));
     }
 
