@@ -53,13 +53,29 @@ jobs:
           UDID=$(xcrun simctl list devices available -j \
             | python3 -c "import json,sys; d=json.load(sys.stdin); ds=[x for vs in d['devices'].values() for x in vs if 'iPhone' in x.get('name','')]; print(ds[0]['udid'])")
           echo "Using simulator: $UDID"
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
           xcrun simctl boot "$UDID" || true
           sleep 20
           xcrun simctl install "$UDID" "$SIM_APP"
+          mkdir -p "$GITHUB_WORKSPACE/simshots"
+
+          # 1) 首页（看底部栏是否坐到底边、顶部是否融合）
           xcrun simctl launch "$UDID" "$BUNDLE_ID"
           sleep 12
-          mkdir -p "$GITHUB_WORKSPACE/simshots"
-          xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/startpage.png"
+          xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/1-home.png"
+
+          # 2) Devices + 扫描弹窗（看遮罩是否盖住状态栏/底部）
+          xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
+          SIMCTL_CHILD_BOXARBOR_SHOT=picker xcrun simctl launch "$UDID" "$BUNDLE_ID"
+          sleep 14
+          xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/2-picker.png"
+
+          # 3) 暗色首页（看状态栏文字与暗色底栏）
+          xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
+          SIMCTL_CHILD_BOXARBOR_DARK=1 xcrun simctl launch "$UDID" "$BUNDLE_ID"
+          sleep 12
+          xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/3-dark.png"
+
           ls -la "$GITHUB_WORKSPACE/simshots"
 
       - name: Upload screenshots

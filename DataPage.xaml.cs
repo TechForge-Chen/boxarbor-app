@@ -216,7 +216,7 @@ public partial class DataPage : ContentPage
     {
         const double bleed = 100;
         PickerOverlay.Margin = new Thickness(0, -bleed, 0, -bleed);
-        TabBar.ApplyBottomFill(SafeArea.Insets(this));
+        TabBar.ApplyBottomInset(SafeArea.Insets(this));
     }
 
     private void OnSizeChangedBleed(object? sender, EventArgs e) => ApplySafeArea();
@@ -238,6 +238,14 @@ public partial class DataPage : ContentPage
     }
 
     // ============================== 蓝牙设备选择弹窗（Figma 191:240） ==============================
+
+    /// <summary>CI 截图专用：不扫蓝牙直接摆出弹窗（环境变量触发，生产不走）。</summary>
+    public void OpenPickerForShot()
+    {
+        PickerOverlay.IsVisible = true;
+        ThemeManager.SetOverlayDim(true);
+        SetPickerState(PickerState.Scanning);
+    }
 
     /// <summary>点击 Scan with Bluetooth：打开弹窗并开始扫描。</summary>
     private async void OnScanTapped(object sender, TappedEventArgs e)

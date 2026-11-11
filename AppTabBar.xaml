@@ -11,8 +11,7 @@
              HorizontalOptions="Fill"
              HeightRequest="105">
 
-    <Grid RowDefinitions="105,Auto">
-        <Grid x:Name="BarContent" Grid.Row="0" HeightRequest="105">
+    <Grid x:Name="BarContent" HeightRequest="105">
 
         <!-- 挖孔条（含中央凸起）；暗色换 tabbar_bg_dark.png -->
         <Image x:Name="BarBg" Source="tabbar_bg.png"
@@ -98,7 +97,5 @@
             </Border>
 
         </Grid>
-        </Grid>
-        <BoxView x:Name="BottomFill" Grid.Row="1" Color="{DynamicResource DgTabBarFill}" IsVisible="False" />
     </Grid>
 </ContentView>

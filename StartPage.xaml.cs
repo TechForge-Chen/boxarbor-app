@@ -277,6 +277,30 @@ public partial class StartPage : ContentPage
         ThemeManager.ApplyWindowBackground();
         ApplySafeArea();
         OnThemeChanged();   // 后台期间主题可能已切换，回前台重刷
+        MaybeAutoShot();
+    }
+
+    /// <summary>CI 截图专用：模拟器里没法点击，用环境变量自动切到 Devices 并打开扫描弹窗。
+    /// 生产环境没有该变量，不会触发。</summary>
+    private static void MaybeAutoShot()
+    {
+        if (Environment.GetEnvironmentVariable("BOXARBOR_SHOT") != "picker")
+            return;
+        _ = Task.Run(async () =>
+        {
+            await Task.Delay(2500);
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                if (Shell.Current is AppShell sh)
+                    sh.SelectTab(AppTabBar.DevicesRoute);
+            });
+            await Task.Delay(2500);
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                if (Shell.Current?.CurrentPage is DataPage dp)
+                    dp.OpenPickerForShot();
+            });
+        });
     }
 
     /// <summary>安全区由系统处理（窗口/页面底色跟主题走，安全区无断层）；
@@ -287,7 +311,7 @@ public partial class StartPage : ContentPage
     {
         const double bleed = 100;
         RenameDlg.Margin = new Thickness(0, -bleed, 0, -bleed);
-        TabBar.ApplyBottomFill(SafeArea.Insets(this));
+        TabBar.ApplyBottomInset(SafeArea.Insets(this));
     }
 
     private void OnSizeChangedBleed(object? sender, EventArgs e) => ApplySafeArea();
