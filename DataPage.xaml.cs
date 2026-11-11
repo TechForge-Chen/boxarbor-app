@@ -212,6 +212,7 @@ public partial class DataPage : ContentPage
     private void ApplySafeArea()
     {
         var insets = SafeArea.Insets(this);
+        SafeArea.ClearRootPadding(this);
         GridHeader.Padding = new Thickness(17, 27 + insets.Top, 16, 0);
         EmptyStack.Padding = new Thickness(17, 27 + insets.Top, 16, 137);
         PickerOverlay.Margin = Thickness.Zero;

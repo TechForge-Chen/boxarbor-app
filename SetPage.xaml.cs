@@ -35,6 +35,7 @@ public partial class SetPage : ContentPage
         base.OnAppearing();
         // iOS：去掉底部安全区让底栏坐到底边（Android 为 0）
         var insets = SafeArea.Insets(this);
+        SafeArea.ClearRootPadding(this);
         PageStack.Padding = new Thickness(17, 28 + insets.Top, 16, 137);
         TabBar.ApplyBottomInset(new Thickness(0, 0, 0, SafeArea.TabBarBottomInset(this)));
     }

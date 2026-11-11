@@ -132,6 +132,7 @@ public partial class Board : ContentPage
     private void ApplySafeArea()
     {
         var insets = SafeArea.Insets(this);
+        SafeArea.ClearRootPadding(this);
         HeaderRow.Padding = new Thickness(20, 26 + insets.Top, 20, 0);
         ContentGrid.Margin = new Thickness(18, 16, 18, 16 + insets.Bottom);
         SaveOverlay.Margin = Thickness.Zero;

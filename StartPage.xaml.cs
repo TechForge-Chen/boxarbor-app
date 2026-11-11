@@ -307,6 +307,7 @@ public partial class StartPage : ContentPage
     private void ApplySafeArea()
     {
         var insets = SafeArea.Insets(this);
+        SafeArea.ClearRootPadding(this);
         PageStack.Padding = new Thickness(20, 16 + insets.Top, 20, 133);
         RenameDlg.Margin = Thickness.Zero;
         TabBar.ApplyBottomInset(new Thickness(0, 0, 0, SafeArea.TabBarBottomInset(this)));

@@ -29,6 +29,21 @@ internal static class SafeArea
 #endif
     }
 
+    /// <summary>MAUI 把系统安全区当作内边距加在页面根布局上，
+    /// 导致遮罩层够不到最上面那一条（约 24pt）。这里把根布局内边距清零，
+    /// 由页面自己用 Insets 补内容间距。</summary>
+    public static void ClearRootPadding(Microsoft.Maui.Controls.Page page)
+    {
+        try
+        {
+            if (page.Content is Microsoft.Maui.Controls.Layout layout)
+                layout.Padding = Microsoft.Maui.Thickness.Zero;
+        }
+        catch
+        {
+        }
+    }
+
     /// <summary>自绘底栏要占的底部边距：移除底部安全区后返回 0，
     /// 移除失败则退回原始高度（外观不比现在差）。</summary>
     public static double TabBarBottomInset(Microsoft.Maui.Controls.Page page)
