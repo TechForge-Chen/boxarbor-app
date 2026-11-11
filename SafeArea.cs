@@ -28,4 +28,49 @@ internal static class SafeArea
         return Thickness.Zero;
 #endif
     }
+
+    /// <summary>
+    /// 自绘底栏要占的底部边距。
+    /// iOS：把根视图控制器的底部安全区去掉（AdditionalSafeAreaInsets 取负值），
+    /// 页面内容就能铺到屏幕底边，105 高的底栏直接坐到底；去掉后返回 0。
+    /// 去掉失败时退回安全区高度（外观与之前一致，不会更糟）。
+    /// Android：返回 0，导航栏由系统栏着色处理。
+    /// </summary>
+    public static double TabBarBottomInset(Microsoft.Maui.Controls.Page page)
+    {
+        double bottom = System.Math.Max(0, Insets(page).Bottom);
+        return ResolveBottom(bottom);
+    }
+
+    private static double ResolveBottom(double bottom)
+    {
+#if IOS
+        if (bottom <= 0)
+            return 0;
+        if (_bottomRemoved)
+            return 0;
+        try
+        {
+            // 负的 AdditionalSafeAreaInsets 会把安全区缩掉：底部 34 变成 0
+            var root = UIKit.UIApplication.SharedApplication.KeyWindow?.RootViewController;
+            if (root is not null)
+            {
+                root.AdditionalSafeAreaInsets = new UIKit.UIEdgeInsets(0, 0, (nfloat)(-bottom), 0);
+                _bottomRemoved = true;
+                return 0;
+            }
+        }
+        catch
+        {
+            // 拿不到根控制器就退回原值
+        }
+        return bottom;
+#else
+        return bottom;
+#endif
+    }
+
+#if IOS
+    private static bool _bottomRemoved;
+#endif
 }

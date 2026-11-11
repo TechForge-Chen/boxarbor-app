@@ -33,6 +33,6 @@ public partial class SetPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        TabBar.ApplyBottomInset(SafeArea.Insets(this));
+        TabBar.ApplyBottomInset(new Thickness(0, 0, 0, SafeArea.TabBarBottomInset(this)));
     }
 }
