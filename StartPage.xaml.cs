@@ -303,15 +303,21 @@ public partial class StartPage : ContentPage
         });
     }
 
-    /// <summary>安全区由系统处理（窗口/页面底色跟主题走，安全区无断层）；
-    /// 这里只把 Rename 弹窗遮罩向外扩保证蒙层铺满状态栏与 Home/导航区。
-    /// 固定外扩 100：超出屏幕由系统裁掉；在 SizeChanged 里再调一次保证排版完成后生效。
-    /// 新手引导是整页渲染图不做外扩，避免聚光灯错位。</summary>
+    /// <summary>iOS 页面全屏：原始安全区补回内容顶部，底栏直接坐到底边，
+    /// 遮罩（Rename/引导）本来就铺满全屏不再外扩。Android 全为 0。</summary>
     private void ApplySafeArea()
     {
-        const double bleed = 100;
-        RenameDlg.Margin = new Thickness(0, -bleed, 0, -bleed);
-        TabBar.ApplyBottomInset(new Thickness(0, 0, 0, SafeArea.TabBarBottomInset(this)));
+        var safe = SafeArea.EnsureFullScreen(this);
+        PageStack.Padding = new Thickness(20, 16 + safe.Top, 20, 133);
+        RenameDlg.Margin = Thickness.Zero;
+        TabBar.ApplyBottomInset(Thickness.Zero);
+
+        // 引导图是整页渲染板（已裁状态栏），全屏后下移一个状态栏高度保持原比例
+        var guideMargin = new Thickness(0, safe.Top, 0, 0);
+        Guide1.Margin = guideMargin;
+        Guide2.Margin = guideMargin;
+        Guide3.Margin = guideMargin;
+        Guide4.Margin = guideMargin;
     }
 
     private void OnSizeChangedBleed(object? sender, EventArgs e) => ApplySafeArea();

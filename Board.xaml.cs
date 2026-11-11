@@ -128,15 +128,15 @@ public partial class Board : ContentPage
         GetNetPara(false);
     }
 
-    /// <summary>安全区由系统处理（窗口/页面底色跟主题走，安全区无断层）；
-    /// 这里只把弹窗遮罩向外扩保证蒙层铺满状态栏与 Home/导航区。
-    /// 固定外扩 100：超出屏幕由系统裁掉；在 SizeChanged 里再调一次保证排版完成后生效。</summary>
+    /// <summary>iOS 页面全屏：原始安全区补回页头与内容区，弹窗遮罩本来就铺满全屏。
+    /// Android 全为 0。</summary>
     private void ApplySafeArea()
     {
-        const double bleed = 100;
-        var margin = new Thickness(0, -bleed, 0, -bleed);
-        SaveOverlay.Margin = margin;
-        RenameDlg.Margin = margin;
+        var safe = SafeArea.EnsureFullScreen(this);
+        HeaderRow.Padding = new Thickness(20, 26 + safe.Top, 20, 0);
+        ContentGrid.Margin = new Thickness(18, 16, 18, 16 + safe.Bottom);
+        SaveOverlay.Margin = Thickness.Zero;
+        RenameDlg.Margin = Thickness.Zero;
     }
 
     private void OnSizeChangedBleed(object? sender, EventArgs e) => ApplySafeArea();

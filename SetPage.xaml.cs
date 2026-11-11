@@ -33,6 +33,9 @@ public partial class SetPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        TabBar.ApplyBottomInset(new Thickness(0, 0, 0, SafeArea.TabBarBottomInset(this)));
+        // iOS 页面全屏：原始安全区补回内容顶部，底栏直接坐到底边（Android 全为 0）
+        var safe = SafeArea.EnsureFullScreen(this);
+        PageStack.Padding = new Thickness(17, 28 + safe.Top, 16, 137);
+        TabBar.ApplyBottomInset(Thickness.Zero);
     }
 }

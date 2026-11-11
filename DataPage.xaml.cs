@@ -208,15 +208,15 @@ public partial class DataPage : ContentPage
         RefreshViewState();
     }
 
-    /// <summary>安全区由系统处理（窗口/页面底色跟主题走，安全区无断层）；
-    /// 这里只把蓝牙弹窗遮罩向外扩保证蒙层铺满状态栏与 Home/导航区。
-    /// 固定外扩 100：覆盖刘海/状态栏/Home/导航栏一切高度，超出屏幕由系统裁掉；
-    /// 在 SizeChanged 里再调一次，保证排版完成后生效。</summary>
+    /// <summary>iOS 页面全屏：原始安全区补回内容顶部，底栏直接坐到底边，
+    /// 蓝牙弹窗遮罩本来就铺满全屏不再外扩。Android 全为 0。</summary>
     private void ApplySafeArea()
     {
-        const double bleed = 100;
-        PickerOverlay.Margin = new Thickness(0, -bleed, 0, -bleed);
-        TabBar.ApplyBottomInset(new Thickness(0, 0, 0, SafeArea.TabBarBottomInset(this)));
+        var safe = SafeArea.EnsureFullScreen(this);
+        GridHeader.Padding = new Thickness(17, 27 + safe.Top, 16, 0);
+        EmptyStack.Padding = new Thickness(17, 27 + safe.Top, 16, 137);
+        PickerOverlay.Margin = Thickness.Zero;
+        TabBar.ApplyBottomInset(Thickness.Zero);
     }
 
     private void OnSizeChangedBleed(object? sender, EventArgs e) => ApplySafeArea();
