@@ -219,6 +219,22 @@ public static class ThemeManager
         }
     }
 
+    /// <summary>弹窗遮罩开关时把页面底色一起刷暗/恢复。
+    /// 状态栏最上面那一条露的是页面底色（遮罩层在页面内容区之内，够不到），
+    /// 不刷这一层弹窗顶上就会留一条浅色。</summary>
+    public static void SetPageDim(Microsoft.Maui.Controls.Page? page, bool dim)
+    {
+        if (page is null)
+            return;
+        try
+        {
+            page.BackgroundColor = dim ? ParseHex("#0D1713") : Color("DgAtmosBase");
+        }
+        catch
+        {
+        }
+    }
+
     public static void SetOverlayDim(bool dim)
     {
         try

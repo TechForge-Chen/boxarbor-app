@@ -226,6 +226,7 @@ public partial class DataPage : ContentPage
         {
             PickerOverlay.IsVisible = false;
         ThemeManager.SetOverlayDim(false);
+        ThemeManager.SetPageDim(this, false);
             _scanGeneration++;
         }
         _ = StartPage.StopScanAsync();
@@ -240,6 +241,7 @@ public partial class DataPage : ContentPage
     {
         PickerOverlay.IsVisible = true;
         ThemeManager.SetOverlayDim(true);
+        ThemeManager.SetPageDim(this, true);
         SetPickerState(PickerState.Scanning);
 
         // 一次性探针：把页面染洋红、遮罩染纯红，截图即可看出两者真实边界
@@ -259,6 +261,7 @@ public partial class DataPage : ContentPage
     {
         PickerOverlay.IsVisible = true;
         ThemeManager.SetOverlayDim(true);
+        ThemeManager.SetPageDim(this, true);
         SetPickerState(PickerState.Scanning);
         await StartPage.StartScanAsync();
         WatchScanTimeout(++_scanGeneration);
@@ -311,6 +314,7 @@ public partial class DataPage : ContentPage
         _scanGeneration++;                              // 作废在途扫描/连接回调
         PickerOverlay.IsVisible = false;
         ThemeManager.SetOverlayDim(false);
+        ThemeManager.SetPageDim(this, false);
         await StartPage.StopScanAsync();
         RefreshViewState();
     }
