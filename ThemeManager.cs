@@ -199,15 +199,11 @@ public static class ThemeManager
     {
         try
         {
-            var app = Application.Current;
-            if (app is null)
-                return;
             var bg = Color("DgAtmosBase");
 #if IOS
             var uiColor = new UIKit.UIColor((float)bg.Red, (float)bg.Green, (float)bg.Blue, (float)bg.Alpha);
-            foreach (var w in app.Windows)
-                if (w.Handler?.PlatformView is UIKit.UIWindow uiWin)
-                    uiWin.BackgroundColor = uiColor;
+            foreach (var w in GetKeyWindows())
+                w.BackgroundColor = uiColor;
 #elif ANDROID
             var agColor = Android.Graphics.Color.Argb(
                 (int)(bg.Alpha * 255), (int)(bg.Red * 255), (int)(bg.Green * 255), (int)(bg.Blue * 255));
@@ -220,6 +216,58 @@ public static class ThemeManager
             // 窗口底色同步失败不影响主题
         }
     }
+
+    public static void SetOverlayDim(bool dim)
+    {
+        try
+        {
+            var color = dim ? ParseHex("#0D1713") : Color("DgAtmosBase");
+#if IOS
+            var dimUi = new UIKit.UIColor((float)color.Red, (float)color.Green, (float)color.Blue, (float)color.Alpha);
+            foreach (var w in GetKeyWindows())
+                w.BackgroundColor = dimUi;
+#elif ANDROID
+            var dimAg = Android.Graphics.Color.Argb(
+                (int)(color.Alpha * 255), (int)(color.Red * 255), (int)(color.Green * 255), (int)(color.Blue * 255));
+            var dimWin = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity?.Window;
+            if (dimWin is null)
+                return;
+            dimWin.SetBackgroundDrawable(new Android.Graphics.Drawables.ColorDrawable(dimAg));
+            if (IsDark)
+                dimWin.SetNavigationBarColor(dimAg);
+#endif
+        }
+        catch
+        {
+        }
+    }
+
+#if IOS
+    private static System.Collections.Generic.List<UIKit.UIWindow> GetKeyWindows()
+    {
+        var list = new System.Collections.Generic.List<UIKit.UIWindow>();
+        try
+        {
+            var app = UIKit.UIApplication.SharedApplication;
+            if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion(13, 0))
+            {
+                foreach (var scene in app.ConnectedScenes)
+                    if (scene is UIKit.UIWindowScene ws)
+                        foreach (var w in ws.Windows)
+                            if (w.IsKeyWindow)
+                                list.Add(w);
+            }
+            else if (app.KeyWindow != null)
+            {
+                list.Add(app.KeyWindow);
+            }
+        }
+        catch
+        {
+        }
+        return list;
+    }
+#endif
 
     private static void ApplySystemBars(bool dark)
     {

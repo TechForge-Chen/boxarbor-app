@@ -23,12 +23,14 @@ public partial class RenameDialog : ContentView
         if (!string.IsNullOrEmpty(subtitle))
             SubtitleLabel.Text = subtitle;
         IsVisible = true;
+        ThemeManager.SetOverlayDim(true);
         NameEntry.Focus();
     }
 
     public void Close()
     {
         IsVisible = false;
+        ThemeManager.SetOverlayDim(false);
         NameEntry.Unfocus();
     }
 

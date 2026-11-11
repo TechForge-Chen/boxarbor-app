@@ -228,6 +228,7 @@ public partial class DataPage : ContentPage
         if (PickerOverlay.IsVisible)
         {
             PickerOverlay.IsVisible = false;
+        ThemeManager.SetOverlayDim(false);
             _scanGeneration++;
         }
         _ = StartPage.StopScanAsync();
@@ -241,6 +242,7 @@ public partial class DataPage : ContentPage
     private async void OnScanTapped(object sender, TappedEventArgs e)
     {
         PickerOverlay.IsVisible = true;
+        ThemeManager.SetOverlayDim(true);
         SetPickerState(PickerState.Scanning);
         await StartPage.StartScanAsync();
         WatchScanTimeout(++_scanGeneration);
@@ -292,6 +294,7 @@ public partial class DataPage : ContentPage
     {
         _scanGeneration++;                              // 作废在途扫描/连接回调
         PickerOverlay.IsVisible = false;
+        ThemeManager.SetOverlayDim(false);
         await StartPage.StopScanAsync();
         RefreshViewState();
     }
