@@ -121,6 +121,7 @@ public partial class Board : ContentPage
         ThemeManager.BindIcon(imgGatewayEdit, "ic_edit.png", "ic_edit_w.png");
         SizeChanged -= OnSizeChangedBleed;
         SizeChanged += OnSizeChangedBleed;
+        ThemeManager.ApplyWindowBackground();
         ApplySafeArea();
         OnThemeChanged();   // 后台期间主题可能已切换，回前台重刷
         // 进入界面自动读取一次当前参数（不弹未连接提示）

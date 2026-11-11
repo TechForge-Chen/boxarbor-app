@@ -203,8 +203,17 @@ public static class ThemeManager
             if (app is null)
                 return;
             var bg = Color("DgAtmosBase");
+#if IOS
+            var uiColor = new UIKit.UIColor((float)bg.Red, (float)bg.Green, (float)bg.Blue, (float)bg.Alpha);
             foreach (var w in app.Windows)
-                w.BackgroundColor = bg;
+                if (w.Handler?.PlatformView is UIKit.UIWindow uiWin)
+                    uiWin.BackgroundColor = uiColor;
+#elif ANDROID
+            var agColor = Android.Graphics.Color.Argb(
+                (int)(bg.Alpha * 255), (int)(bg.Red * 255), (int)(bg.Green * 255), (int)(bg.Blue * 255));
+            var window = Microsoft.Maui.ApplicationModel.Platform.CurrentActivity?.Window;
+            window?.SetBackgroundDrawable(new Android.Graphics.Drawables.ColorDrawable(agColor));
+#endif
         }
         catch
         {

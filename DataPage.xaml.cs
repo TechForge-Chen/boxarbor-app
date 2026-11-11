@@ -202,6 +202,7 @@ public partial class DataPage : ContentPage
         StartPage.OnDataReceivedAction = OnDataReceived;
         SizeChanged -= OnSizeChangedBleed;
         SizeChanged += OnSizeChangedBleed;
+        ThemeManager.ApplyWindowBackground();
         ApplySafeArea();
         StartStatusTimer();
         RefreshViewState();

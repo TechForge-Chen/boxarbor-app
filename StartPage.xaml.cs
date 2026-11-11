@@ -274,6 +274,7 @@ public partial class StartPage : ContentPage
         ThemeManager.Changed += OnThemeChanged;
         SizeChanged -= OnSizeChangedBleed;
         SizeChanged += OnSizeChangedBleed;
+        ThemeManager.ApplyWindowBackground();
         ApplySafeArea();
         OnThemeChanged();   // 后台期间主题可能已切换，回前台重刷
     }
