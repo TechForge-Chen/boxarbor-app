@@ -253,7 +253,7 @@ public static class ThemeManager
                 return;
             }
             RemoveStatusStrip();
-            Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThreadAsync(() =>
+            Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(() =>
             {
                 (Microsoft.Maui.Controls.Shell.Current?.CurrentPage as Microsoft.Maui.Controls.Page)?.InvalidateMeasure();
             });
