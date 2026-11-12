@@ -229,11 +229,18 @@ public static class ThemeManager
         {
             var color = dim ? ParseHex("#0D1713") : Color("DgAtmosBase");
 #if IOS
-            SetStatusStripDim(dim, stripHeight);
-            var dimUi = new UIKit.UIColor((float)color.Red, (float)color.Green, (float)color.Blue, (float)color.Alpha);
-            foreach (var w in GetKeyWindows())
-                w.BackgroundColor = dimUi;
-            PaintRootView(dimUi);
+            // CI 定位开关（生产无这些变量）：只关 strip 移除 or 只关底色恢复
+            bool noStripRm = !dim && Environment.GetEnvironmentVariable("BOXARBOR_NO_STRIPRM") == "1";
+            bool noWinBg = !dim && Environment.GetEnvironmentVariable("BOXARBOR_NO_WINBG") == "1";
+            if (!noStripRm)
+                SetStatusStripDim(dim, stripHeight);
+            if (dim || !noWinBg)
+            {
+                var dimUi = new UIKit.UIColor((float)color.Red, (float)color.Green, (float)color.Blue, (float)color.Alpha);
+                foreach (var w in GetKeyWindows())
+                    w.BackgroundColor = dimUi;
+                PaintRootView(dimUi);
+            }
 #elif ANDROID
             var dimAg = Android.Graphics.Color.Argb(
                 (int)(color.Alpha * 255), (int)(color.Red * 255), (int)(color.Green * 255), (int)(color.Blue * 255));
