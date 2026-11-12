@@ -8,6 +8,12 @@ public partial class RenameDialog : ContentView
     /// <summary>点 Save：回传去空格后的名称。</summary>
     public event Action<string>? Confirmed;
 
+    /// <summary>CI 截图专用：填名 + 保存（复现保存白屏）。</summary>
+    public void SetNameForShot(string name) => NameEntry.Text = name;
+
+    /// <summary>CI 截图专用：程序化保存。</summary>
+    public void SaveForShot() => SaveAndClose();
+
     /// <summary>点 Cancel 或点遮罩：关闭且不改名。</summary>
     public event Action? Cancelled;
 

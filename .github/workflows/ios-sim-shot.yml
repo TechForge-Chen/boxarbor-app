@@ -101,6 +101,26 @@ jobs:
             xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/6-$T-dark.png"
           done
 
+          # 7) 引导抖动复现：引导打开后连拍 3 张（间隔约 1s，无任何点击）
+          xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
+          SIMCTL_CHILD_BOXARBOR_LIGHT=1 SIMCTL_CHILD_BOXARBOR_SHOT=guideframes xcrun simctl launch "$UDID" "$BUNDLE_ID"
+          sleep 8
+          xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/7-guide-a.png"
+          sleep 1
+          xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/7-guide-b.png"
+          sleep 1
+          xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/7-guide-c.png"
+
+          # 8) 改名保存白屏复现：自动打开改名→填名→保存保存后 0.5s/1.5s/3s 各截一张
+          xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
+          SIMCTL_CHILD_BOXARBOR_LIGHT=1 SIMCTL_CHILD_BOXARBOR_SHOT=rename xcrun simctl launch "$UDID" "$BUNDLE_ID"
+          sleep 5
+          xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/8-rename-a.png"
+          sleep 1
+          xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/8-rename-b.png"
+          sleep 2
+          xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/8-rename-c.png"
+
           ls -la "$GITHUB_WORKSPACE/simshots"
 
       - name: Upload screenshots

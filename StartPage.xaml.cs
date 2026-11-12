@@ -285,12 +285,21 @@ public partial class StartPage : ContentPage
     private static void MaybeAutoShot()
     {
         string shot = Environment.GetEnvironmentVariable("BOXARBOR_SHOT") ?? "";
-        if (shot == "guide")
+        if (shot == "guide" || shot == "guideframes")
         {
             _ = Task.Run(async () =>
             {
                 await Task.Delay(2000);
                 await MainThread.InvokeOnMainThreadAsync(Onboarding.Start);
+            });
+            return;
+        }
+        if (shot == "rename")
+        {
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(2000);
+                await MainThread.InvokeOnMainThreadAsync(() => _current?.RenameForShot());
             });
             return;
         }
@@ -794,6 +803,16 @@ public partial class StartPage : ContentPage
     }
 
     private void OnGuideSkip() => Onboarding.Finish();
+
+    /// <summary>CI 截图专用：自动打开改名弹窗、填名、保存（复现保存白屏）。
+    /// 生产环境没有环境变量，不会触发。</summary>
+    public async void RenameForShot()
+    {
+        OpenRename(1);
+        await Task.Delay(1500);
+        RenameDlg.SetNameForShot("ShotName");
+        RenameDlg.SaveForShot();
+    }
 
     private void OnScene1Rename(object sender, TappedEventArgs e) => OpenRename(1);
     private void OnScene2Rename(object sender, TappedEventArgs e) => OpenRename(2);
