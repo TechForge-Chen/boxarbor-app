@@ -42,6 +42,7 @@ public partial class RenameDialog : ContentView
         if (Environment.GetEnvironmentVariable("BOXARBOR_NO_UNFOCUS") != "1")
             NameEntry.Unfocus();
         System.Console.WriteLine("SHOTDBG Close exit");
+    }
 
     private void OnBackdropTapped(object sender, TappedEventArgs e) => CancelAndClose();
 
