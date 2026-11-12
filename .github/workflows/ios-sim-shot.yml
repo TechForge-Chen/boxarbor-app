@@ -123,12 +123,12 @@ jobs:
 
           # 9) 改名保存白屏定位：同一流程跑 4 遍（基线 / 去 Unfocus / 去遮罩染色 / 去回填）
           for V in base nounfocus nodim noconfirm; do
-            ENVARG=""
-            if [ "$V" = "nounfocus" ]; then ENVARG="SIMCTL_CHILD_BOXARBOR_NO_UNFOCUS=1"; fi
-            if [ "$V" = "nodim" ]; then ENVARG="SIMCTL_CHILD_BOXARBOR_NO_DIM=1"; fi
-            if [ "$V" = "noconfirm" ]; then ENVARG="SIMCTL_CHILD_BOXARBOR_NO_CONFIRM=1"; fi
+            unset SIMCTL_CHILD_BOXARBOR_NO_UNFOCUS SIMCTL_CHILD_BOXARBOR_NO_DIM SIMCTL_CHILD_BOXARBOR_NO_CONFIRM
+            if [ "$V" = "nounfocus" ]; then export SIMCTL_CHILD_BOXARBOR_NO_UNFOCUS=1; fi
+            if [ "$V" = "nodim" ]; then export SIMCTL_CHILD_BOXARBOR_NO_DIM=1; fi
+            if [ "$V" = "noconfirm" ]; then export SIMCTL_CHILD_BOXARBOR_NO_CONFIRM=1; fi
             xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
-            SIMCTL_CHILD_BOXARBOR_LIGHT=1 SIMCTL_CHILD_BOXARBOR_SHOT=rename $ENVARG xcrun simctl launch "$UDID" "$BUNDLE_ID"
+            SIMCTL_CHILD_BOXARBOR_LIGHT=1 SIMCTL_CHILD_BOXARBOR_SHOT=rename xcrun simctl launch "$UDID" "$BUNDLE_ID"
             sleep 5
             xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/9-rename-$V-a.png"
             sleep 2
