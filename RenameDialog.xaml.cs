@@ -35,12 +35,13 @@ public partial class RenameDialog : ContentView
 
     public void Close()
     {
+        System.Console.WriteLine("SHOTDBG Close enter");
         IsVisible = false;
         if (Environment.GetEnvironmentVariable("BOXARBOR_NO_DIM") != "1")
             ThemeManager.SetOverlayDim(false);
         if (Environment.GetEnvironmentVariable("BOXARBOR_NO_UNFOCUS") != "1")
             NameEntry.Unfocus();
-    }
+        System.Console.WriteLine("SHOTDBG Close exit");
 
     private void OnBackdropTapped(object sender, TappedEventArgs e) => CancelAndClose();
 

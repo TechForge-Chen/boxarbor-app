@@ -144,6 +144,10 @@ jobs:
             sleep 1
           done
 
+          # 11) 导出设备日志（含 SHOTDBG 打点，用于对时）
+          xcrun simctl spawn "$UDID" log show --predicate 'processImagePath CONTAINS "Net"' --last 30m --style compact > "$GITHUB_WORKSPACE/simshots/device.log" 2>&1 || true
+          grep -a "SHOTDBG" "$GITHUB_WORKSPACE/simshots/device.log" | tail -40 || true
+
           ls -la "$GITHUB_WORKSPACE/simshots"
 
       - name: Upload screenshots

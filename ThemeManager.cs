@@ -229,6 +229,7 @@ public static class ThemeManager
     {
         try
         {
+            System.Console.WriteLine($"SHOTDBG paint window bg R={color.Red:F2} G={color.Green:F2} B={color.Blue:F2}");
             var ui = new UIKit.UIColor((float)color.Red, (float)color.Green, (float)color.Blue, (float)color.Alpha);
             foreach (var w in GetKeyWindows())
                 w.BackgroundColor = ui;
@@ -242,6 +243,7 @@ public static class ThemeManager
     public static void SetOverlayDim(bool dim, double stripHeight = 0)
     {
         unchecked { _dimGen++; }
+        System.Console.WriteLine($"SHOTDBG SetOverlayDim dim={dim} strip={stripHeight}");
         try
         {
             var color = dim ? ParseHex("#0D1713") : Color("DgAtmosBase");
@@ -253,6 +255,7 @@ public static class ThemeManager
                 return;
             }
             RemoveStatusStrip();
+            System.Console.WriteLine($"SHOTDBG close sync done wins={GetKeyWindows().Count}");
             Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(() =>
             {
                 (Microsoft.Maui.Controls.Shell.Current?.CurrentPage as Microsoft.Maui.Controls.Page)?.InvalidateMeasure();
@@ -266,6 +269,7 @@ public static class ThemeManager
             _ = Task.Run(async () =>
             {
                 await Task.Delay(delayMs);
+                System.Console.WriteLine($"SHOTDBG restore fired gen={gen} cur={_dimGen}");
                 if (gen != _dimGen)
                     return;
                 await Microsoft.Maui.ApplicationModel.MainThread.InvokeOnMainThreadAsync(() =>
