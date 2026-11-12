@@ -36,8 +36,10 @@ public partial class RenameDialog : ContentView
     public void Close()
     {
         IsVisible = false;
-        ThemeManager.SetOverlayDim(false);
-        NameEntry.Unfocus();
+        if (Environment.GetEnvironmentVariable("BOXARBOR_NO_DIM") != "1")
+            ThemeManager.SetOverlayDim(false);
+        if (Environment.GetEnvironmentVariable("BOXARBOR_NO_UNFOCUS") != "1")
+            NameEntry.Unfocus();
     }
 
     private void OnBackdropTapped(object sender, TappedEventArgs e) => CancelAndClose();
@@ -64,6 +66,7 @@ public partial class RenameDialog : ContentView
             return;
         }
         Close();
-        Confirmed?.Invoke(name);
+        if (Environment.GetEnvironmentVariable("BOXARBOR_NO_CONFIRM") != "1")
+            Confirmed?.Invoke(name);
     }
 }

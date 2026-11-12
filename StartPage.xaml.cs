@@ -291,6 +291,14 @@ public partial class StartPage : ContentPage
             {
                 await Task.Delay(2000);
                 await MainThread.InvokeOnMainThreadAsync(Onboarding.Start);
+                if (int.TryParse(Environment.GetEnvironmentVariable("BOXARBOR_GUIDE_ADV_MS"), out int advMs) && advMs > 0)
+                {
+                    for (int i = 0; i < 3; i++)
+                    {
+                        await Task.Delay(advMs);
+                        await MainThread.InvokeOnMainThreadAsync(Onboarding.Next);
+                    }
+                }
             });
             return;
         }
