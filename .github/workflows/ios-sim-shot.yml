@@ -121,16 +121,12 @@ jobs:
           sleep 2
           xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/8-rename-c.png"
 
-          # 9) 改名保存白屏定位：同一流程跑 6 遍
-          # base=全量 / nounfocus=去键盘收起 / nodim=去染色恢复 /
-          # noconfirm=去回填 / nostriprm=只保留底色恢复 / nowinbg=只保留摘条
-          for V in base nounfocus nodim noconfirm nostriprm nowinbg; do
-            unset SIMCTL_CHILD_BOXARBOR_NO_UNFOCUS SIMCTL_CHILD_BOXARBOR_NO_DIM SIMCTL_CHILD_BOXARBOR_NO_CONFIRM SIMCTL_CHILD_BOXARBOR_NO_STRIPRM SIMCTL_CHILD_BOXARBOR_NO_WINBG
-            if [ "$V" = "nounfocus" ]; then export SIMCTL_CHILD_BOXARBOR_NO_UNFOCUS=1; fi
-            if [ "$V" = "nodim" ]; then export SIMCTL_CHILD_BOXARBOR_NO_DIM=1; fi
-            if [ "$V" = "noconfirm" ]; then export SIMCTL_CHILD_BOXARBOR_NO_CONFIRM=1; fi
-            if [ "$V" = "nostriprm" ]; then export SIMCTL_CHILD_BOXARBOR_NO_STRIPRM=1; fi
-            if [ "$V" = "nowinbg" ]; then export SIMCTL_CHILD_BOXARBOR_NO_WINBG=1; fi
+          # 9) 改名保存白屏定位（强制重排 + 延迟恢复是否生效）
+          # base=立即重排+0.8s恢复 / norestore=只重排不恢复 / delay2500=重排+2.5s恢复
+          for V in base norestore delay2500; do
+            unset SIMCTL_CHILD_BOXARBOR_NO_WINRESTORE SIMCTL_CHILD_BOXARBOR_RESTORE_DELAY_MS
+            if [ "$V" = "norestore" ]; then export SIMCTL_CHILD_BOXARBOR_NO_WINRESTORE=1; fi
+            if [ "$V" = "delay2500" ]; then export SIMCTL_CHILD_BOXARBOR_RESTORE_DELAY_MS=2500; fi
             xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
             SIMCTL_CHILD_BOXARBOR_LIGHT=1 SIMCTL_CHILD_BOXARBOR_SHOT=rename xcrun simctl launch "$UDID" "$BUNDLE_ID"
             sleep 5

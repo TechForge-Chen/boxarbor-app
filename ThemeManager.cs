@@ -253,15 +253,28 @@ public static class ThemeManager
                 return;
             }
             RemoveStatusStrip();
+            Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThreadAsync(() =>
+            {
+                (Microsoft.Maui.Controls.Shell.Current?.CurrentPage as Microsoft.Maui.Controls.Page)?.InvalidateMeasure();
+            });
             int gen = _dimGen;
+            int delayMs = 800;
+            var ds = Environment.GetEnvironmentVariable("BOXARBOR_RESTORE_DELAY_MS");
+            if (int.TryParse(ds, out int dms) && dms >= 0)
+                delayMs = dms;
+            bool noRestore = Environment.GetEnvironmentVariable("BOXARBOR_NO_WINRESTORE") == "1";
             _ = Task.Run(async () =>
             {
-                await Task.Delay(800);
+                await Task.Delay(delayMs);
                 if (gen != _dimGen)
                     return;
-                await Microsoft.Maui.ApplicationModel.MainThread.InvokeOnMainThreadAsync(() => SetWindowBackground(Color("DgAtmosBase")));
+                await Microsoft.Maui.ApplicationModel.MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    (Microsoft.Maui.Controls.Shell.Current?.CurrentPage as Microsoft.Maui.Controls.Page)?.InvalidateMeasure();
+                    if (!noRestore)
+                        SetWindowBackground(Color("DgAtmosBase"));
+                });
             });
-#elif ANDROID
 #elif ANDROID
             var dimAg = Android.Graphics.Color.Argb(
                 (int)(color.Alpha * 255), (int)(color.Red * 255), (int)(color.Green * 255), (int)(color.Blue * 255));
