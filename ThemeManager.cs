@@ -223,24 +223,45 @@ public static class ThemeManager
     /// iOS：给状态栏那一条单独盖一层与弹窗遮罩**完全相同**的半透明视图
     /// （同一蒙层色、同一 50% 透明），走同一套混合，颜色天然一致，不受色域换算影响。
     /// Android：直接用系统栏着色。</summary>
+    private static int _dimGen;
+
+    private static void SetWindowBackground(Microsoft.Maui.Graphics.Color color)
+    {
+        try
+        {
+            var ui = new UIKit.UIColor((float)color.Red, (float)color.Green, (float)color.Blue, (float)color.Alpha);
+            foreach (var w in GetKeyWindows())
+                w.BackgroundColor = ui;
+            PaintRootView(ui);
+        }
+        catch
+        {
+        }
+    }
+
     public static void SetOverlayDim(bool dim, double stripHeight = 0)
     {
+        unchecked { _dimGen++; }
         try
         {
             var color = dim ? ParseHex("#0D1713") : Color("DgAtmosBase");
 #if IOS
-            // CI 定位开关（生产无这些变量）：只关 strip 移除 or 只关底色恢复
-            bool noStripRm = !dim && Environment.GetEnvironmentVariable("BOXARBOR_NO_STRIPRM") == "1";
-            bool noWinBg = !dim && Environment.GetEnvironmentVariable("BOXARBOR_NO_WINBG") == "1";
-            if (!noStripRm)
-                SetStatusStripDim(dim, stripHeight);
-            if (dim || !noWinBg)
+            if (dim)
             {
-                var dimUi = new UIKit.UIColor((float)color.Red, (float)color.Green, (float)color.Blue, (float)color.Alpha);
-                foreach (var w in GetKeyWindows())
-                    w.BackgroundColor = dimUi;
-                PaintRootView(dimUi);
+                SetStatusStripDim(true, stripHeight);
+                SetWindowBackground(color);
+                return;
             }
+            RemoveStatusStrip();
+            int gen = _dimGen;
+            _ = Task.Run(async () =>
+            {
+                await Task.Delay(800);
+                if (gen != _dimGen)
+                    return;
+                await Microsoft.Maui.ApplicationModel.MainThread.InvokeOnMainThreadAsync(() => SetWindowBackground(Color("DgAtmosBase")));
+            });
+#elif ANDROID
 #elif ANDROID
             var dimAg = Android.Graphics.Color.Argb(
                 (int)(color.Alpha * 255), (int)(color.Red * 255), (int)(color.Green * 255), (int)(color.Blue * 255));

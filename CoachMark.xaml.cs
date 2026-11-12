@@ -24,6 +24,8 @@ public partial class CoachMark : ContentView
         ApplyContent();
     }
 
+    private double _lastW = -1;
+
     public int Step { get => _step; set { _step = value; ApplyContent(); } }
     public string DemoImage { get => _demoImage; set { _demoImage = value; ApplyContent(); } }
 
@@ -39,35 +41,17 @@ public partial class CoachMark : ContentView
         bool show = Onboarding.Step == _step;
         IsVisible = show;
         if (show)
-        {
             ApplyContent();
-            ScheduleLayout();
-        }
-    }
-
-    /// <summary>刚可见时可能还没完成测量，延后补一次布局（热区依赖它）。</summary>
-    private void ScheduleLayout()
-    {
-        _ = Task.Run(async () =>
-        {
-            await Task.Delay(200);
-            await MainThread.InvokeOnMainThreadAsync(ApplyLayout);
-        });
-        _ = Task.Run(async () =>
-        {
-            await Task.Delay(600);
-            await MainThread.InvokeOnMainThreadAsync(ApplyLayout);
-        });
     }
 
     private void ApplyContent()
     {
         if (DemoImg is null)
             return;
-        if (!string.IsNullOrEmpty(_demoImage))
+        if (!string.IsNullOrEmpty(_demoImage)
+            && (DemoImg.Source as FileImageSource)?.File != _demoImage)
             DemoImg.Source = _demoImage;
         ApplyLayout();
-        ScheduleLayout();
     }
 
     private void ApplyLayout()
@@ -76,6 +60,11 @@ public partial class CoachMark : ContentView
             return;
         if (Root.Width <= 0)
             return;
+
+        // 宽度没变就不碰：之前每次切步骤都先用旧尺寸画一次、200ms 后再纠正一次就是抖动来源
+        if (System.Math.Abs(Root.Width - _lastW) < 0.5)
+            return;
+        _lastW = Root.Width;
 
         double sc = Root.Width / 375.0;
 
