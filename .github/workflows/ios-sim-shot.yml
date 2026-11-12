@@ -121,19 +121,13 @@ jobs:
           sleep 2
           xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/8-rename-c.png"
 
-          # 9) 改名保存白屏定位（强制重排 + 延迟恢复是否生效）
-          # base=立即重排+0.8s恢复 / norestore=只重排不恢复 / delay2500=重排+2.5s恢复
-          for V in base norestore delay2500; do
-            unset SIMCTL_CHILD_BOXARBOR_NO_WINRESTORE SIMCTL_CHILD_BOXARBOR_RESTORE_DELAY_MS
-            if [ "$V" = "norestore" ]; then export SIMCTL_CHILD_BOXARBOR_NO_WINRESTORE=1; fi
-            if [ "$V" = "delay2500" ]; then export SIMCTL_CHILD_BOXARBOR_RESTORE_DELAY_MS=2500; fi
-            xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
-            SIMCTL_CHILD_BOXARBOR_LIGHT=1 SIMCTL_CHILD_BOXARBOR_SHOT=rename xcrun simctl launch "$UDID" "$BUNDLE_ID"
-            sleep 5
-            xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/9-rename-$V-a.png"
-            sleep 2
-            xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/9-rename-$V-b.png"
-          done
+          # 9) 改名保存验证：打开→填名→保存，+1.5s/+4s 各截一张（应正常显示首页）
+          xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
+          SIMCTL_CHILD_BOXARBOR_LIGHT=1 SIMCTL_CHILD_BOXARBOR_SHOT=rename xcrun simctl launch "$UDID" "$BUNDLE_ID"
+          sleep 5
+          xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/9-rename-a.png"
+          sleep 2
+          xcrun simctl io "$UDID" screenshot "$GITHUB_WORKSPACE/simshots/9-rename-b.png"
 
           # 10) 引导切步抖动：自动每 1.2s 切一步，连拍 6 张
           xcrun simctl terminate "$UDID" "$BUNDLE_ID" || true
@@ -145,9 +139,6 @@ jobs:
           done
 
           # 11) 导出设备日志（含 SHOTDBG 打点，用于对时）
-          xcrun simctl spawn "$UDID" log show --predicate 'processImagePath CONTAINS "Net"' --last 30m --style compact > "$GITHUB_WORKSPACE/simshots/device.log" 2>&1 || true
-          grep -a "SHOTDBG" "$GITHUB_WORKSPACE/simshots/device.log" | tail -40 || true
-
           ls -la "$GITHUB_WORKSPACE/simshots"
 
       - name: Upload screenshots

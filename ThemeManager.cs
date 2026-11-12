@@ -223,13 +223,10 @@ public static class ThemeManager
     /// iOS：给状态栏那一条单独盖一层与弹窗遮罩**完全相同**的半透明视图
     /// （同一蒙层色、同一 50% 透明），走同一套混合，颜色天然一致，不受色域换算影响。
     /// Android：直接用系统栏着色。</summary>
-    private static int _dimGen;
-
     private static void SetWindowBackground(Microsoft.Maui.Graphics.Color color)
     {
         try
         {
-            System.Console.WriteLine($"SHOTDBG paint window bg R={color.Red:F2} G={color.Green:F2} B={color.Blue:F2}");
             var ui = new UIKit.UIColor((float)color.Red, (float)color.Green, (float)color.Blue, (float)color.Alpha);
             foreach (var w in GetKeyWindows())
                 w.BackgroundColor = ui;
@@ -242,8 +239,6 @@ public static class ThemeManager
 
     public static void SetOverlayDim(bool dim, double stripHeight = 0)
     {
-        unchecked { _dimGen++; }
-        System.Console.WriteLine($"SHOTDBG SetOverlayDim dim={dim} strip={stripHeight}");
         try
         {
             var color = dim ? ParseHex("#0D1713") : Color("DgAtmosBase");
@@ -255,29 +250,9 @@ public static class ThemeManager
                 return;
             }
             RemoveStatusStrip();
-            System.Console.WriteLine($"SHOTDBG close sync done wins={GetKeyWindows().Count}");
             Microsoft.Maui.ApplicationModel.MainThread.BeginInvokeOnMainThread(() =>
             {
                 (Microsoft.Maui.Controls.Shell.Current?.CurrentPage as Microsoft.Maui.Controls.Page)?.InvalidateMeasure();
-            });
-            int gen = _dimGen;
-            int delayMs = 800;
-            var ds = Environment.GetEnvironmentVariable("BOXARBOR_RESTORE_DELAY_MS");
-            if (int.TryParse(ds, out int dms) && dms >= 0)
-                delayMs = dms;
-            bool noRestore = Environment.GetEnvironmentVariable("BOXARBOR_NO_WINRESTORE") == "1";
-            _ = Task.Run(async () =>
-            {
-                await Task.Delay(delayMs);
-                System.Console.WriteLine($"SHOTDBG restore fired gen={gen} cur={_dimGen}");
-                if (gen != _dimGen)
-                    return;
-                await Microsoft.Maui.ApplicationModel.MainThread.InvokeOnMainThreadAsync(() =>
-                {
-                    (Microsoft.Maui.Controls.Shell.Current?.CurrentPage as Microsoft.Maui.Controls.Page)?.InvalidateMeasure();
-                    if (!noRestore)
-                        SetWindowBackground(Color("DgAtmosBase"));
-                });
             });
 #elif ANDROID
             var dimAg = Android.Graphics.Color.Argb(
